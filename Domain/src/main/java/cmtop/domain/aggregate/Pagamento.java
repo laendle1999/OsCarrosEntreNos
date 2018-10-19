@@ -1,11 +1,11 @@
-package domain.aggregate;
+package cmtop.domain.aggregate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.entity.Financiamento;
-import domain.entity.TrocaCarro;
-import domain.entity.ValorEntrada;
+import cmtop.domain.entity.Financiamento;
+import cmtop.domain.entity.TrocaCarro;
+import cmtop.domain.entity.ValorEntrada;
 
 public class Pagamento {
 

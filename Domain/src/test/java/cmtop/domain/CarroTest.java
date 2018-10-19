@@ -1,11 +1,11 @@
-package domain.test;
+package cmtop.domain;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.entity.Carro;
+import cmtop.domain.entity.Carro;
 
 public class CarroTest {
 	

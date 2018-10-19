@@ -1,4 +1,4 @@
-package domain.entity;
+package cmtop.domain.entity;
 
 public class Manutencao {
 
@@ -39,6 +39,10 @@ public class Manutencao {
 
 	public void setCusto(float custo) {
 		this.custo = custo;
+	}
+	
+	public void setCarro(Carro carro) {
+		this.carro = carro;
 	}
 	
 	public Carro getCarro() {

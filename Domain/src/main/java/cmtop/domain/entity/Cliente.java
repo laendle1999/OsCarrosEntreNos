@@ -1,4 +1,4 @@
-package domain.entity;
+package cmtop.domain.entity;
 
 public class Cliente {
 	private String nome, rg, cpf, endereco, telefone;

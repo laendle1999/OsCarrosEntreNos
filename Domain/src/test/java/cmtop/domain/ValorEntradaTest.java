@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import cmtop.domain.entity.Manutencao;
 import cmtop.domain.entity.ValorEntrada;
 
 public class ValorEntradaTest {

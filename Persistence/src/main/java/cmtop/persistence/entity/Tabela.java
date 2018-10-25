@@ -3,8 +3,6 @@ package cmtop.persistence.entity;
 import java.util.List;
 
 import cmtop.persistence.valueobject.Condicao;
-import cmtop.persistence.valueobject.TipoValor;
-import cmtop.persistence.valueobject.Valor;
 
 public class Tabela {
 
@@ -17,35 +15,9 @@ public class Tabela {
 	public void inserir(Registro registro) {
 		String sql = "INSERT INTO " + getNome() + " ";
 
-		List<String> chaves = registro.getChaves();
+		sql += "(" + registro.getSQLKeys() + ") ";
 
-		sql += "(";
-		for (int i = 0; i < chaves.size(); i++) {
-			sql += chaves.get(i);
-
-			if (i + 1 < chaves.size()) {
-				sql += ", ";
-			}
-		}
-		sql += ") ";
-
-		sql += "VALUES (";
-		for (int i = 0; i < chaves.size(); i++) {
-			Valor valor = registro.get(chaves.get(i));
-
-			if (valor.getTipo() == TipoValor.STRING) {
-				sql += "'";
-			}
-			sql += valor;
-			if (valor.getTipo() == TipoValor.STRING) {
-				sql += "'";
-			}
-
-			if (i + 1 < chaves.size()) {
-				sql += ", ";
-			}
-		}
-		sql += ")";
+		sql += "VALUES (" + registro.getSQLValues() + ")";
 
 		// TODO executar consulta
 		System.out.println(sql);
@@ -53,7 +25,7 @@ public class Tabela {
 
 	public void atualizar(Condicao condicao, Registro registro) {
 		String sql = "UPDATE " + getNome() + " ";
-		sql += "SET " + registro.toSQL() + " ";
+		sql += "SET " + registro.getSQLSET() + " ";
 		sql += "WHERE " + condicao.toSQL();
 
 		// TODO executar consulta

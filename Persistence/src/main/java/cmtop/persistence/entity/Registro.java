@@ -42,7 +42,7 @@ public class Registro {
 		return source.toString();
 	}
 
-	public String toSQL() {
+	public String getSQLSET() {
 		StringBuilder source = new StringBuilder();
 
 		List<String> chaves = new ArrayList<>(map.keySet());
@@ -68,6 +68,44 @@ public class Registro {
 		}
 
 		return source.toString();
+	}
+
+	public String getSQLKeys() {
+		String sql = "";
+
+		List<String> chaves = new ArrayList<>(map.keySet());
+		for (int i = 0; i < chaves.size(); i++) {
+			sql += chaves.get(i);
+
+			if (i + 1 < chaves.size()) {
+				sql += ", ";
+			}
+		}
+
+		return sql;
+	}
+
+	public String getSQLValues() {
+		String sql = "";
+
+		List<String> chaves = new ArrayList<>(map.keySet());
+		for (int i = 0; i < chaves.size(); i++) {
+			Valor valor = this.get(chaves.get(i));
+
+			if (valor.getTipo() == TipoValor.STRING) {
+				sql += "'";
+			}
+			sql += valor;
+			if (valor.getTipo() == TipoValor.STRING) {
+				sql += "'";
+			}
+
+			if (i + 1 < chaves.size()) {
+				sql += ", ";
+			}
+		}
+
+		return sql;
 	}
 
 }

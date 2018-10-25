@@ -16,7 +16,7 @@ public class RegistroTest {
 		registro.set("c", new ValorInt(10));
 		registro.set("d", new ValorString("abc"));
 
-		System.out.println(registro.toSQL());
+		System.out.println(registro.getSQLSET());
 	}
 
 }

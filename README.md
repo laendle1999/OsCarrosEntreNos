@@ -1,6 +1,6 @@
 # OsCarrosEntreNos
 Projeto CMTop (AutoManager) desenvolvido pela X Software.
-Membros da Equipe:  Alex Santos
+Membros da Equipe:  Alex Rafael
                     Eduardo Figueiredo 
                     Felipe Santos
                     Marcelo Laendle 

@@ -19,5 +19,10 @@ public abstract class Valor {
 	public TipoValor getTipo() {
 		return tipoValor;
 	}
+	
+	@Override
+	public String toString() {
+		return getAsString();
+	}
 
 }

@@ -5,7 +5,7 @@ public class ValorString extends Valor {
 	private String valor;
 
 	public ValorString(String valor) {
-		super(TipoValor.FLOAT);
+		super(TipoValor.STRING);
 		this.valor = valor;
 	}
 

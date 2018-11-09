@@ -1,4 +1,4 @@
-package domain.service;
+package cmtop.domain.service;
 
 import cmtop.domain.aggregate.Pagamento;
 import cmtop.domain.entity.Carro;
@@ -36,6 +36,7 @@ public class VendaService {
 	}
 
 	public static void finalizarVenda() {
+		// TODO
 		// VendaRepository vendaRepository = new VendaRepository();
 		// vendaRepository.gravarVenda(vendaEmAndamento);
 

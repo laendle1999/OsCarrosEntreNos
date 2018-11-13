@@ -8,5 +8,5 @@ Membros da Equipe:  Alex Rafael
                     Sérgio Ferreira Batista
 
 Desenvolvimento durante: 2o semestre de 2018
-Objetivo: Concluir projeto para a Disciplina ST062 - Engenharia de Softwate 3, pela Universidade Estadual de Campinas (unicamp)
+Objetivo: Concluir projeto para a Disciplina ST062 - Engenharia de Software 3, pela Universidade Estadual de Campinas (unicamp)
 

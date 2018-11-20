@@ -1,6 +1,6 @@
-package domain.entity;
+package cmtop.domain.entity;
 
-import domain.valueobject.TipoAcesso;
+import cmtop.domain.valueobject.TipoAcesso;
 
 public class Vendedor {
 	private String telefone, nome, rg, cpf, endereco, login, email;

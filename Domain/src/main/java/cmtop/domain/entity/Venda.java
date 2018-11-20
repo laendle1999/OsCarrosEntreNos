@@ -1,6 +1,6 @@
-package domain.entity;
+package cmtop.domain.entity;
 
-import domain.aggregate.Pagamento;
+import cmtop.domain.aggregate.Pagamento;
 
 public class Venda {
 

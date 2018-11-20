@@ -1,43 +1,19 @@
 package cmtop.application;
 
-import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
-public class formularioEntrada extends Application {
+public class FormularioEntrada extends TelaBase {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage tela) throws Exception {
-		// TODO Auto-generated method stub
-		Group raiz = new Group();
-		
-		HBox linha = new HBox();
-		linha.setPrefSize( Double.MAX_VALUE, Double.MAX_VALUE );
-		linha.setStyle("-fx-background-color: #fefefe;");
-		
-		HBox faixa = new HBox();
-		VBox.setVgrow(faixa, Priority.ALWAYS);
-		faixa.setStyle("-fx-background-color: #333333; -fx-pref-width: 40px; -fx-pref-height: 100%; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
-		linha.getChildren().add(faixa);
+	public FormularioEntrada() {
+		super("AutoManager - Formulário de entrada", 600, 500);
 		
 		VBox conteudo = new VBox();
 		
@@ -61,9 +37,6 @@ public class formularioEntrada extends Application {
 		
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER_LEFT);
-		//menu.add(secao, 2, 0);
-		//vendedor.setTranslateX(conteudo.getWidth()/2);
-		conteudo.setTranslateY(-100);
 		
 		TextField[] campos = {new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField()};
 		Text[] labels = {new Text("Campo 1"), new Text("Campo 2"), new Text("Campo 3"), new Text("Campo 4"), new Text("Campo 5"), new Text("Campo 6")};
@@ -102,27 +75,7 @@ public class formularioEntrada extends Application {
 		btn.setTranslateY(30);
 		
 		
-		linha.getChildren().add(conteudo);
-		linha.setAlignment(Pos.CENTER);
-		faixa.setTranslateX(-142);
-		raiz.getChildren().add(linha);
-		
-		BorderPane borderPane = new BorderPane();
-		
-		Scene cena = new Scene(borderPane);
-		
-		cena.setFill(Color.MEDIUMSEAGREEN);
-		
-		borderPane.setCenter(linha);
-		
-		tela.setTitle("AutoManager");
-		tela.setScene(cena);
-		tela.centerOnScreen();
-		tela.show();
-		
-		tela.setWidth(700);
-		tela.setHeight(600);
-		
+		definirConteudo(conteudo);
 	}
 		
 

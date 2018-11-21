@@ -1,69 +1,49 @@
 package cmtop.persistence.entity;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Banco {
-	private static final String DbURL = "jdbc:mysql://localhost/auto_manager";
-	private static final String user = "root";
-	private static final String password = "root";
-	
-	protected static Connection conn;
-	
-	public Connection getConnection() {
-				
-		if(Banco.conn == null) {
+	private static final String DEFAULT_DATABASE_NAME = "auto_manager";
+
+	private String url = "jdbc:mysql://localhost/" + DEFAULT_DATABASE_NAME;
+	private String user = "root";
+	private String password = "";
+
+	private Connection connection;
+
+	public Banco(String host, String database, String user, String password) {
+		this.url = "jdbc:mysql://" + host + "/" + database;
+		this.user = user;
+		this.password = password;
+	}
+
+	public Banco(String host) {
+		this.url = "jdbc:mysql://" + host + "/" + DEFAULT_DATABASE_NAME;
+	}
+
+	public Connection getConnection() throws IOException {
+		if (connection == null) {
 			try {
-				Banco.conn = DriverManager.getConnection(Banco.DbURL, Banco.user, Banco.password);
-			}catch(Exception e) {
-				System.out.println("ERRO: "+e.getMessage());
+				connection = DriverManager.getConnection(url, user, password);
+			} catch (SQLException e) {
+				throw new IOException(e);
 			}
 		}
-		
-		return Banco.conn;
+
+		return connection;
 	}
-	
+
 	public void closeConnection() {
-		if(Banco.conn != null) {
-			Banco.conn = null;
+		if (connection != null) {
+			connection = null;
 		}
 	}
-	
-	public boolean verifyConnection() {
-		this.getConnection();
-		
-		if(this.conn != null) {
-			System.out.println("Connection Work!!!\n");
-			return true;
-		}else {
-			System.out.println("Connection Failed!!!\n");
-			return false;
-		}
+
+	public Tabela getTabela(String nome) {
+		return new Tabela(nome, this);
 	}
-	
-	public ResultSet selectAllCars() throws SQLException {
-		Statement stm = null;
-		ResultSet rs = null;
-		
-		if(this.verifyConnection()) {
-			String sql = "Select * from carro Limit 3";
-			stm = this.conn.createStatement();
-			
-			if(stm.execute(sql)) {
-				rs = stm.getResultSet();
-				
-				
-			}else {
-				System.out.println("Query result is zero!");
-			}
-			
-		}else {
-			
-		}
-		
-		return rs;
-	}
+
 }

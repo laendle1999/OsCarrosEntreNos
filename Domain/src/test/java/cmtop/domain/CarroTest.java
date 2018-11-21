@@ -13,7 +13,7 @@ public class CarroTest {
 
 	@Before
 	public void criarCarro() {
-		this.carro = new Carro(null, null, null, null, null, null, 0, 0, 0, 0, null);
+		this.carro = new Carro(null, null, null, null, null, null, 0, 0, 0, null, null);
 	}
 
 	@Test

@@ -1,30 +1,24 @@
 package cmtop.domain.entity;
 
-import cmtop.domain.aggregate.Pagamento;
-
 public class Venda {
 
 	private String numeroVenda;
 
-	private long dataVenda;
+	private String dataVenda;
 
-	private Carro carro;
+	private int carro;
 
-	private NotaFiscal notaFiscal;
+	private int cliente;
 
-	private Pagamento pagamento;
+	private int vendedor;
 
-	private Cliente cliente;
+	private int id;
 
-	private Vendedor vendedor;
-
-	public Venda(String numeroVenda, long dataVenda, Carro carro, NotaFiscal notaFiscal, Pagamento pagamento,
-			Cliente cliente, Vendedor vendedor) {
+	public Venda(int id, String numeroVenda, String dataVenda, int cliente, int vendedor) {
+		this.id = id;
 		this.numeroVenda = numeroVenda;
+		this.carro = -1;
 		this.dataVenda = dataVenda;
-		this.carro = carro;
-		this.notaFiscal = notaFiscal;
-		this.pagamento = pagamento;
 		this.cliente = cliente;
 		this.vendedor = vendedor;
 	}
@@ -37,52 +31,40 @@ public class Venda {
 		this.numeroVenda = numeroVenda;
 	}
 
-	public long getDataVenda() {
+	public String getDataVenda() {
 		return dataVenda;
 	}
 
-	public void setDataVenda(long dataVenda) {
+	public void setDataVenda(String dataVenda) {
 		this.dataVenda = dataVenda;
 	}
 
-	public Carro getCarro() {
+	public int getCarro() {
 		return carro;
 	}
 
-	public void setCarro(Carro carro) {
+	public void setCarro(int carro) {
 		this.carro = carro;
 	}
 
-	public NotaFiscal getNotaFiscal() {
-		return notaFiscal;
-	}
-
-	public void setNotaFiscal(NotaFiscal notaFiscal) {
-		this.notaFiscal = notaFiscal;
-	}
-
-	public Pagamento getPagamento() {
-		return pagamento;
-	}
-
-	public void setPagamento(Pagamento pagamento) {
-		this.pagamento = pagamento;
-	}
-
-	public Cliente getCliente() {
+	public int getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(Cliente cliente) {
+	public void setCliente(int cliente) {
 		this.cliente = cliente;
 	}
 
-	public Vendedor getVendedor() {
+	public int getVendedor() {
 		return vendedor;
 	}
 
-	public void setVendedor(Vendedor vendedor) {
+	public void setVendedor(int vendedor) {
 		this.vendedor = vendedor;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }

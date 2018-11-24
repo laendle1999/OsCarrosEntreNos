@@ -20,6 +20,10 @@ public class Registro {
 		return map.get(chave);
 	}
 
+	public boolean has(String chave) {
+		return map.containsKey(chave);
+	}
+
 	public List<String> getChaves() {
 		return new ArrayList<>(map.keySet());
 	}

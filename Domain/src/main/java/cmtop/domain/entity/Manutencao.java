@@ -4,13 +4,16 @@ public class Manutencao {
 
 	private String descricao;
 
-	private long data;
+	private String data;
 
 	private float custo;
 
-	private Carro carro;
-	
-	public Manutencao(String descricao, long data, float custo, Carro carro) {
+	private int carro;
+
+	private int id;
+
+	public Manutencao(int id, String descricao, String data, float custo, int carro) {
+		this.id = id;
 		this.descricao = descricao;
 		this.data = data;
 		this.custo = custo;
@@ -25,11 +28,11 @@ public class Manutencao {
 		this.descricao = descricao;
 	}
 
-	public long getData() {
+	public String getData() {
 		return data;
 	}
 
-	public void setData(long data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 
@@ -40,13 +43,17 @@ public class Manutencao {
 	public void setCusto(float custo) {
 		this.custo = custo;
 	}
-	
-	public void setCarro(Carro carro) {
+
+	public void setCarro(int carro) {
 		this.carro = carro;
 	}
-	
-	public Carro getCarro() {
+
+	public int getCarro() {
 		return this.carro;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }

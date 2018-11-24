@@ -16,8 +16,9 @@ public class Carro {
 
 	private int id;
 
-	public Carro(String numero, String placa, String renavan, String modelo, String marca, String cor, int ano,
+	public Carro(int id, String numero, String placa, String renavan, String modelo, String marca, String cor, int ano,
 			float valorVenda, float custo, String dataEntrada, StatusCarro statusCarro) {
+		this.id = id;
 		this.numero = numero;
 		this.placa = placa;
 		this.renavan = renavan;
@@ -187,10 +188,6 @@ public class Carro {
 		if (Float.floatToIntBits(valorVenda) != Float.floatToIntBits(other.valorVenda))
 			return false;
 		return true;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getId() {

@@ -15,7 +15,7 @@ public class MenuPrincipal extends TelaBase {
 
 	public MenuPrincipal() {
 		super("AutoManager - Menu principal", 700, 600);
-		
+
 		VBox conteudo = new VBox();
 
 		GridPane menu = new GridPane();

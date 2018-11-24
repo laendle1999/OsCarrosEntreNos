@@ -104,14 +104,14 @@ CREATE TABLE valor_entrada (
 
 CREATE TABLE troca_carro (
     id_troca INT AUTO_INCREMENT PRIMARY KEY,
-    id_venda INT NULL NOT NULL,
-    id_carro INT NOT NULL,
-    data_entrada DATETIME NOT NULL,
+    placa VARCHAR(255) NOT NULL,
+    modelo VARCHAR(255) NOT NULL,
+    marca VARCHAR(255) NOT NULL,
+    cor VARCHAR(255) NOT NULL,
     local VARCHAR(255),
-
-    FOREIGN KEY (id_venda) REFERENCES venda (id_venda) ON DELETE CASCADE,
-    FOREIGN KEY (id_carro) REFERENCES carro (id_carro) ON DELETE CASCADE
-
+    ano INT NOT NULL,
+    valor_carro DECIMAL NOT NULL,
+    data_entrada DATETIME NOT NULL
 );
 
 CREATE TABLE nota_fiscal (

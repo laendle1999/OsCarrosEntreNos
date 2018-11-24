@@ -58,17 +58,8 @@ public class CarroRepository {
 		registro.set("status", new ValorInt(carro.getStatusCarro().asInt()));
 		return registro;
 	}
-
-	public void cadastrarCarro(Carro carro) throws IOException {
-		Registro registro = converterCarroEmRegistro(carro);
-		tabela.inserir(registro);
-	}
-
-	public List<Carro> obterCarrosPorPlaca(String valor, int limite) throws IOException {
-		Condicao condicao = new Condicao();
-		condicao.add("placa", TipoCondicao.SIMILAR, new ValorString(valor));
-
-		List<Registro> registros = tabela.buscar(condicao, limite);
+	
+	private List<Carro> converterRegistrosEmCarros(List<Registro> registros) {
 		List<Carro> resultado = new ArrayList<>();
 
 		for (Registro registro : registros) {
@@ -78,10 +69,44 @@ public class CarroRepository {
 		return resultado;
 	}
 
+	public void cadastrarCarro(Carro carro) throws IOException {
+		Registro registro = converterCarroEmRegistro(carro);
+		tabela.inserir(registro);
+	}
+
+	public List<Carro> obterCarrosPorPlaca(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("placa", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+	}
+
+	public List<Carro> obterCarrosPorRenavan(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("renavan", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+	}
+
+	public List<Carro> obterCarrosPorNumero(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("numero", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+	}
+
+	public List<Carro> obterCarrosPorModelo(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("modelo", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+	}
+
+	public List<Carro> obterCarrosPorCor(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("cor", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+	}
+
 	public Carro obterCarroPorId(int id) throws IOException {
 		Condicao condicao = new Condicao();
 		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(id));
-
 		List<Registro> registros = tabela.buscar(condicao, 1);
 		return converterRegistroEmCarro(registros.get(0));
 	}
@@ -100,14 +125,7 @@ public class CarroRepository {
 		Condicao condicao = new Condicao();
 		condicao.add("data_entrada", TipoCondicao.MAIOR, new ValorString(data));
 
-		List<Registro> registros = tabela.buscar(condicao, limiteResultados);
-		List<Carro> resultado = new ArrayList<>();
-
-		for (Registro registro : registros) {
-			Carro carro = converterRegistroEmCarro(registro);
-			resultado.add(carro);
-		}
-		return resultado;
+		return converterRegistrosEmCarros(tabela.buscar(condicao, limiteResultados));
 	}
 
 }

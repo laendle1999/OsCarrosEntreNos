@@ -1,17 +1,23 @@
 package cmtop.domain.entity;
 
 public class Cliente {
-	private String nome, rg, cpf, endereco, telefone;
+	private int id;
 
-	private long dataNascimento;
+	private String nome, rg, cpf, endereco, telefone1;
 
-	public Cliente(String nome, String rg, String cpf, String endereco, String telefone, long dataNascimento) {
-		super();
+	private String telefone2;
+
+	private String dataNascimento;
+
+	public Cliente(int id, String nome, String rg, String cpf, String endereco, String telefone1, String telefone2,
+			String dataNascimento) {
+		this.id = id;
 		this.nome = nome;
 		this.rg = rg;
 		this.cpf = cpf;
 		this.endereco = endereco;
-		this.telefone = telefone;
+		this.telefone1 = telefone1;
+		this.telefone2 = telefone2;
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -47,20 +53,31 @@ public class Cliente {
 		this.endereco = endereco;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public String getTelefone1() {
+		return telefone1;
 	}
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+	public void setTelefone1(String telefone1) {
+		this.telefone1 = telefone1;
 	}
 
-	public long getDataNascimento() {
+	public String getTelefone2() {
+		return telefone2;
+	}
+
+	public void setTelefone2(String telefone2) {
+		this.telefone2 = telefone2;
+	}
+
+	public String getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(long dataNascimento) {
+	public void setDataNascimento(String dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
+	public int getId() {
+		return id;
+	}
 }

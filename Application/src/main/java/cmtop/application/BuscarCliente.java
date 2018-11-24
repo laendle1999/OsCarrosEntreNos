@@ -1,7 +1,9 @@
 package cmtop.application;
 
 import cmtop.application.model.CarroModel;
+import cmtop.application.model.ClienteModel;
 import cmtop.domain.entity.Carro;
+import cmtop.domain.entity.Cliente;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -16,11 +18,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class Busca extends TelaBase {
+public class BuscarCliente extends TelaBase {
 
-	private ObservableList<CarroModel> listaTabela = FXCollections.observableArrayList();
+	private ObservableList<ClienteModel> listaTabela = FXCollections.observableArrayList();
 
-	public Busca() {
+	public BuscarCliente() {
 		super("AutoManager", 700, 600);
 
 		VBox conteudo = new VBox();
@@ -57,28 +59,46 @@ public class Busca extends TelaBase {
 		adicionarModelosExemplo();
 	}
 
-	private TableView<CarroModel> construirTabela() {
-		TableView<CarroModel> tabela = new TableView<>(listaTabela);
+	private TableView<ClienteModel> construirTabela() {
+		TableView<ClienteModel> tabela = new TableView<>(listaTabela);
 
-		TableColumn<CarroModel, String> coluna1 = new TableColumn<>("Marca do carro");
+		TableColumn<ClienteModel, String> coluna1 = new TableColumn<>("Nome");
 		coluna1.setCellValueFactory(celula -> {
-			return celula.getValue().getMarca();
+			return celula.getValue().getNome();
 		});
 
-		TableColumn<CarroModel, String> coluna2 = new TableColumn<>("Cor do carro");
+		TableColumn<ClienteModel, String> coluna2 = new TableColumn<>("CPF");
 		coluna2.setCellValueFactory(celula -> {
-			return celula.getValue().getCor();
+			return celula.getValue().getCpf();
 		});
+		TableColumn<ClienteModel, String> coluna3 = new TableColumn<>("RG");
+		coluna3.setCellValueFactory(celula -> {
+			return celula.getValue().getRg();
+		});
+
+		TableColumn<ClienteModel, String> coluna4 = new TableColumn<>("Endereco");
+		coluna4.setCellValueFactory(celula -> {
+			return celula.getValue().getEndereco();
+		});
+		TableColumn<ClienteModel, String> coluna5 = new TableColumn<>("Telefone");
+		coluna5.setCellValueFactory(celula -> {
+			return celula.getValue().getTelefone1();
+		});
+
+		
 
 		tabela.getColumns().add(coluna1);
 		tabela.getColumns().add(coluna2);
+		tabela.getColumns().add(coluna3);
+		tabela.getColumns().add(coluna4);
+		tabela.getColumns().add(coluna5);
 
 		return tabela;
 	}
 
 	private void adicionarModelosExemplo() {
-		listaTabela.add(new CarroModel(new Carro(-1, "", "", "", "", "Ford", "Branco", 0, 0, 0, "", null)));
-		listaTabela.add(new CarroModel(new Carro(-1, "", "", "", "", "Fiat", "Roxo", 0, 0, 0, "", null)));
+		listaTabela.add(new ClienteModel(new Cliente(-1, "Marcao", "12345678", "32165498711", "ads", "Ford", "Branco", "")));
+		listaTabela.add(new ClienteModel(new Cliente(-1, "Josue", "987654321", "91827364533", "asd", "Fiat", "Roxo", "")));
 	}
 
 }

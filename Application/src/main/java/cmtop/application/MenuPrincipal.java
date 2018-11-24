@@ -36,8 +36,8 @@ public class MenuPrincipal extends TelaBase {
 		conteudo.setAlignment(Pos.CENTER);
 		menu.add(vendedor, 2, 0);
 
-		Button[] botoes = { new Button("FormEntrada"), new Button("Funcao 2"), new Button("Funcao 3"),
-				new Button("Funcao 4"), new Button("Funcao 5"), new Button("Funcao 6") };
+		Button[] botoes = { new Button("Nova Venda"), new Button("Clientes"), new Button("Tabela FIPE"),
+				new Button("Buscar Venda"), new Button("Gerencia "), new Button("Funcao 6") };
 
 		for (int x = 0; x < 6; x++) {
 			botoes[x].setStyle("    -fx-background-color: \r\n" + "        rgba(0,0,0,0.08),\r\n"
@@ -53,7 +53,7 @@ public class MenuPrincipal extends TelaBase {
 		menu.add(botoes[2], 2, 1);
 		menu.add(botoes[3], 0, 2);
 		menu.add(botoes[4], 1, 2);
-		menu.add(botoes[5], 2, 2);
+		//menu.add(botoes[5], 2, 2);
 
 		botoes[0].setOnMouseClicked(new EventHandler<Event>() {
 

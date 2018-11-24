@@ -21,7 +21,7 @@ public class TelaBase extends Stage {
 		linha.setPrefSize( Double.MAX_VALUE, Double.MAX_VALUE );
 		linha.setStyle("-fx-background-color: #fefefe;");
 		
-		HBox faixa = new HBox();
+		HBox faixa = new HBox(0);
 		VBox.setVgrow(faixa, Priority.ALWAYS);
 		faixa.setStyle("-fx-background-color: #333333; -fx-pref-width: 40px; -fx-pref-height: 100%; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
 		linha.getChildren().add(faixa);

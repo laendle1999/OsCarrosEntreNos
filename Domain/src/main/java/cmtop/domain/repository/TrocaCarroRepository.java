@@ -43,6 +43,7 @@ public class TrocaCarroRepository {
 	private Registro converterTrocaCarroEmRegistro(TrocaCarro trocaCarro) {
 		Registro registro = new Registro();
 		registro.set("placa", new ValorString(trocaCarro.getPlaca()));
+		registro.set("modelo", new ValorString(trocaCarro.getModelo()));
 		registro.set("marca", new ValorString(trocaCarro.getMarca()));
 		registro.set("cor", new ValorString(trocaCarro.getCor()));
 		registro.set("local", new ValorString(trocaCarro.getLocal()));

@@ -53,18 +53,18 @@ public class ClienteRepository {
 		return registro;
 	}
 
-	public List<Cliente> consultarClientePorRg(String rg, int limite) throws IOException {
+	public List<Cliente> consultarClientePorRg(String valor, int limite) throws IOException {
 		Condicao condicao = new Condicao();
-		condicao.add("rg", TipoCondicao.SIMILAR, new ValorString(rg));
+		condicao.add("rg", TipoCondicao.SIMILAR, new ValorString(valor));
 
 		List<Registro> registros = tabela.buscar(condicao, limite);
-		List<Cliente> clientes = new ArrayList<>();
+		List<Cliente> resultado = new ArrayList<>();
 
 		for (Registro registro : registros) {
 			Cliente cliente = converterRegistroEmCliente(registro);
-			clientes.add(cliente);
+			resultado.add(cliente);
 		}
-		return clientes;
+		return resultado;
 	}
 
 	public void cadastrarCliente(Cliente cliente) throws IOException {

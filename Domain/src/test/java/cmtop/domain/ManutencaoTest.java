@@ -47,10 +47,10 @@ public class ManutencaoTest {
 
 		Carro carro, carro2;
 
-		carro = new Carro("Numero", "EWI0392", "6596416", "Honda", "Honda", "Amarelo", 2012, 10000, 1000, "10-10-10",
-				statusCarro);
-		carro2 = new Carro("Numero", "EWI0392", "6596416", "Honda", "Honda", "Amarelo", 2012, 10000, 1000, "10-10-10",
-				statusCarro);
+		carro = new Carro(-1, "Numero", "EWI0392", "6596416", "Honda", "Honda", "Amarelo", 2012, 10000, 1000,
+				"10-10-10", statusCarro);
+		carro2 = new Carro(-1, "Numero", "EWI0392", "6596416", "Honda", "Honda", "Amarelo", 2012, 10000, 1000,
+				"10-10-10", statusCarro);
 
 		manutencao.setCarro(carro);
 		Assert.assertEquals(carro2, manutencao.getCarro());

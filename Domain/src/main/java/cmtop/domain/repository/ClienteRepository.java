@@ -67,6 +67,14 @@ public class ClienteRepository {
 		return resultado;
 	}
 
+	public Cliente obterClientePorId(int id) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("id_cliente", TipoCondicao.IGUAL, new ValorInt(id));
+
+		List<Registro> registros = tabela.buscar(condicao, 1);
+		return converterRegistroEmCliente(registros.get(0));
+	}
+
 	public void cadastrarCliente(Cliente cliente) throws IOException {
 		Registro registro = converterClienteEmRegistro(cliente);
 		tabela.inserir(registro);

@@ -25,9 +25,10 @@ public class CarroRepository {
 	}
 
 	private Carro converterRegistroEmCarro(Registro registro) {
-		if (registro.has("id_") && registro.has("id_venda") && registro.has("id_carro") && registro.has("data_entrada")
-				&& registro.has("local")) {
-
+		if (registro.has("id_carro") && registro.has("renavan") && registro.has("numero") && registro.has("placa")
+				&& registro.has("modelo") && registro.has("ano") && registro.has("marca") && registro.has("cor")
+				&& registro.has("valor_carro") && registro.has("custo") && registro.has("data_entrada")
+				&& registro.has("status")) {
 			int id = registro.get("id_carro").getAsInt();
 			String renavan = registro.get("renavan").getAsString();
 			String numero = registro.get("numero").getAsString();
@@ -67,19 +68,7 @@ public class CarroRepository {
 	}
 
 	public void cadastrarCarro(Carro carro) throws IOException {
-		Registro registro = new Registro();
-		registro.set("renavan", new ValorString(carro.getRenavan()));
-		registro.set("numero", new ValorString(carro.getNumero()));
-		registro.set("placa", new ValorString(carro.getPlaca()));
-		registro.set("modelo", new ValorString(carro.getModelo()));
-		registro.set("ano", new ValorInt(carro.getAno()));
-		registro.set("marca", new ValorString(carro.getMarca()));
-		registro.set("cor", new ValorString(carro.getCor()));
-		registro.set("valor_carro", new ValorFloat(carro.getValorVenda()));
-		registro.set("custo", new ValorFloat(carro.getCusto()));
-		registro.set("data_entrada", new ValorString(carro.getDataEntrada()));
-		registro.set("status", new ValorInt(carro.getStatusCarro().asInt()));
-
+		Registro registro = converterCarroEmRegistro(carro);
 		tabela.inserir(registro);
 	}
 
@@ -95,6 +84,14 @@ public class CarroRepository {
 			resultado.add(carro);
 		}
 		return resultado;
+	}
+
+	public Carro obterCarroPorId(int id) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(id));
+
+		List<Registro> registros = tabela.buscar(condicao, 1);
+		return converterRegistroEmCarro(registros.get(0));
 	}
 
 	public void definirCarroVendido(Carro carro) throws IOException {

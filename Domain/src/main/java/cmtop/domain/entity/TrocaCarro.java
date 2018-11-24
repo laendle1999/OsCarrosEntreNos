@@ -12,8 +12,10 @@ public class TrocaCarro {
 
 	private int id;
 
+	private int idVenda;
+
 	public TrocaCarro(int id, String placa, String modelo, String marca, String cor, String local, int ano,
-			float valorCarro, String dataEntrada) {
+			float valorCarro, String dataEntrada, int idVenda) {
 		this.id = id;
 		this.placa = placa;
 		this.modelo = modelo;
@@ -23,6 +25,7 @@ public class TrocaCarro {
 		this.ano = ano;
 		this.valorCarro = valorCarro;
 		this.dataEntrada = dataEntrada;
+		this.idVenda = idVenda;
 	}
 
 	public String getPlaca() {
@@ -91,6 +94,14 @@ public class TrocaCarro {
 
 	public int getId() {
 		return id;
+	}
+
+	public int getIdVenda() {
+		return idVenda;
+	}
+
+	public void setIdVenda(int idVenda) {
+		this.idVenda = idVenda;
 	}
 
 }

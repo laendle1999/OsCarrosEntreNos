@@ -22,7 +22,7 @@ public class TrocaCarroRepository {
 	@SuppressWarnings("unused")
 	private TrocaCarro converterRegistroEmTrocaCarro(Registro registro) {
 		if (registro.has("id_troca") && registro.has("id_venda") && registro.has("id_carro")
-				&& registro.has("data_entrada") && registro.has("local")) {
+				&& registro.has("data_entrada") && registro.has("local") && registro.has("id_venda")) {
 			int id = registro.get("id_troca").getAsInt();
 
 			String placa = registro.get("placa").getAsString();
@@ -33,8 +33,9 @@ public class TrocaCarroRepository {
 			int ano = registro.get("ano").getAsInt();
 			float valor_carro = registro.get("valor_carro").getAsFloat();
 			String data_entrada = registro.get("data_entrada").getAsString();
+			int id_venda = registro.get("id_venda").getAsInt();
 
-			return new TrocaCarro(id, placa, modelo, marca, cor, local, ano, valor_carro, data_entrada);
+			return new TrocaCarro(id, placa, modelo, marca, cor, local, ano, valor_carro, data_entrada, id_venda);
 		} else {
 			throw new InvalidParameterException();
 		}
@@ -50,6 +51,7 @@ public class TrocaCarroRepository {
 		registro.set("ano", new ValorInt(trocaCarro.getAno()));
 		registro.set("valor_carro", new ValorFloat(trocaCarro.getValorCarro()));
 		registro.set("data_entrada", new ValorString(trocaCarro.getDataEntrada()));
+		registro.set("id_venda", new ValorInt(trocaCarro.getIdVenda()));
 		return registro;
 	}
 

@@ -73,9 +73,9 @@ CREATE TABLE venda (
     id_venda INT AUTO_INCREMENT PRIMARY KEY,
     id_cliente INT NOT NULL,
     id_carro INT NOT NULL,
-    renavan VARCHAR(255) NOT NULL UNIQUE,
     id_funcionario INT NOT NULL,
     dt_venda DATETIME NOT NULL,
+    num_venda VARCHAR(255) NOT NULL,
 
     FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente) ON DELETE CASCADE,
     FOREIGN KEY (id_carro) REFERENCES carro (id_carro) ON DELETE CASCADE,
@@ -111,7 +111,11 @@ CREATE TABLE troca_carro (
     local VARCHAR(255),
     ano INT NOT NULL,
     valor_carro DECIMAL NOT NULL,
-    data_entrada DATETIME NOT NULL
+    data_entrada DATETIME NOT NULL,
+    
+    id_venda INT NOT NULL,
+
+    FOREIGN KEY (id_venda) REFERENCES venda (id_venda) ON DELETE CASCADE
 );
 
 CREATE TABLE nota_fiscal (

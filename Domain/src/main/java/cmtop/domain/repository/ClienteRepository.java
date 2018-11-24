@@ -1,7 +1,6 @@
 package cmtop.domain.repository;
 
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,22 +22,17 @@ public class ClienteRepository {
 	}
 
 	private Cliente converterRegistroEmCliente(Registro registro) {
-		if (registro.has("id_cliente") && registro.has("nome") && registro.has("rg") && registro.has("cpf")
-				&& registro.has("endereco") && registro.has("telefone1") && registro.has("dt_nasc")) {
-			int id = registro.get("id_cliente").getAsInt();
+		int id = registro.get("id_cliente").getAsInt();
 
-			String nome = registro.get("nome").getAsString();
-			String rg = registro.get("rg").getAsString();
-			String cpf = registro.get("cpf").getAsString();
-			String endereco = registro.get("endereco").getAsString();
-			String telefone1 = registro.get("telefone1").getAsString();
-			String telefone2 = registro.get("telefone1").getAsString();
-			String dataNascimento = registro.get("dt_nasc").getAsString();
+		String nome = registro.get("nome").getAsString();
+		String rg = registro.get("rg").getAsString();
+		String cpf = registro.get("cpf").getAsString();
+		String endereco = registro.get("endereco").getAsString();
+		String telefone1 = registro.get("telefone1").getAsString();
+		String telefone2 = registro.get("telefone1").getAsString();
+		String dataNascimento = registro.get("dt_nasc").getAsString();
 
-			return new Cliente(id, nome, rg, cpf, endereco, telefone1, telefone2, dataNascimento);
-		} else {
-			throw new InvalidParameterException();
-		}
+		return new Cliente(id, nome, rg, cpf, endereco, telefone1, telefone2, dataNascimento);
 	}
 
 	private Registro converterClienteEmRegistro(Cliente cliente) {

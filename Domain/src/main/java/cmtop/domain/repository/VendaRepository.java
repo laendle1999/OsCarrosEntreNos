@@ -1,7 +1,6 @@
 package cmtop.domain.repository;
 
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,20 +26,14 @@ public class VendaRepository {
 	}
 
 	private Venda converterRegistroEmVenda(Registro registro) {
-		if (registro.has("id_") && registro.has("id_venda") && registro.has("id_carro") && registro.has("data_entrada")
-				&& registro.has("local")) {
+		int id = registro.get("id_venda").getAsInt();
+		int id_cliente = registro.get("id_cliente").getAsInt();
+		int id_carro = registro.get("id_carro").getAsInt();
+		int id_funcionario = registro.get("id_funcionario").getAsInt();
+		String dt_venda = registro.get("dt_venda").getAsString();
+		String num_venda = registro.get("num_venda").getAsString();
 
-			int id = registro.get("id_venda").getAsInt();
-			int id_cliente = registro.get("id_cliente").getAsInt();
-			int id_carro = registro.get("id_carro").getAsInt();
-			int id_funcionario = registro.get("id_funcionario").getAsInt();
-			String dt_venda = registro.get("dt_venda").getAsString();
-			String num_venda = registro.get("num_venda").getAsString();
-
-			return new Venda(id, num_venda, dt_venda, id_carro, id_cliente, id_funcionario);
-		} else {
-			throw new InvalidParameterException();
-		}
+		return new Venda(id, num_venda, dt_venda, id_carro, id_cliente, id_funcionario);
 	}
 
 	private Registro converterVendaEmRegistro(Venda venda) {

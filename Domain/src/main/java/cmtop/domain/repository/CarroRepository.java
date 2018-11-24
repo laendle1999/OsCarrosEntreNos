@@ -1,7 +1,6 @@
 package cmtop.domain.repository;
 
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,30 +24,23 @@ public class CarroRepository {
 	}
 
 	private Carro converterRegistroEmCarro(Registro registro) {
-		if (registro.has("id_carro") && registro.has("renavan") && registro.has("numero") && registro.has("placa")
-				&& registro.has("modelo") && registro.has("ano") && registro.has("marca") && registro.has("cor")
-				&& registro.has("valor_carro") && registro.has("custo") && registro.has("data_entrada")
-				&& registro.has("status")) {
-			int id = registro.get("id_carro").getAsInt();
-			String renavan = registro.get("renavan").getAsString();
-			String numero = registro.get("numero").getAsString();
-			String placa = registro.get("placa").getAsString();
-			String modelo = registro.get("modelo").getAsString();
-			int ano = registro.get("ano").getAsInt();
-			String marca = registro.get("marca").getAsString();
-			String cor = registro.get("cor").getAsString();
-			float valor_carro = registro.get("valor_carro").getAsFloat();
-			float custo = registro.get("custo").getAsFloat();
-			String data_entrada = registro.get("data_entrada").getAsString();
-			int status = registro.get("status").getAsInt();
+		int id = registro.get("id_carro").getAsInt();
+		String renavan = registro.get("renavan").getAsString();
+		String numero = registro.get("numero").getAsString();
+		String placa = registro.get("placa").getAsString();
+		String modelo = registro.get("modelo").getAsString();
+		int ano = registro.get("ano").getAsInt();
+		String marca = registro.get("marca").getAsString();
+		String cor = registro.get("cor").getAsString();
+		float valor_carro = registro.get("valor_carro").getAsFloat();
+		float custo = registro.get("custo").getAsFloat();
+		String data_entrada = registro.get("data_entrada").getAsString();
+		int status = registro.get("status").getAsInt();
 
-			StatusCarro statusCarro = StatusCarro.fromInt(status);
+		StatusCarro statusCarro = StatusCarro.fromInt(status);
 
-			return new Carro(id, numero, placa, renavan, modelo, marca, cor, ano, valor_carro, custo, data_entrada,
-					statusCarro);
-		} else {
-			throw new InvalidParameterException();
-		}
+		return new Carro(id, numero, placa, renavan, modelo, marca, cor, ano, valor_carro, custo, data_entrada,
+				statusCarro);
 	}
 
 	private Registro converterCarroEmRegistro(Carro carro) {

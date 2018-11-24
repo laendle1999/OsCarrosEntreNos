@@ -18,13 +18,18 @@ public class CompraRepository {
 		tabela = banco.getTabela("compra");
 	}
 
-	public void cadastrarCompra(Compra compra) throws IOException {
+	private Registro converterCompraEmRegistro(Compra compra) {
 		Registro registro = new Registro();
 		registro.set("id_carro", new ValorInt(compra.getCarro().getId()));
 		registro.set("dt_compra", new ValorString(compra.getData()));
 		registro.set("local_compra", new ValorString(compra.getLocalCompra()));
 		registro.set("custo", new ValorFloat(compra.getCusto()));
 		registro.set("nome_do_fornecedor", new ValorString(compra.getNomeFornecedor()));
+		return registro;
+	}
+
+	public void cadastrarCompra(Compra compra) throws IOException {
+		Registro registro = converterCompraEmRegistro(compra);
 
 		tabela.inserir(registro);
 	}

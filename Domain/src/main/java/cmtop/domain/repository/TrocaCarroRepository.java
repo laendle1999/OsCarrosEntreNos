@@ -1,7 +1,6 @@
 package cmtop.domain.repository;
 
 import java.io.IOException;
-import java.security.InvalidParameterException;
 
 import cmtop.domain.entity.TrocaCarro;
 import cmtop.persistence.entity.Banco;
@@ -21,24 +20,19 @@ public class TrocaCarroRepository {
 
 	@SuppressWarnings("unused")
 	private TrocaCarro converterRegistroEmTrocaCarro(Registro registro) {
-		if (registro.has("id_troca") && registro.has("id_venda") && registro.has("id_carro")
-				&& registro.has("data_entrada") && registro.has("local") && registro.has("id_venda")) {
-			int id = registro.get("id_troca").getAsInt();
+		int id = registro.get("id_troca").getAsInt();
 
-			String placa = registro.get("placa").getAsString();
-			String modelo = registro.get("modelo").getAsString();
-			String marca = registro.get("marca").getAsString();
-			String cor = registro.get("cor").getAsString();
-			String local = registro.get("local").getAsString();
-			int ano = registro.get("ano").getAsInt();
-			float valor_carro = registro.get("valor_carro").getAsFloat();
-			String data_entrada = registro.get("data_entrada").getAsString();
-			int id_venda = registro.get("id_venda").getAsInt();
+		String placa = registro.get("placa").getAsString();
+		String modelo = registro.get("modelo").getAsString();
+		String marca = registro.get("marca").getAsString();
+		String cor = registro.get("cor").getAsString();
+		String local = registro.get("local").getAsString();
+		int ano = registro.get("ano").getAsInt();
+		float valor_carro = registro.get("valor_carro").getAsFloat();
+		String data_entrada = registro.get("data_entrada").getAsString();
+		int id_venda = registro.get("id_venda").getAsInt();
 
-			return new TrocaCarro(id, placa, modelo, marca, cor, local, ano, valor_carro, data_entrada, id_venda);
-		} else {
-			throw new InvalidParameterException();
-		}
+		return new TrocaCarro(id, placa, modelo, marca, cor, local, ano, valor_carro, data_entrada, id_venda);
 	}
 
 	private Registro converterTrocaCarroEmRegistro(TrocaCarro trocaCarro) {

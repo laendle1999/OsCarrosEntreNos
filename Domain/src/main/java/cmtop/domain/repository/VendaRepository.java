@@ -48,11 +48,7 @@ public class VendaRepository {
 		return registro;
 	}
 
-	public List<Venda> consultarVendaPorNumero(String valor, int limite) throws IOException {
-		Condicao condicao = new Condicao();
-		condicao.add("num_venda", TipoCondicao.SIMILAR, new ValorString(valor));
-
-		List<Registro> registros = tabela.buscar(condicao, limite);
+	private List<Venda> converterRegistrosEmVendas(List<Registro> registros) {
 		List<Venda> resultado = new ArrayList<>();
 
 		for (Registro registro : registros) {
@@ -60,6 +56,12 @@ public class VendaRepository {
 			resultado.add(objeto);
 		}
 		return resultado;
+	}
+
+	public List<Venda> consultarVendaPorNumero(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("num_venda", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmVendas(tabela.buscar(condicao, limite));
 	}
 
 	public void gravarVenda(Venda venda) throws IOException {
@@ -71,15 +73,7 @@ public class VendaRepository {
 	public List<Venda> consultarVendasDeCliente(int id_cliente, int limite) throws IOException {
 		Condicao condicao = new Condicao();
 		condicao.add("id_cliente", TipoCondicao.IGUAL, new ValorInt(id_cliente));
-
-		List<Registro> registros = tabela.buscar(condicao, limite);
-		List<Venda> resultado = new ArrayList<>();
-
-		for (Registro registro : registros) {
-			Venda objeto = converterRegistroEmVenda(registro);
-			resultado.add(objeto);
-		}
-		return resultado;
+		return converterRegistrosEmVendas(tabela.buscar(condicao, limite));
 	}
 
 	public void addNotaFiscal(Venda venda, NotaFiscal notaFiscal) throws IOException {
@@ -88,6 +82,12 @@ public class VendaRepository {
 		registro.set("endereco_arquivo", new ValorString(notaFiscal.getArquivo()));
 
 		tabelaNotaFiscal.inserir(registro);
+	}
+
+	public List<Venda> obterVendasRealizadasApos(String data, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("dt_venda", TipoCondicao.MAIOR, new ValorString(data));
+		return converterRegistrosEmVendas(tabela.buscar(condicao, limite));
 	}
 
 }

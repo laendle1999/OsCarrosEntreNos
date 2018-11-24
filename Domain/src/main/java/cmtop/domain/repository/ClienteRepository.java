@@ -63,7 +63,7 @@ public class ClienteRepository {
 		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
 	}
 
-	public List<Cliente> consultarClientePorNome(String valor, int limite) throws IOException {
+	public List<Cliente> consultarClientesPorNome(String valor, int limite) throws IOException {
 		Condicao condicao = new Condicao();
 		condicao.add("nome", TipoCondicao.SIMILAR, new ValorString(valor));
 		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));

@@ -17,12 +17,12 @@ public class RelatorioFinanceiro {
 		this.banco = banco;
 	}
 
-	public String gerarRelatorioFinanceiro(String dataInicio) throws IOException {
+	public String gerarRelatorioFinanceiro(String dataInicio, int limiteRegistros) throws IOException {
 		CompraRepository compraRepository = new CompraRepository(banco);
-		List<Compra> compras = compraRepository.obterComprasRealizadasApos(dataInicio, 100);
+		List<Compra> compras = compraRepository.obterComprasRealizadasApos(dataInicio, limiteRegistros);
 
 		VendaRepository vendaRepository = new VendaRepository(banco);
-		List<Venda> vendas = vendaRepository.obterVendasRealizadasApos(dataInicio, 100);
+		List<Venda> vendas = vendaRepository.obterVendasRealizadasApos(dataInicio, limiteRegistros);
 
 		StringBuilder s = new StringBuilder();
 

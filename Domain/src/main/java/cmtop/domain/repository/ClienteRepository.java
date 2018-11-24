@@ -47,11 +47,7 @@ public class ClienteRepository {
 		return registro;
 	}
 
-	public List<Cliente> consultarClientePorRg(String valor, int limite) throws IOException {
-		Condicao condicao = new Condicao();
-		condicao.add("rg", TipoCondicao.SIMILAR, new ValorString(valor));
-
-		List<Registro> registros = tabela.buscar(condicao, limite);
+	private List<Cliente> converterRegistrosEmClientes(List<Registro> registros) {
 		List<Cliente> resultado = new ArrayList<>();
 
 		for (Registro registro : registros) {
@@ -59,6 +55,24 @@ public class ClienteRepository {
 			resultado.add(cliente);
 		}
 		return resultado;
+	}
+
+	public List<Cliente> consultarClientePorRg(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("rg", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
+	}
+
+	public List<Cliente> consultarClientePorNome(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("nome", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
+	}
+
+	public List<Cliente> consultarClientePorCpf(String valor, int limite) throws IOException {
+		Condicao condicao = new Condicao();
+		condicao.add("cpf", TipoCondicao.SIMILAR, new ValorString(valor));
+		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
 	}
 
 	public Cliente obterClientePorId(int id) throws IOException {

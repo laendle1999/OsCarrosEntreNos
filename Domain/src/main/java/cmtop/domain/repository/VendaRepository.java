@@ -17,7 +17,7 @@ import cmtop.persistence.valueobject.ValorString;
 public class VendaRepository {
 
 	private Tabela tabela;
-	
+
 	private Tabela tabelaNotaFiscal;
 
 	public VendaRepository(Banco banco) {
@@ -33,7 +33,9 @@ public class VendaRepository {
 		String dt_venda = registro.get("dt_venda").getAsString();
 		String num_venda = registro.get("num_venda").getAsString();
 
-		return new Venda(id, num_venda, dt_venda, id_carro, id_cliente, id_funcionario);
+		Venda venda = new Venda(id, num_venda, dt_venda, id_cliente, id_funcionario);
+		venda.setCarro(id_carro);
+		return venda;
 	}
 
 	private Registro converterVendaEmRegistro(Venda venda) {
@@ -84,7 +86,7 @@ public class VendaRepository {
 		Registro registro = new Registro();
 		registro.set("id_venda", new ValorInt(venda.getId()));
 		registro.set("endereco_arquivo", new ValorString(notaFiscal.getArquivo()));
-		
+
 		tabelaNotaFiscal.inserir(registro);
 	}
 

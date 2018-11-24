@@ -7,9 +7,11 @@ public class Vendedor {
 
 	private TipoAcesso tipoAcesso;
 
-	public Vendedor(String telefone, String nome, String rg, String cpf, String endereco, String login, String email,
-			TipoAcesso tipoAcesso) {
-		super();
+	private int id;
+
+	public Vendedor(int id, String telefone, String nome, String rg, String cpf, String endereco, String login,
+			String email, TipoAcesso tipoAcesso) {
+		this.id = id;
 		this.telefone = telefone;
 		this.nome = nome;
 		this.rg = rg;
@@ -82,6 +84,10 @@ public class Vendedor {
 
 	public void setTipoAcesso(TipoAcesso tipoAcesso) {
 		this.tipoAcesso = tipoAcesso;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }

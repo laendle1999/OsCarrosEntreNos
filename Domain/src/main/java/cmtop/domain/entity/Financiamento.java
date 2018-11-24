@@ -8,8 +8,10 @@ public class Financiamento {
 
 	private int numeroParcelas;
 
+	private int id_venda;
+
 	public Financiamento(String banco, float valorFinanciado, int numeroParcelas) {
-		super();
+		this.id_venda = -1;
 		this.banco = banco;
 		this.valorFinanciado = valorFinanciado;
 		this.numeroParcelas = numeroParcelas;
@@ -37,6 +39,14 @@ public class Financiamento {
 
 	public void setNumeroParcelas(int numeroParcelas) {
 		this.numeroParcelas = numeroParcelas;
+	}
+
+	public int getIdVenda() {
+		return id_venda;
+	}
+
+	public void setIdVenda(int id_venda) {
+		this.id_venda = id_venda;
 	}
 
 }

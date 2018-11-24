@@ -14,11 +14,11 @@ public class Venda {
 
 	private int id;
 
-	public Venda(int id, String numeroVenda, String dataVenda, int carro, int cliente, int vendedor) {
+	public Venda(int id, String numeroVenda, String dataVenda, int cliente, int vendedor) {
 		this.id = id;
 		this.numeroVenda = numeroVenda;
+		this.carro = -1;
 		this.dataVenda = dataVenda;
-		this.carro = carro;
 		this.cliente = cliente;
 		this.vendedor = vendedor;
 	}

@@ -26,7 +26,7 @@ public class RelatorioFinanceiro {
 
 		StringBuilder s = new StringBuilder();
 
-		s.append("<!DOCTYPE html><html><head><meta charset=\"utf-8\">");
+		s.append("<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>");
 		s.append("<title>Relatório financeiro</title>");
 		s.append("<style>*{text-align:center; font-family: sans-serif;}</style>");
 		s.append("</head><body>");
@@ -45,7 +45,7 @@ public class RelatorioFinanceiro {
 	}
 
 	private void adicionarTabelaCompras(StringBuilder s, List<Compra> compras) {
-		s.append("<table border=1>");
+		s.append("<table border=\"1\">");
 		s.append("<tr>");
 		s.append("<th>Data</th><th>Custo</th><th>Fornecedor</th>");
 		s.append("</tr>");
@@ -58,13 +58,13 @@ public class RelatorioFinanceiro {
 			s.append("</tr>");
 		}
 		if (compras.isEmpty()) {
-			s.append("<tr><td colspan=3>Nenhuma compra</td></tr>");
+			s.append("<tr><td colspan=\"3\">Nenhuma compra</td></tr>");
 		}
 		s.append("</table>");
 	}
 
 	private void adicionarTabelaVendas(StringBuilder s, List<Venda> vendas) {
-		s.append("<table border=1>");
+		s.append("<table border=\"1\">");
 		s.append("<tr>");
 		s.append("<th>Data</th><th>Id cliente</th>");
 		s.append("</tr>");
@@ -76,7 +76,7 @@ public class RelatorioFinanceiro {
 			s.append("</tr>");
 		}
 		if (vendas.isEmpty()) {
-			s.append("<tr><td colspan=2>Nenhuma venda</td></tr>");
+			s.append("<tr><td colspan=\"2\">Nenhuma venda</td></tr>");
 		}
 		s.append("</table>");
 	}

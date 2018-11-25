@@ -202,6 +202,10 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 
 			tabela.getColumns().add(coluna);
 		}
+
+		if (colunasTabela.isEmpty()) {
+			tabela.getColumns().add(new TableColumn<>(""));
+		}
 	}
 
 	private List<String> obterColunasDoModelo() {

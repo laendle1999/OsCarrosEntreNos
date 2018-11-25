@@ -66,7 +66,11 @@ public class Tabela {
 	}
 
 	public List<Registro> buscar(Condicao condicao, int limite) throws IOException {
-		String sql = "SELECT * FROM " + getNome() + " WHERE " + condicao.toSQL() + " LIMIT " + limite;
+		String sql = "SELECT * FROM " + getNome();
+		if (!condicao.isEmpty()) {
+			sql += " WHERE " + condicao.toSQL();
+		}
+		sql += " LIMIT " + limite;
 
 		List<Registro> resultados = new ArrayList<>();
 

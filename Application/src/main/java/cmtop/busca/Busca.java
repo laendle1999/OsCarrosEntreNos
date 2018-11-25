@@ -14,6 +14,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,9 +28,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public abstract class Busca extends TelaBase {
+public abstract class Busca<ObjetoBuscado> extends TelaBase {
 
 	private ObservableList<ModelGenerico> listaTabela = FXCollections.observableArrayList();
+
+	private List<ObjetoBuscado> listaOriginal;
 
 	private TableView<ModelGenerico> tabela;
 
@@ -38,7 +42,7 @@ public abstract class Busca extends TelaBase {
 
 	private Campo[] camposBusca;
 
-	public Busca(String nomeObjetoParaBuscar) {
+	public Busca(String nomeObjetoParaBuscar, String mensagemBotaoEscolher, Consumer<ObjetoBuscado> callback) {
 		super("AutoManager", 700, 600);
 
 		VBox conteudo = new VBox();
@@ -64,7 +68,7 @@ public abstract class Busca extends TelaBase {
 				buscar(obterValoresCampos(), maximoResultados, resutadoBusca -> {
 					listaTabela.addAll(resutadoBusca);
 					atualizarColunasTabela();
-				});
+				}, lista -> listaOriginal = lista);
 			} catch (IOException e) {
 				// Falha ao buscar
 				System.err.println("Falha ao buscar " + nomeObjetoParaBuscar);
@@ -74,7 +78,7 @@ public abstract class Busca extends TelaBase {
 
 		listaCampos = new GridPane();
 		listaCampos.setAlignment(Pos.CENTER);
-		listaCampos.setStyle("-fx-background-fill: black, white ;\n" + "-fx-background-insets: 0, 1 ;");
+		listaCampos.setStyle("-fx-background-fill: black, white; -fx-background-insets: 0, 1;");
 		listaCampos.setHgap(10);
 		listaCampos.setVgap(10);
 
@@ -83,12 +87,60 @@ public abstract class Busca extends TelaBase {
 		conteudo.getChildren().add(listaCampos);
 
 		HBox hBoxBotao = new HBox(botao);
+		hBoxBotao.setStyle("-fx-padding: 5px;");
 		hBoxBotao.setAlignment(Pos.CENTER);
 
 		conteudo.getChildren().add(hBoxBotao);
 		conteudo.getChildren().add(tabela);
 
+		Button botaoEscolher = new Button(mensagemBotaoEscolher);
+		botaoEscolher.setOnAction(event -> {
+			List<ObjetoBuscado> itens = obterItensSelecionados();
+
+			if (itens.isEmpty()) {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Alerta");
+				alert.setHeaderText("Por favor, selecione um item da lista");
+				alert.show();
+				return;
+			}
+
+			if (itens.size() > 1) {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Alerta");
+				alert.setHeaderText("Por favor, selecione apenas um item da lista");
+				alert.show();
+				return;
+			}
+
+			callback.accept(itens.get(0));
+			close();
+		});
+
+		Button botaoCancelar = new Button("Cancelar");
+		botaoCancelar.setOnAction(event -> {
+			callback.accept(null);
+			close();
+		});
+
+		HBox linhaBotoesEscolherCancelar = new HBox();
+		linhaBotoesEscolherCancelar.setStyle("-fx-padding: 10px;");
+		linhaBotoesEscolherCancelar.setAlignment(Pos.BOTTOM_CENTER);
+		linhaBotoesEscolherCancelar.getChildren().add(botaoCancelar);
+		linhaBotoesEscolherCancelar.getChildren().add(botaoEscolher);
+		conteudo.getChildren().add(linhaBotoesEscolherCancelar);
+
 		definirConteudo(conteudo);
+	}
+
+	private List<ObjetoBuscado> obterItensSelecionados() {
+		List<Integer> indices = tabela.getSelectionModel().getSelectedIndices();
+
+		List<ObjetoBuscado> lista = new ArrayList<>();
+		for (Integer indice : indices) {
+			lista.add(listaOriginal.get(indice));
+		}
+		return lista;
 	}
 
 	private ValoresCamposBusca obterValoresCampos() {
@@ -166,6 +218,7 @@ public abstract class Busca extends TelaBase {
 	}
 
 	protected abstract void buscar(ValoresCamposBusca camposBusca, int limite,
-			Consumer<List<? extends ModelGenerico>> callback) throws IOException;
+			Consumer<List<? extends ModelGenerico>> callbackListaModel,
+			Consumer<List<ObjetoBuscado>> callbackListaOriginal) throws IOException;
 
 }

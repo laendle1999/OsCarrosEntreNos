@@ -12,7 +12,14 @@ public class PontoEntradaAplicacao extends Application {
 
 		// new MenuPrincipal().show();
 		// new TelaDeVenda().show();
-		new BuscaCarro(banco).show();
+		new BuscaCarro(banco, carro -> {
+			if (carro == null) {
+				System.out.println("Nenhum carro escolhido");
+			} else {
+				System.out.println("Carro escolhido (marca): ");
+				System.out.println(carro.getMarca());
+			}
+		}).show();
 	}
 
 	@Override

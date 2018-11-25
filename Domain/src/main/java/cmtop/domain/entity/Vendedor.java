@@ -3,17 +3,23 @@ package cmtop.domain.entity;
 import cmtop.domain.valueobject.TipoAcesso;
 
 public class Vendedor {
-	private String telefone, nome, rg, cpf, endereco, login, email;
+	private String telefone1, nome, rg, cpf, endereco, login, email;
 
 	private TipoAcesso tipoAcesso;
 
 	private int id;
 
-	public Vendedor(int id, String telefone, String nome, String rg, String cpf, String endereco, String login,
-			String email, TipoAcesso tipoAcesso) {
+	private String dataNascimento;
+
+	private String telefone2;
+
+	public Vendedor(int id, String telefone1, String telefone2, String nome, String dataNascimento, String rg,
+			String cpf, String endereco, String login, String email, TipoAcesso tipoAcesso) {
 		this.id = id;
-		this.telefone = telefone;
+		this.telefone1 = telefone1;
+		this.telefone2 = telefone2;
 		this.nome = nome;
+		this.dataNascimento = dataNascimento;
 		this.rg = rg;
 		this.cpf = cpf;
 		this.endereco = endereco;
@@ -22,12 +28,20 @@ public class Vendedor {
 		this.tipoAcesso = tipoAcesso;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public String getTelefone1() {
+		return telefone1;
 	}
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+	public void setTelefone1(String telefone1) {
+		this.telefone1 = telefone1;
+	}
+
+	public String getTelefone2() {
+		return telefone2;
+	}
+
+	public void setTelefone2(String telefone2) {
+		this.telefone2 = telefone2;
 	}
 
 	public String getNome() {
@@ -36,6 +50,14 @@ public class Vendedor {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(String dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public String getRg() {

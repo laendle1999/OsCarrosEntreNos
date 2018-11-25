@@ -58,7 +58,7 @@ public class CarroRepository {
 		registro.set("status", new ValorInt(carro.getStatusCarro().asInt()));
 		return registro;
 	}
-	
+
 	private List<Carro> converterRegistrosEmCarros(List<Registro> registros) {
 		List<Carro> resultado = new ArrayList<>();
 

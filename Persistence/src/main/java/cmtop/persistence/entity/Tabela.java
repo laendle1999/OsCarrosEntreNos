@@ -106,8 +106,8 @@ public class Tabela {
 						registro.set(colName, new ValorString(resultSet.getString(i)));
 						break;
 					default:
-						System.err.println("Field not identified on table \"" + getNome() + "\": " + colName
-								+ "; converting to string");
+						// System.err.println("Field not identified on table \"" + getNome() + "\": " +
+						// colName + "; converting to string");
 						registro.set(colName, new ValorString(resultSet.getString(i)));
 						continue;
 					}
@@ -119,7 +119,7 @@ public class Tabela {
 			throw new IOException(e);
 		}
 
-		return null;
+		return resultados;
 	}
 
 	public String getNome() {

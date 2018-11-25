@@ -1,15 +1,18 @@
 package cmtop.application;
 
+import cmtop.busca.BuscaCarro;
+import cmtop.persistence.entity.Banco;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PontoEntradaAplicacao extends Application {
 
 	public static void iniciarAplicacao() {
-		new MenuPrincipal().show();
+		Banco banco = new Banco("localhost");
+
+		// new MenuPrincipal().show();
 		// new TelaDeVenda().show();
-		//new Busca().show();
-		new BuscarCliente().show();
+		new BuscaCarro(banco).show();
 	}
 
 	@Override

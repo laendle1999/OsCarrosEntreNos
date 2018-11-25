@@ -8,14 +8,14 @@ public class Compra {
 
 	private float custo;
 
-	private Carro carro;
+	private int carro;
 
-	public Compra(String localCompra, String nomeFornecedor, String data, float custo, Carro carro) {
+	public Compra(String localCompra, String nomeFornecedor, String data, float custo, int id_carro) {
 		this.localCompra = localCompra;
 		this.nomeFornecedor = nomeFornecedor;
 		this.data = data;
 		this.custo = custo;
-		this.carro = carro;
+		this.carro = id_carro;
 	}
 
 	public String getLocalCompra() {
@@ -50,11 +50,11 @@ public class Compra {
 		this.custo = custo;
 	}
 
-	public Carro getCarro() {
+	public int getCarro() {
 		return carro;
 	}
 
-	public void setCarro(Carro carro) {
+	public void setCarro(int carro) {
 		this.carro = carro;
 	}
 

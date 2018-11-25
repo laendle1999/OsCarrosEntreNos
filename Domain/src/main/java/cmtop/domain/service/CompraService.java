@@ -10,15 +10,24 @@ import cmtop.persistence.entity.Banco;
 
 public class CompraService {
 
-	public static void comprarCarro(Banco banco, String localCompra, String nomeFornecedor, String data, float custo,
+	private Banco banco;
+
+	public CompraService(Banco banco) {
+		this.banco = banco;
+	}
+
+	public void cadastrarNovaCompraDeCarro(String localCompra, String nomeFornecedor, String data, float custo,
 			Carro carro) throws IOException {
-		Compra compra = new Compra(localCompra, nomeFornecedor, data, custo, carro);
+		CarroRepository carroRepository = new CarroRepository(banco);
+		carroRepository.cadastrarCarro(carro);
+
+		// Recuperar carro
+		Carro carroCadastrado = carroRepository.obterCarrosPorRenavan(carro.getRenavan(), 1).get(0);
+
+		Compra compra = new Compra(localCompra, nomeFornecedor, data, custo, carroCadastrado.getId());
 
 		CompraRepository compraRepository = new CompraRepository(banco);
 		compraRepository.cadastrarCompra(compra);
-
-		CarroRepository carroRepository = new CarroRepository(banco);
-		carroRepository.cadastrarCarro(carro);
 	}
 
 }

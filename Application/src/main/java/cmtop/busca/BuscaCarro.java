@@ -13,7 +13,7 @@ import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
 import cmtop.persistence.entity.Banco;
 
-public class BuscaCarro extends Busca {
+public class BuscaCarro extends Busca<Carro> {
 
 	private Banco banco;
 
@@ -21,22 +21,24 @@ public class BuscaCarro extends Busca {
 
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
-	public BuscaCarro(Banco banco) {
-		super("Carro");
+	public BuscaCarro(Banco banco, Consumer<Carro> callback) {
+		super("Carro", "Selecionar carro", callback);
 
 		this.banco = banco;
 		this.definirCamposBusca(PLACA);
 	}
 
 	@Override
-	protected void buscar(ValoresCamposBusca camposBusca, int limite, Consumer<List<? extends ModelGenerico>> callback)
+	protected void buscar(ValoresCamposBusca camposBusca, int limite,
+			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Carro>> callbackListaOriginal)
 			throws IOException {
 		CarroRepository carroRepository = new CarroRepository(banco);
 		List<Carro> resultados = carroRepository.obterCarrosPorPlaca(camposBusca.get(PLACA.getNome()), limite);
+		callbackListaOriginal.accept(resultados);
 
 		List<CarroModel> lista = new ArrayList<>();
 		resultados.forEach(resultado -> lista.add(new CarroModel(resultado)));
-		callback.accept(lista);
+		callbackListaModel.accept(lista);
 	}
 
 }

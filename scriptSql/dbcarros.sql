@@ -155,7 +155,7 @@ VALUES
 INSERT INTO funcionario (id_funcionario,rg,cpf,nome,dt_nasc,endereco,telefone1,tipo_acesso,login,senha,email)
 VALUES
 (19,'71.308.804-4','546.111.207/28','Gerente','08-11-18','P.O. Box 478, 3438 Nunc St.','1-387-719-0450','1','gerente','1234','gerente@cmtop.br'),
-(20,'47.492.214-X','431.445.897/55','Funcionario','10-05-19','921-7434 Morbi Road','293-3238','2','funcionario','1234','funcionario@cmtop.br');
+(20,'47.492.214-X','431.445.897/55','Funcionario','10-05-19','921-7434 Morbi Road','293-3238','0','funcionario','1234','funcionario@cmtop.br');
 
 
 INSERT INTO carro (id_carro,renavan,numero,placa,modelo,ano,marca,cor,valor_carro,custo,data_entrada,status) 

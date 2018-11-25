@@ -21,6 +21,10 @@ public class Condicao {
 		campos.remove(campo);
 	}
 
+	public boolean isEmpty() {
+		return campos.isEmpty();
+	}
+
 	public String toSQL() {
 		StringBuilder source = new StringBuilder();
 

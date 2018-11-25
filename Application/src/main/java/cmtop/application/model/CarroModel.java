@@ -10,6 +10,6 @@ public class CarroModel extends ModelGenerico {
 		adicionarColuna("Cor", carro.getCor());
 		adicionarColuna("Modelo", carro.getModelo());
 		adicionarColuna("Placa", carro.getPlaca());
-	}
-
+  }
+	
 }

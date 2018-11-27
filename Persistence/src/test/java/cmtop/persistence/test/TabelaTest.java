@@ -17,7 +17,7 @@ public class TabelaTest {
 
 	@Test
 	public void inserirRemoverTest() throws IOException {
-		Registro registro = new Registro();
+		Registro registro = new Registro(TipoConexao.SERVIDOR_DERBY);
 		registro.set("rg", new ValorString("10"));
 		registro.set("cpf", new ValorString("15"));
 		registro.set("dt_nasc", new ValorLong(1543344888115L));
@@ -41,7 +41,7 @@ public class TabelaTest {
 	}
 
 	private static Banco getBanco() {
-		return new Banco(TipoConexao.SERVIDOR);
+		return new Banco(TipoConexao.SERVIDOR_DERBY);
 	}
 
 }

@@ -17,8 +17,10 @@ import cmtop.persistence.valueobject.ValorString;
 public class VendedorRepository {
 
 	private Tabela tabela;
+	private Banco banco;
 
 	public VendedorRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("funcionario");
 	}
 
@@ -43,7 +45,7 @@ public class VendedorRepository {
 	}
 
 	private Registro converterVendedorEmRegistro(Vendedor vendedor) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("rg", new ValorString(vendedor.getRg()));
 		registro.set("cpf", new ValorString(vendedor.getCpf()));
 		registro.set("nome", new ValorString(vendedor.getNome()));

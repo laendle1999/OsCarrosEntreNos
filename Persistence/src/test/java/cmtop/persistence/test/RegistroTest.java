@@ -2,6 +2,7 @@ package cmtop.persistence.test;
 
 import org.junit.Test;
 
+import cmtop.persistence.entity.Banco.TipoConexao;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -10,7 +11,7 @@ public class RegistroTest {
 
 	@Test
 	public void test() {
-		Registro registro = new Registro();
+		Registro registro = new Registro(TipoConexao.SERVIDOR_DERBY);
 		registro.set("a", new ValorInt(10));
 		registro.set("b", new ValorInt(10));
 		registro.set("c", new ValorInt(10));

@@ -15,7 +15,7 @@ import cmtop.persistence.service.ScriptRunner;
 
 public class Banco {
 	public enum TipoConexao {
-		SERVIDOR, CLIENTE;
+		SERVIDOR_DERBY, CLIENTE_DERBY, CLIENTE_AZURE;
 	}
 
 	private static final String SQL_CREATE_SCRIPT_LOCATION = "../dbcarrosderby.sql";
@@ -30,6 +30,8 @@ public class Banco {
 
 	private String password;
 
+	private TipoConexao tipoConexao;
+
 	public Banco(TipoConexao tipoConexao) {
 		this("", "", tipoConexao);
 	}
@@ -37,7 +39,17 @@ public class Banco {
 	public Banco(String user, String password, TipoConexao tipoConexao) {
 		this.user = user;
 		this.password = password;
-		this.url = "jdbc:derby:" + DEFAULT_DATABASE_NAME + ";create=true";
+		this.tipoConexao = tipoConexao;
+
+		if (tipoConexao == TipoConexao.CLIENTE_DERBY || tipoConexao == TipoConexao.SERVIDOR_DERBY) {
+			this.url = "jdbc:derby:" + DEFAULT_DATABASE_NAME + ";create=true";
+		} else if (tipoConexao == TipoConexao.CLIENTE_AZURE) {
+			this.url = "jdbc:sqlserver://ft-projetos-server.database.windows.net:1433;database=auto_manager;user=laendle1999@ft-projetos-server;password=rumGa5Pp;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+		}
+	}
+
+	public TipoConexao getTipoConexao() {
+		return tipoConexao;
 	}
 
 	public Connection getConnection() throws IOException {
@@ -48,7 +60,11 @@ public class Banco {
 
 		if (connection == null) {
 			try {
-				connection = DriverManager.getConnection(url, user, password);
+				if (tipoConexao == TipoConexao.CLIENTE_AZURE) {
+					connection = DriverManager.getConnection(url);
+				} else {
+					connection = DriverManager.getConnection(url, user, password);
+				}
 			} catch (SQLException e) {
 				throw new IOException(e);
 			}

@@ -20,7 +20,10 @@ public class VendaRepository {
 
 	private Tabela tabelaNotaFiscal;
 
+	private Banco banco;
+
 	public VendaRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("venda");
 		tabelaNotaFiscal = banco.getTabela("nota_fiscal");
 	}
@@ -39,7 +42,7 @@ public class VendaRepository {
 	}
 
 	private Registro converterVendaEmRegistro(Venda venda) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_cliente", new ValorInt(venda.getCliente()));
 		registro.set("id_carro", new ValorInt(venda.getCarro()));
 		registro.set("id_funcionario", new ValorInt(venda.getVendedor()));
@@ -77,7 +80,7 @@ public class VendaRepository {
 	}
 
 	public void addNotaFiscal(Venda venda, NotaFiscal notaFiscal) throws IOException {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_venda", new ValorInt(venda.getId()));
 		registro.set("endereco_arquivo", new ValorString(notaFiscal.getArquivo()));
 

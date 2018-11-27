@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.ResultSetMetaData;
 
+import cmtop.persistence.entity.Banco.TipoConexao;
 import cmtop.persistence.valueobject.Condicao;
 import cmtop.persistence.valueobject.ValorDouble;
 import cmtop.persistence.valueobject.ValorFloat;
@@ -73,8 +74,12 @@ public class Tabela {
 			sql += " WHERE " + condicao.toSQL();
 		}
 
-		// sql += " LIMIT " + limite;
-		sql += "fetch first " + limite + " rows only";
+		if (banco.getTipoConexao() == TipoConexao.CLIENTE_DERBY
+				|| banco.getTipoConexao() == TipoConexao.SERVIDOR_DERBY) {
+			sql += "fetch first " + limite + " rows only";
+		} else {
+			sql += " LIMIT " + limite;
+		}
 
 		List<Registro> resultados = new ArrayList<>();
 
@@ -92,7 +97,7 @@ public class Tabela {
 			int columnCount = metaData.getColumnCount();
 
 			while (resultSet.next()) {
-				Registro registro = new Registro();
+				Registro registro = new Registro(banco.getTipoConexao());
 
 				for (int i = 1; i <= columnCount; i++) {
 					String colName = metaData.getColumnName(i);

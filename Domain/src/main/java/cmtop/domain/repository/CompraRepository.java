@@ -17,13 +17,15 @@ import cmtop.persistence.valueobject.ValorString;
 public class CompraRepository {
 
 	private Tabela tabela;
+	private Banco banco;
 
 	public CompraRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("compra");
 	}
 
 	private Registro converterCompraEmRegistro(Compra compra) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_carro", new ValorInt(compra.getCarro()));
 		registro.set("dt_compra", new ValorString(compra.getData()));
 		registro.set("local_compra", new ValorString(compra.getLocalCompra()));

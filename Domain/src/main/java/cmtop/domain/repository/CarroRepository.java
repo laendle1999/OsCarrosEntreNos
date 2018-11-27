@@ -19,7 +19,10 @@ public class CarroRepository {
 
 	private Tabela tabela;
 
+	private Banco banco;
+
 	public CarroRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("carro");
 	}
 
@@ -44,7 +47,7 @@ public class CarroRepository {
 	}
 
 	private Registro converterCarroEmRegistro(Carro carro) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("renavan", new ValorString(carro.getRenavan()));
 		registro.set("numero", new ValorString(carro.getNumero()));
 		registro.set("placa", new ValorString(carro.getPlaca()));

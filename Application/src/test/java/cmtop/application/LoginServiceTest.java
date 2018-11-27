@@ -15,7 +15,7 @@ public class LoginServiceTest {
 
 	@Test
 	public void testeLoginGerente() throws IOException {
-		Banco banco = new Banco(TipoConexao.SERVIDOR);
+		Banco banco = new Banco(TipoConexao.SERVIDOR_DERBY);
 
 		boolean logado = LoginService.logar(banco, "gerente", "1234");
 
@@ -28,7 +28,7 @@ public class LoginServiceTest {
 
 	@Test
 	public void testeLoginVendedor() throws IOException {
-		Banco banco = new Banco(TipoConexao.SERVIDOR);
+		Banco banco = new Banco(TipoConexao.SERVIDOR_DERBY);
 
 		boolean logado = LoginService.logar(banco, "funcionario", "1234");
 

@@ -5,26 +5,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cmtop.persistence.entity.Banco.TipoConexao;
 import cmtop.persistence.valueobject.TipoValor;
 import cmtop.persistence.valueobject.Valor;
 
 public class Registro {
 
 	private final Map<String, Valor> map = new HashMap<>();
+	private TipoConexao tipoConexao;
+
+	public Registro(TipoConexao tipoConexao) {
+		this.tipoConexao = tipoConexao;
+	}
 
 	public void set(String chave, Valor valor) {
-		String upperCaseChave = chave.toUpperCase();
-		this.map.put(upperCaseChave, valor);
+		String novaChave = chave;
+		if (tipoConexao == TipoConexao.CLIENTE_DERBY || tipoConexao == TipoConexao.SERVIDOR_DERBY) {
+			novaChave = chave.toUpperCase();
+		}
+		this.map.put(novaChave, valor);
 	}
 
 	public Valor get(String chave) {
-		String upperCaseChave = chave.toUpperCase();
-		return map.get(upperCaseChave);
+		String novaChave = chave;
+		if (tipoConexao == TipoConexao.CLIENTE_DERBY || tipoConexao == TipoConexao.SERVIDOR_DERBY) {
+			novaChave = chave.toUpperCase();
+		}
+		return map.get(novaChave);
 	}
 
 	public boolean has(String chave) {
-		String upperCaseChave = chave.toUpperCase();
-		return map.containsKey(upperCaseChave);
+		String novaChave = chave;
+		if (tipoConexao == TipoConexao.CLIENTE_DERBY || tipoConexao == TipoConexao.SERVIDOR_DERBY) {
+			novaChave = chave.toUpperCase();
+		}
+		return map.containsKey(novaChave);
 	}
 
 	public List<String> getChaves() {

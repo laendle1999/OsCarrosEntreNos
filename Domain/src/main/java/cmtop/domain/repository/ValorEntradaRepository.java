@@ -13,8 +13,10 @@ import cmtop.persistence.valueobject.ValorString;
 public class ValorEntradaRepository {
 
 	private Tabela tabela;
+	private Banco banco;
 
 	public ValorEntradaRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("finaciamento");
 	}
 
@@ -30,7 +32,7 @@ public class ValorEntradaRepository {
 	}
 
 	private Registro converterValorEntradaEmRegistro(ValorEntrada valorEntrada) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_venda", new ValorInt(valorEntrada.getIdVenda()));
 		registro.set("descricao", new ValorString(valorEntrada.getDescricao()));
 		registro.set("valor_entrada", new ValorFloat(valorEntrada.getValor()));

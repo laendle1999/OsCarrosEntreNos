@@ -13,8 +13,10 @@ import cmtop.persistence.valueobject.ValorString;
 public class FinanciamentoRepository {
 
 	private Tabela tabela;
+	private Banco banco;
 
 	public FinanciamentoRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("finaciamento");
 	}
 
@@ -31,7 +33,7 @@ public class FinanciamentoRepository {
 	}
 
 	private Registro converterFinanciamentoEmRegistro(Financiamento financiamento) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_venda", new ValorInt(financiamento.getIdVenda()));
 		registro.set("banco", new ValorString(financiamento.getBanco()));
 		registro.set("valorFinanciamento", new ValorFloat(financiamento.getValorFinanciado()));

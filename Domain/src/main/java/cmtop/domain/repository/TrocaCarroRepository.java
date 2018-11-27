@@ -13,8 +13,10 @@ import cmtop.persistence.valueobject.ValorString;
 public class TrocaCarroRepository {
 
 	private Tabela tabela;
+	private Banco banco;
 
 	public TrocaCarroRepository(Banco banco) {
+		this.banco = banco;
 		tabela = banco.getTabela("troca_carro");
 	}
 
@@ -36,7 +38,7 @@ public class TrocaCarroRepository {
 	}
 
 	private Registro converterTrocaCarroEmRegistro(TrocaCarro trocaCarro) {
-		Registro registro = new Registro();
+		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("placa", new ValorString(trocaCarro.getPlaca()));
 		registro.set("modelo", new ValorString(trocaCarro.getModelo()));
 		registro.set("marca", new ValorString(trocaCarro.getMarca()));

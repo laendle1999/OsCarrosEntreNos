@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 public class PontoEntradaAplicacao extends Application {
 
 	public static void iniciarAplicacao() {
-		Banco banco = new Banco("", "", TipoConexao.SERVIDOR);
+		Banco banco = new Banco("", "", TipoConexao.SERVIDOR_DERBY);
 
 		// new MenuPrincipal().show();
 		// new TelaDeVenda().show();

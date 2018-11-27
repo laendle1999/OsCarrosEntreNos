@@ -12,7 +12,7 @@ public class CarroRepositoryTest {
 
 	@Test
 	public void test() throws IOException {
-		Banco banco = new Banco(TipoConexao.SERVIDOR);
+		Banco banco = new Banco(TipoConexao.SERVIDOR_DERBY);
 
 		CarroRepository carroRepository = new CarroRepository(banco);
 		carroRepository.obterCarrosPorPlaca("a", 100);

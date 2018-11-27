@@ -1,13 +1,12 @@
 package cmtop.application;
 
+import cmtop.application.service.ComponentesServices;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -26,12 +25,7 @@ public class MenuGerencia extends TelaBase {
 		Text vendedor = new Text("Ola [VENDEDOR]");
 		vendedor.setTextAlignment(TextAlignment.LEFT);
 
-		Text nome = new Text("Auto Management");
-		nome.setFont(Font.font("Comic Sans MS", FontWeight.NORMAL, 45));
-		nome.setTextAlignment(TextAlignment.CENTER);
-		nome.setStyle("-fx-border-color:red;");
-
-		conteudo.getChildren().add(nome);
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER);
 		menu.add(vendedor, 2, 0);

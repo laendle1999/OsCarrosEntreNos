@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import cmtop.application.TelaBase;
 import cmtop.application.model.ModelGenerico;
 import cmtop.application.model.ModelGenerico.Coluna;
+import cmtop.application.service.ComponentesServices;
 import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
 import javafx.collections.FXCollections;
@@ -23,8 +24,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -49,11 +48,6 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 
 		Text secao = new Text("Buscar " + nomeObjetoParaBuscar);
 		secao.setTextAlignment(TextAlignment.LEFT);
-
-		Text titulo = new Text("Auto Management");
-		titulo.setFont(Font.font("Comic Sans MS", FontWeight.NORMAL, 45));
-		titulo.setTextAlignment(TextAlignment.CENTER);
-		titulo.setStyle("-fx-border-color:red;");
 
 		tabela = new TableView<>(listaTabela);
 		atualizarColunasTabela();
@@ -82,7 +76,7 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 		listaCampos.setHgap(10);
 		listaCampos.setVgap(10);
 
-		conteudo.getChildren().add(titulo);
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 177));
 		conteudo.getChildren().add(secao);
 		conteudo.getChildren().add(listaCampos);
 

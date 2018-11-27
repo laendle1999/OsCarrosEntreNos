@@ -28,6 +28,7 @@ public class PontoEntradaAplicacao extends Application {
 		}).show();
 
 		// new CadastrarVendedor().show();
+		// new TelaDeVenda().show();
 	}
 
 	@Override

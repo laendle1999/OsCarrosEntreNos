@@ -1,6 +1,7 @@
 package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
+import cmtop.application.service.LoginService;
 import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -23,7 +24,8 @@ public class MenuGerenciamentoCliente extends TelaBase {
 		menu.setHgap(10);
 		menu.setVgap(10);
 
-		Text vendedor = new Text("Ola [VENDEDOR]");
+		String nomeVendedor = LoginService.getFuncionarioLogado().getNome().split("\\s")[0];
+		Text vendedor = new Text("Olá " + nomeVendedor);
 		vendedor.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));

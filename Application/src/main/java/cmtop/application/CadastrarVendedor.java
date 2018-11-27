@@ -23,7 +23,7 @@ public class CadastrarVendedor extends TelaBase {
 		menu.setHgap(10);
 		menu.setVgap(10);
 
-		Text secao = new Text("Cadastro de Cliente");
+		Text secao = new Text("Cadastro de vendedor");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));

@@ -22,7 +22,7 @@ public class CadastrarCompra extends TelaBase {
 		menu.setHgap(10);
 		menu.setVgap(10);
 
-		Text secao = new Text("Cadastro de[ISSO AI MSMO]");
+		Text secao = new Text("Cadastro de compra");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
@@ -56,11 +56,9 @@ public class CadastrarCompra extends TelaBase {
 
 		menu.setTranslateY(15);
 
-		btn.setStyle("    -fx-background-color: \r\n" + "        rgba(0,0,0,0.08),\r\n"
-				+ "        linear-gradient(#9a9a9a, #909090),\r\n"
-				+ "        linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);\r\n"
-				+ "    -fx-background-insets: 0 0 -1 0,0,1;\r\n" + "    -fx-background-radius: 5,5,4;\r\n"
-				+ "    -fx-padding: 3 30 3 30;\r\n" + "    -fx-text-fill: #242d35;\r\n" + "    -fx-font-size: 14px;");
+		btn.setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
+				+ "    -fx-padding: 3 3 3 3; -fx-text-fill: #242d35;"
+				+ "    -fx-font-size: 14px;");
 
 		conteudo.getChildren().add(btn);
 		btn.setTranslateX(300);

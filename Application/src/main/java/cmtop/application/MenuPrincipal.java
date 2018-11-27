@@ -39,8 +39,8 @@ public class MenuPrincipal extends TelaBase {
 		Button[] botoes = { new Button("Nova Venda"), new Button("Clientes"), new Button("Tabela FIPE"),
 				new Button("Buscar Venda"), new Button("Gerência"), new Button("Funcao 6") };
 
-		for (int x = 0; x < 6; x++) {
-			botoes[x].setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
+		for (Button b : botoes) {
+			b.setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
 					+ "    -fx-padding: 3 3 3 3; -fx-text-fill: #242d35;"
 					+ "    -fx-font-size: 14px;-fx-pref-width: 150px; -fx-pref-height: 75px");
 		}

@@ -8,10 +8,13 @@ import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
 import cmtop.busca.BuscaCarro;
 import cmtop.busca.BuscaCliente;
+import cmtop.domain.entity.Carro;
+import cmtop.domain.entity.Cliente;
 import cmtop.domain.service.VendaService;
 import cmtop.persistence.entity.Banco;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -21,6 +24,8 @@ import javafx.scene.text.TextAlignment;
 public class TelaDeVenda extends TelaBase {
 
 	private VendaService vendaService;
+
+	private VBox[] celulasTabela;
 
 	public TelaDeVenda(Banco banco) {
 		super("AutoManager", 700, 600);
@@ -52,49 +57,47 @@ public class TelaDeVenda extends TelaBase {
 					+ "  -fx-text-fill: #242d35;");
 		}
 
-		HBox interior = new HBox();
-		interior.setStyle("-fx-border-color: black; -fx-pref-height: 150px;  -fx-pref-width: 20px;"
-				+ "-fx-padding: 5px 0 1px 1px; -fx-border-insets: 20px; -fx-background-insets: 20px");
-
-		VBox[] interiorE = { new VBox(), new VBox(), new VBox(), new VBox(), new VBox(), new VBox(), new VBox(),
+		celulasTabela = new VBox[] { new VBox(), new VBox(), new VBox(), new VBox(), new VBox(), new VBox(), new VBox(),
 				new VBox() };
 
 		for (int x = 0; x < 8; x++) {
-			interiorE[x].setStyle("-fx-border-color: black; -fx-pref-height: 100%; -fx-pref-width: 150px;"
+			celulasTabela[x].setStyle("-fx-border-color: black; -fx-pref-height: 100%; -fx-pref-width: 150px;"
 					+ " -fx-padding:5px; -fx-border-insets: 0px; -fx-background-insets: 20px");
-			interiorE[x].setAlignment(Pos.CENTER);
+			celulasTabela[x].setAlignment(Pos.CENTER);
 		}
-
-		VBox interiorD = new VBox();
-		interiorD.setStyle("-fx-border-color: black; -fx-pref-height: 100%;  -fx-pref-width: 200px;"
-				+ "  -fx-border-insets: 20px; -fx-background-insets: 20px");
-		interiorD.setAlignment(Pos.CENTER);
 
 		GridPane tabela = new GridPane();
 		tabela.setVgap(0.5);
 		tabela.setHgap(0.5);
-		tabela.add(interiorE[0], 0, 1);
-		tabela.add(interiorE[1], 0, 2);
-		tabela.add(interiorE[2], 0, 3);
-		tabela.add(interiorE[3], 0, 4);
-		tabela.add(interiorE[4], 1, 1);
-		tabela.add(interiorE[5], 1, 2);
-		tabela.add(interiorE[6], 1, 3);
-		tabela.add(interiorE[7], 1, 4);
+		tabela.add(celulasTabela[0], 0, 1);
+		tabela.add(celulasTabela[1], 0, 2);
+		tabela.add(celulasTabela[2], 0, 3);
+		tabela.add(celulasTabela[3], 0, 4);
+		tabela.add(celulasTabela[4], 1, 1);
+		tabela.add(celulasTabela[5], 1, 2);
+		tabela.add(celulasTabela[6], 1, 3);
+		tabela.add(celulasTabela[7], 1, 4);
+
+		celulasTabela[4].setMinWidth(300.0);
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDateTime now = LocalDateTime.now();
 
 		// interiorE.getChildren().add(carroTexto);
-		interiorE[0].getChildren().add(new Text("Carro:"));
-		interiorE[1].getChildren().add(new Text("Cliente:"));
-		interiorE[2].getChildren().add(new Text("Pagamento:"));
-		interiorE[3].getChildren().add(new Text("Data da Venda:"));
-		interiorE[7].getChildren().add(new Text(dtf.format(now)));
+		celulasTabela[0].getChildren().add(new Text("Carro:"));
+		celulasTabela[1].getChildren().add(new Text("Cliente:"));
+		celulasTabela[2].getChildren().add(new Text("Pagamento:"));
+		celulasTabela[3].getChildren().add(new Text("Data da Venda:"));
+		celulasTabela[7].getChildren().add(new Text(dtf.format(now)));
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
 		conteudo.getChildren().add(secao);
 		conteudo.getChildren().add(botoesCima);
 		// interior.getChildren().add(interiorE);
+
+		HBox interior = new HBox();
+		interior.setStyle("-fx-pref-height: 150px;  -fx-pref-width: 20px;"
+				+ "-fx-padding: 5px 0 1px 1px; -fx-border-insets: 20px; -fx-background-insets: 20px");
+
 		interior.getChildren().add(tabela);
 		conteudo.getChildren().add(interior);
 		conteudo.getChildren().add(botoesEmbaixo);
@@ -111,6 +114,7 @@ public class TelaDeVenda extends TelaBase {
 				if (carro == null)
 					return;
 				vendaService.escolherCarro(carro);
+				atualizarView();
 			}).show();
 		});
 
@@ -119,6 +123,7 @@ public class TelaDeVenda extends TelaBase {
 				if (cliente == null)
 					return;
 				vendaService.setCliente(cliente);
+				atualizarView();
 			}).show();
 		});
 
@@ -142,6 +147,31 @@ public class TelaDeVenda extends TelaBase {
 
 		definirConteudo(conteudo);
 
+	}
+
+	private void atualizarView() {
+		setCarroView(vendaService.getCarro());
+		setClienteView(vendaService.getCliente());
+	}
+
+	private void setCarroView(Carro carro) {
+		celulasTabela[4].getChildren().clear();
+
+		if (carro != null) {
+			Label label = new Label();
+			label.setText(carro.getModelo() + " - " + carro.getMarca() + " - " + carro.getAno());
+			celulasTabela[4].getChildren().add(label);
+		}
+	}
+
+	private void setClienteView(Cliente cliente) {
+		celulasTabela[5].getChildren().clear();
+
+		if (cliente != null) {
+			Label label = new Label();
+			label.setText(cliente.getNome() + " - " + cliente.getCpf());
+			celulasTabela[5].getChildren().add(label);
+		}
 	}
 
 }

@@ -12,7 +12,7 @@ import javafx.scene.text.TextAlignment;
 public class CadastrarCliente extends TelaBase {
 
 	public CadastrarCliente() {
-		super("AutoManager - Formulário de entrada", 600, 500);
+		super("AutoManager - Cadastro de cliente", 600, 500);
 
 		VBox conteudo = new VBox();
 

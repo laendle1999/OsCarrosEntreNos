@@ -13,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 public class MenuGerenciamentoCarros extends TelaBase {
 
 	public MenuGerenciamentoCarros() {
-		super("AutoManager - Menu principal", 700, 600);
+		super("AutoManager - Gerenciamento de carros", 700, 600);
 
 		VBox conteudo = new VBox();
 

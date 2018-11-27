@@ -1,15 +1,14 @@
 package cmtop.application;
 
+import cmtop.application.service.ComponentesServices;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.control.RadioButton;
 
 public class CadastrarVendedor extends TelaBase {
 
@@ -27,12 +26,7 @@ public class CadastrarVendedor extends TelaBase {
 		Text secao = new Text("Cadastro de Cliente");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
-		Text nome = new Text("Auto Management");
-		nome.setFont(Font.font("Comic Sans MS", FontWeight.NORMAL, 45));
-		nome.setTextAlignment(TextAlignment.CENTER);
-		nome.setStyle("-fx-border-color:red;");
-
-		conteudo.getChildren().add(nome);
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
 		conteudo.getChildren().add(secao);
 
 		conteudo.getChildren().add(menu);

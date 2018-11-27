@@ -19,6 +19,7 @@ public class BuscaCarro extends Busca<Carro> {
 
 	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "");
 
+	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
 	public BuscaCarro(Banco banco, Consumer<Carro> callback) {

@@ -19,6 +19,7 @@ public class BuscaCliente extends Busca<Cliente> {
 
 	private static Campo NOME = new Campo(TipoCampo.TEXTO, "Nome", "");
 
+	@SuppressWarnings("unused")
 	private static Campo RG = new Campo(TipoCampo.TEXTO, "RG", "");
 
 	public BuscaCliente(Banco banco, Consumer<Cliente> callback) {

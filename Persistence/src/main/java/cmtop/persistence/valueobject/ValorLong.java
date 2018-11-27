@@ -1,11 +1,11 @@
 package cmtop.persistence.valueobject;
 
-public class ValorDouble extends Valor {
+public class ValorLong extends Valor {
 
-	private double valor;
+	private long valor;
 
-	public ValorDouble(double valor) {
-		super(TipoValor.DOUBLE);
+	public ValorLong(long valor) {
+		super(TipoValor.LONG);
 		this.valor = valor;
 	}
 
@@ -16,7 +16,7 @@ public class ValorDouble extends Valor {
 
 	@Override
 	public float getAsFloat() {
-		return (float) valor;
+		return valor;
 	}
 
 	@Override
@@ -25,13 +25,13 @@ public class ValorDouble extends Valor {
 	}
 
 	@Override
-	public String getAsString() {
-		return valor + "";
+	public long getAsLong() {
+		return valor;
 	}
 
 	@Override
-	public long getAsLong() {
-		return (long) valor;
+	public String getAsString() {
+		return valor + "";
 	}
 
 }

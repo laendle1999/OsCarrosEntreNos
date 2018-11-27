@@ -29,4 +29,9 @@ public class ValorInt extends Valor {
 		return valor + "";
 	}
 
+	@Override
+	public long getAsLong() {
+		return valor;
+	}
+
 }

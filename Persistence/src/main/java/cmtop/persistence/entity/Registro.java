@@ -13,15 +13,18 @@ public class Registro {
 	private final Map<String, Valor> map = new HashMap<>();
 
 	public void set(String chave, Valor valor) {
-		this.map.put(chave, valor);
+		String upperCaseChave = chave.toUpperCase();
+		this.map.put(upperCaseChave, valor);
 	}
 
 	public Valor get(String chave) {
-		return map.get(chave);
+		String upperCaseChave = chave.toUpperCase();
+		return map.get(upperCaseChave);
 	}
 
 	public boolean has(String chave) {
-		return map.containsKey(chave);
+		String upperCaseChave = chave.toUpperCase();
+		return map.containsKey(upperCaseChave);
 	}
 
 	public List<String> getChaves() {

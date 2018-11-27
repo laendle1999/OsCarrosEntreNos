@@ -1,6 +1,6 @@
-/*
-Criação do banco de dados
-*/
+
+-- Criação do banco de dados
+
 DROP DATABASE IF EXISTS auto_manager;
 
 CREATE DATABASE auto_manager;

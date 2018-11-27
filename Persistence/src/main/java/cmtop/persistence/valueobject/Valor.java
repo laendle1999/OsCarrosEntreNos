@@ -15,6 +15,8 @@ public abstract class Valor {
 	public abstract double getAsDouble();
 
 	public abstract String getAsString();
+	
+	public abstract long getAsLong();
 
 	public TipoValor getTipo() {
 		return tipoValor;

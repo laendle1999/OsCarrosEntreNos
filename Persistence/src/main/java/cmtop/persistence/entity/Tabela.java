@@ -1,6 +1,7 @@
 package cmtop.persistence.entity;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +14,7 @@ import cmtop.persistence.valueobject.Condicao;
 import cmtop.persistence.valueobject.ValorDouble;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class Tabela {
@@ -70,12 +72,15 @@ public class Tabela {
 		if (!condicao.isEmpty()) {
 			sql += " WHERE " + condicao.toSQL();
 		}
-		sql += " LIMIT " + limite;
+
+		// sql += " LIMIT " + limite;
+		sql += "fetch first " + limite + " rows only";
 
 		List<Registro> resultados = new ArrayList<>();
 
 		try {
-			Statement statement = banco.getConnection().createStatement();
+			Connection connection = banco.getConnection();
+			Statement statement = connection.createStatement();
 
 			if (!statement.execute(sql)) {
 				return resultados;
@@ -97,6 +102,9 @@ public class Tabela {
 					case Types.TINYINT:
 						registro.set(colName, new ValorInt(resultSet.getInt(i)));
 						break;
+					case Types.BIGINT:
+						registro.set(colName, new ValorLong(resultSet.getLong(i)));
+						break;
 					case Types.DOUBLE:
 						registro.set(colName, new ValorDouble(resultSet.getDouble(i)));
 						break;
@@ -110,8 +118,8 @@ public class Tabela {
 						registro.set(colName, new ValorString(resultSet.getString(i)));
 						break;
 					default:
-						// System.err.println("Field not identified on table \"" + getNome() + "\": " +
-						// colName + "; converting to string");
+						System.err.println("Field not identified on table \"" + getNome() + "\": " + colName
+								+ "; converting to string");
 						registro.set(colName, new ValorString(resultSet.getString(i)));
 						continue;
 					}
@@ -120,7 +128,9 @@ public class Tabela {
 				resultados.add(registro);
 			}
 		} catch (SQLException e) {
-			throw new IOException(e);
+			IOException exception = new IOException();
+			exception.setStackTrace(e.getStackTrace());
+			throw exception;
 		}
 
 		return resultados;

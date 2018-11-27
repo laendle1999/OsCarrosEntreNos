@@ -1,13 +1,14 @@
 package cmtop.application;
 
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.entity.Banco.TipoConexao;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PontoEntradaAplicacao extends Application {
 
 	public static void iniciarAplicacao() {
-		Banco banco = new Banco("localhost");
+		Banco banco = new Banco("", "", TipoConexao.SERVIDOR);
 
 		// new MenuPrincipal().show();
 		// new TelaDeVenda().show();

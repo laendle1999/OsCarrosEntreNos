@@ -29,4 +29,9 @@ public class ValorFloat extends Valor {
 		return valor + "";
 	}
 
+	@Override
+	public long getAsLong() {
+		return (long) valor;
+	}
+
 }

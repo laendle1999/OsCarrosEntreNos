@@ -8,12 +8,12 @@ public class PortalServiceTest {
 
 	@Test
 	public void testeAbrirPrograma() {
-		//PortalService.abrirProgramaNf();
+		// PortalService.abrirProgramaNf();
 	}
-	
+
 	@Test
 	public void testeAbrirPagina() {
-		PortalService.abrirTabelaFipe();
+		// PortalService.abrirTabelaFipe();
 	}
-	
+
 }

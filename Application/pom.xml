@@ -50,7 +50,9 @@
 			<groupId>oscarrosentrenos</groupId>
 			<artifactId>domain</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf -->
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
@@ -63,7 +65,6 @@
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.12</version>
 		</dependency>
-
 
 	</dependencies>
 </project>

@@ -25,6 +25,11 @@ public class ValorString extends Valor {
 	}
 
 	@Override
+	public long getAsLong() {
+		return Long.parseLong(valor);
+	}
+
+	@Override
 	public String getAsString() {
 		return valor;
 	}

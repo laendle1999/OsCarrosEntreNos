@@ -15,10 +15,13 @@ public abstract class ModelGenerico {
 
 		private Property<String> valor;
 
-		public Coluna(String nome, Property<String> valor) {
+		private boolean alteravel;
+
+		public Coluna(String nome, Property<String> valor, boolean alteravel) {
 			super();
 			this.nome = nome;
 			this.valor = valor;
+			this.alteravel = alteravel;
 		}
 
 		public String getNome() {
@@ -36,10 +39,14 @@ public abstract class ModelGenerico {
 		public void setValor(Property<String> valor) {
 			this.valor = valor;
 		}
+
+		public boolean alteravel() {
+			return alteravel;
+		}
 	}
 
-	protected void adicionarColuna(String nome, String valor) {
-		colunas.add(new Coluna(nome, new SimpleStringProperty(valor)));
+	protected void adicionarColuna(String nome, String valor, boolean alteravel) {
+		colunas.add(new Coluna(nome, new SimpleStringProperty(valor), alteravel));
 	}
 
 	public List<Coluna> getColunas() {

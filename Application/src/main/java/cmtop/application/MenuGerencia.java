@@ -59,9 +59,18 @@ public class MenuGerencia extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new FormularioEntrada().show();
+				new MenuGerenciamentoCarros().show();
 			}
 		});
+		
+		botoes[1].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				new MenuGerenciamentoVendedor().show();
+			}
+		});
+
 
 		definirConteudo(conteudo);
 	}

@@ -59,7 +59,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new FormularioEntrada().show();
+				new CadastrarVendedor().show();
 			}
 		});
 

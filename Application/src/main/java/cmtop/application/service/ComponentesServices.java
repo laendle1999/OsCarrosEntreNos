@@ -41,4 +41,11 @@ public class ComponentesServices {
 		alert.show();
 	}
 
+	public static void mostrarInformacao(String mensagem) {
+		Alert alert = new Alert(AlertType.NONE);
+		alert.setTitle("Informação");
+		alert.setHeaderText(mensagem);
+		alert.show();
+	}
+
 }

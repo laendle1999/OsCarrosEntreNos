@@ -21,7 +21,7 @@ public class VendaRepository {
 	private Tabela tabelaNotaFiscal;
 
 	public VendaRepository(Banco banco) {
-		tabela = banco.getTabela("carro");
+		tabela = banco.getTabela("venda");
 		tabelaNotaFiscal = banco.getTabela("nota_fiscal");
 	}
 

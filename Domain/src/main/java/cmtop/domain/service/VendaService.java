@@ -22,27 +22,44 @@ import cmtop.persistence.entity.Banco;
 
 public class VendaService {
 
-	private Venda venda;
-
 	private Pagamento pagamento;
 
 	private Carro carro;
 
+	private Cliente cliente;
+
+	private Vendedor vendedor;
+
 	private Banco banco;
+
+	private String numeroVenda;
 
 	public VendaService(Banco banco) {
 		this.banco = banco;
-	}
-
-	public void iniciarVenda(String numeroVenda, Cliente cliente, Vendedor vendedor) {
-		String dataVenda = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH).format(new Date());
-
-		venda = new Venda(-1, numeroVenda, dataVenda, cliente.getId(), vendedor.getId());
 		pagamento = new Pagamento();
 	}
 
+	public void definirNumero(String numeroVenda) {
+		this.numeroVenda = numeroVenda;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	public void setVendedor(Vendedor vendedor) {
+		this.vendedor = vendedor;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public Carro getCarro() {
+		return carro;
+	}
+
 	public void adicionarFinanciamento(Financiamento financiamento) {
-		financiamento.setIdVenda(venda.getId());
 		pagamento.adicionarFinanciamento(financiamento);
 	}
 
@@ -54,12 +71,16 @@ public class VendaService {
 		pagamento.adicionarValorEntrada(valorEntrada);
 	}
 
-	public void venderCarro(Carro carro) {
+	public void escolherCarro(Carro carro) {
 		this.carro = carro;
-		venda.setCarro(carro.getId());
 	}
 
 	public void finalizarVenda() throws IOException {
+		String dataVenda = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
+
+		Venda venda = new Venda(-1, numeroVenda, dataVenda, cliente.getId(), vendedor.getId());
+		venda.setCarro(carro.getId());
+
 		CarroRepository carroRepository = new CarroRepository(banco);
 		carroRepository.definirCarroVendido(carro);
 

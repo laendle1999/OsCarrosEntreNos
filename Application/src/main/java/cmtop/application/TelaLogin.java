@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
-import cmtop.domain.entity.Vendedor;
-import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.Banco;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -38,7 +36,7 @@ public class TelaLogin extends TelaBase {
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
 		conteudo.getChildren().add(secao);
-		
+
 		conteudo.getChildren().add(new Label("usuario: funcionario, senha: 1234"));
 		conteudo.getChildren().add(new Label("usuario: gerente, senha: 1234"));
 
@@ -53,6 +51,9 @@ public class TelaLogin extends TelaBase {
 			menu.add(labels[x], 0, x + 1);
 			menu.add(campos[x], 1, x + 1);
 		}
+
+		campos[0].setOnAction(event -> campos[1].requestFocus());
+		campos[1].setOnAction(event -> btn.fire());
 
 		menu.setTranslateY(15);
 

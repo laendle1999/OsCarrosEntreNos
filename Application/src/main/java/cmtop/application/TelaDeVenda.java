@@ -1,9 +1,15 @@
 package cmtop.application;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import cmtop.application.service.ComponentesServices;
+import cmtop.application.service.LoginService;
+import cmtop.busca.BuscaCarro;
+import cmtop.busca.BuscaCliente;
+import cmtop.domain.service.VendaService;
+import cmtop.persistence.entity.Banco;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -14,8 +20,12 @@ import javafx.scene.text.TextAlignment;
 
 public class TelaDeVenda extends TelaBase {
 
-	public TelaDeVenda() {
+	private VendaService vendaService;
+
+	public TelaDeVenda(Banco banco) {
 		super("AutoManager", 700, 600);
+
+		this.vendaService = new VendaService(banco);
 
 		VBox conteudo = new VBox();
 
@@ -36,6 +46,11 @@ public class TelaDeVenda extends TelaBase {
 
 		Button[] botao = { new Button("Carro"), new Button("Cliente"), new Button("Pagamento"),
 				new Button("Nota Fiscal"), new Button("Finalizar Venda") };
+
+		for (Button b : botao) {
+			b.setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
+					+ "  -fx-text-fill: #242d35;");
+		}
 
 		HBox interior = new HBox();
 		interior.setStyle("-fx-border-color: black; -fx-pref-height: 150px;  -fx-pref-width: 20px;"
@@ -90,6 +105,40 @@ public class TelaDeVenda extends TelaBase {
 
 		botoesEmbaixo.add(botao[3], 0, 0);
 		botoesEmbaixo.add(botao[4], 1, 0);
+
+		botao[0].setOnAction(event -> {
+			new BuscaCarro(banco, carro -> {
+				if (carro == null)
+					return;
+				vendaService.escolherCarro(carro);
+			}).show();
+		});
+
+		botao[1].setOnAction(event -> {
+			new BuscaCliente(banco, cliente -> {
+				if (cliente == null)
+					return;
+				vendaService.setCliente(cliente);
+			}).show();
+		});
+
+		botao[4].setOnAction(event -> {
+			try {
+				if (vendaService.getCliente() == null) {
+					ComponentesServices.mostrarAlerta("Por favor, selecione o cliente");
+				} else if (vendaService.getCarro() == null) {
+					ComponentesServices.mostrarAlerta("Por favor, selecione o carro");
+				} else {
+					vendaService.finalizarVenda();
+					ComponentesServices.mostrarInformacao("Venda finalizada com sucesso");
+				}
+			} catch (IOException e) {
+				ComponentesServices.mostrarErro("Falha ao conectar ao banco de dados");
+				e.printStackTrace();
+			}
+		});
+
+		vendaService.setVendedor(LoginService.getFuncionarioLogado());
 
 		definirConteudo(conteudo);
 

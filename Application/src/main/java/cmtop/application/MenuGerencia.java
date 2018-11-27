@@ -1,6 +1,7 @@
 package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
+import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -12,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 
 public class MenuGerencia extends TelaBase {
 
-	public MenuGerencia() {
+	public MenuGerencia(Banco banco) {
 		super("AutoManager - Menu principal", 700, 600);
 
 		VBox conteudo = new VBox();

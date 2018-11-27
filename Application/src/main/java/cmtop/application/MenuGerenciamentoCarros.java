@@ -59,7 +59,7 @@ public class MenuGerenciamentoCarros extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new FormularioEntrada().show();
+				new CadastrarCompra().show();
 			}
 		});
 

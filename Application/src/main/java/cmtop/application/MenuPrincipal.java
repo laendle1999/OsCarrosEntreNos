@@ -1,5 +1,10 @@
 package cmtop.application;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -59,7 +64,47 @@ public class MenuPrincipal extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new FormularioEntrada().show();
+				new TelaDeVenda().show();
+			}
+		});
+		
+		botoes[1].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				new MenuGerenciamentoCliente().show();
+			}
+		});
+		
+		botoes[2].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				try {
+		            Desktop.getDesktop().browse(new URI("http://veiculos.fipe.org.br"));
+		        } catch (IOException e1) {
+		            e1.printStackTrace();
+		        } catch (URISyntaxException e1) {
+		            e1.printStackTrace();
+		        }
+		        }
+		    
+			
+		});
+		
+		botoes[3].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				new MenuGerenciamentoCliente().show();
+			}
+		});
+		
+		botoes[4].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				new MenuGerencia().show();
 			}
 		});
 

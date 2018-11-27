@@ -21,12 +21,8 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
-	public BuscaCarroComEdicao(Banco banco, Consumer<Carro> callback) {
-		super("Carro", "Selecionar carro", (carroAlterado, nomeCampo, valor) -> {
-			System.out.println(nomeCampo);
-			System.out.println(carroAlterado.getPlaca());
-			return true;
-		});
+	public BuscaCarroComEdicao(Banco banco, ListenerAlteracoes<Carro> listenerAlteracoes) {
+		super("Carro", "Selecionar carro", listenerAlteracoes);
 
 		this.banco = banco;
 		this.definirCamposBusca(PLACA);

@@ -1,6 +1,5 @@
 package cmtop.application;
 
-import cmtop.busca.BuscaCarro;
 import cmtop.busca.BuscaCarroComEdicao;
 import cmtop.persistence.entity.Banco;
 import javafx.application.Application;
@@ -13,23 +12,22 @@ public class PontoEntradaAplicacao extends Application {
 
 		// new MenuPrincipal().show();
 		// new TelaDeVenda().show();
-//		new BuscaCarro(banco, carro -> {
-//			if (carro == null) {
-//				System.out.println("Nenhum carro escolhido");
-//			} else {
-//				System.out.println("Carro escolhido (marca): ");
-//				System.out.println(carro.getMarca());
-//			}
-//		}).show();
-		
-		new BuscaCarroComEdicao(banco, carro -> {
-			if (carro == null) {
-				System.out.println("Nenhum carro escolhido");
-			} else {
-				System.out.println("Carro escolhido (marca): ");
-				System.out.println(carro.getMarca());
-			}
+		// new BuscaCarro(banco, carro -> {
+		// if (carro == null) {
+		// System.out.println("Nenhum carro escolhido");
+		// } else {
+		// System.out.println("Carro escolhido (marca): ");
+		// System.out.println(carro.getMarca());
+		// }
+		// }).show();
+
+		new BuscaCarroComEdicao(banco, (carroAlterado, nomeCampo, valor) -> {
+			System.out.println(nomeCampo);
+			System.out.println(carroAlterado.getPlaca());
+			return true;
 		}).show();
+
+		// new CadastrarVendedor().show();
 	}
 
 	@Override

@@ -15,8 +15,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -92,18 +90,12 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 			List<ObjetoBuscado> itens = obterItensSelecionados();
 
 			if (itens.isEmpty()) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Alerta");
-				alert.setHeaderText("Por favor, selecione um item da lista");
-				alert.show();
+				ComponentesServices.mostrarAlerta("Por favor, selecione um item da lista");
 				return;
 			}
 
 			if (itens.size() > 1) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Alerta");
-				alert.setHeaderText("Por favor, selecione apenas um item da lista");
-				alert.show();
+				ComponentesServices.mostrarAlerta("Por favor, selecione apenas um item da lista");
 				return;
 			}
 

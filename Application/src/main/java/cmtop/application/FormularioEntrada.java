@@ -1,6 +1,7 @@
 package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
+import cmtop.persistence.entity.Banco;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -11,7 +12,7 @@ import javafx.scene.text.TextAlignment;
 
 public class FormularioEntrada extends TelaBase {
 
-	public FormularioEntrada() {
+	public FormularioEntrada(Banco banco) {
 		super("AutoManager - Formulário de entrada", 600, 500);
 
 		VBox conteudo = new VBox();

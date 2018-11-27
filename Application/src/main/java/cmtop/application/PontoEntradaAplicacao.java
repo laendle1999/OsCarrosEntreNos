@@ -1,6 +1,5 @@
 package cmtop.application;
 
-import cmtop.busca.BuscaCarroComEdicao;
 import cmtop.persistence.entity.Banco;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,14 +20,13 @@ public class PontoEntradaAplicacao extends Application {
 		// }
 		// }).show();
 
-		new BuscaCarroComEdicao(banco, (carroAlterado, nomeCampo, valor) -> {
-			System.out.println(nomeCampo);
-			System.out.println(carroAlterado.getPlaca());
-			return true;
-		}).show();
+		// new BuscaCarroComEdicao(banco, (carroAlterado, nomeCampo, valor) -> {
+		// System.out.println(nomeCampo);
+		// System.out.println(carroAlterado.getPlaca());
+		// return true;
+		// }).show();
 
-		new CadastrarCliente().show();
-		// new TelaDeVenda().show();
+		new TelaLogin(banco).show();
 	}
 
 	@Override

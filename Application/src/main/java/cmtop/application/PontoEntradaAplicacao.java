@@ -20,6 +20,7 @@ public class PontoEntradaAplicacao extends Application {
 				System.out.println(carro.getMarca());
 			}
 		}).show();
+		//new TelaDeVenda().show();
 	}
 
 	@Override

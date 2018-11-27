@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class TelaBase extends Stage {
+public abstract class TelaBase extends Stage {
 
 	private VBox parteDireita = new VBox();
 	

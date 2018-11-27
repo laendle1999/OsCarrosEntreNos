@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import cmtop.application.service.ComponentesServices;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -35,9 +34,6 @@ public class TelaDeVenda extends TelaBase {
 		Text secao = new Text("Nova Venda");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
-		Text info = new Text("Informações");
-
-		TextField busca = new TextField();
 		Button[] botao = { new Button("Carro"), new Button("Cliente"), new Button("Pagamento"),
 				new Button("Nota Fiscal"), new Button("Finalizar Venda") };
 

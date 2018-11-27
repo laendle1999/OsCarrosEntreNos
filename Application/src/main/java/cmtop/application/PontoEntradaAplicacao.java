@@ -24,7 +24,8 @@ public class PontoEntradaAplicacao extends Application {
 		// System.out.println(nomeCampo);
 		// System.out.println(carroAlterado.getPlaca());
 		// return true;
-		// }).show();
+		// }, carro -> System.out.println("Carro apagado: " +
+		// carro.getModelo())).show();
 
 		new TelaLogin(banco).show();
 	}

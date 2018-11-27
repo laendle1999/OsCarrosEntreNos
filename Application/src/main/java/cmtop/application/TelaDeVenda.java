@@ -27,12 +27,16 @@ public class TelaDeVenda extends TelaBase {
 
 	private VBox[] celulasTabela;
 
+	private static final String BUTTON_STYLE = "-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
+			+ "  -fx-text-fill: #242d35;";
+
 	public TelaDeVenda(Banco banco) {
 		super("AutoManager", 700, 600);
 
 		this.vendaService = new VendaService(banco);
 
 		VBox conteudo = new VBox();
+		conteudo.setAlignment(Pos.CENTER);
 
 		GridPane botoesCima = new GridPane();
 		botoesCima.setAlignment(Pos.CENTER);
@@ -53,8 +57,7 @@ public class TelaDeVenda extends TelaBase {
 				new Button("Nota Fiscal"), new Button("Finalizar Venda") };
 
 		for (Button b : botao) {
-			b.setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
-					+ "  -fx-text-fill: #242d35;");
+			b.setStyle(BUTTON_STYLE);
 		}
 
 		celulasTabela = new VBox[] { new VBox(), new VBox(), new VBox(), new VBox(), new VBox(), new VBox(), new VBox(),
@@ -89,7 +92,7 @@ public class TelaDeVenda extends TelaBase {
 		celulasTabela[2].getChildren().add(new Text("Pagamento:"));
 		celulasTabela[3].getChildren().add(new Text("Data da Venda:"));
 		celulasTabela[7].getChildren().add(new Text(dtf.format(now)));
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 177));
 		conteudo.getChildren().add(secao);
 		conteudo.getChildren().add(botoesCima);
 		// interior.getChildren().add(interiorE);
@@ -106,7 +109,13 @@ public class TelaDeVenda extends TelaBase {
 		botoesCima.add(botao[1], 1, 0);
 		botoesCima.add(botao[2], 2, 0);
 
-		botoesEmbaixo.add(botao[3], 0, 0);
+		Button botaoValoresEntradas = new Button();
+		botaoValoresEntradas.setStyle(BUTTON_STYLE);
+		botaoValoresEntradas.setText("Valores de entrada");
+
+		botoesCima.add(botaoValoresEntradas, 3, 0);
+
+		// botoesEmbaixo.add(botao[3], 0, 0);
 		botoesEmbaixo.add(botao[4], 1, 0);
 
 		botao[0].setOnAction(event -> {

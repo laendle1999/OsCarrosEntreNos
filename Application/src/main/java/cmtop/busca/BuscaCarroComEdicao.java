@@ -22,8 +22,9 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
-	public BuscaCarroComEdicao(Banco banco, ListenerAlteracoes<Carro> listenerAlteracoes) {
-		super("Carro", "Selecionar carro", listenerAlteracoes);
+	public BuscaCarroComEdicao(Banco banco, ListenerAlteracoes<Carro> listenerAlteracoes,
+			Consumer<Carro> listenerApagar) {
+		super("Carro", "Selecionar carro", listenerAlteracoes, listenerApagar);
 
 		this.banco = banco;
 		this.definirCamposBusca(PLACA);

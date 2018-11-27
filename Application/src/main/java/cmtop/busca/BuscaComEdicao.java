@@ -11,6 +11,7 @@ import cmtop.application.model.ModelGenerico.Coluna;
 import cmtop.application.service.ComponentesServices;
 import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -18,7 +19,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -48,10 +52,13 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 
 	private ListenerAlteracoes<ObjetoBuscado> listenerAlteracoes;
 
+	private Consumer<ObjetoBuscado> listenerApagar;
+
 	public BuscaComEdicao(String nomeObjetoParaBuscar, String mensagemBotaoEscolher,
-			ListenerAlteracoes<ObjetoBuscado> listenerAlteracoes) {
+			ListenerAlteracoes<ObjetoBuscado> listenerAlteracoes, Consumer<ObjetoBuscado> listenerApagar) {
 		super("AutoManager", 700, 600);
 		this.listenerAlteracoes = listenerAlteracoes;
+		this.listenerApagar = listenerApagar;
 
 		VBox conteudo = new VBox();
 
@@ -61,6 +68,7 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 		tabela = new TableView<>(listaTabela);
 		tabela.setEditable(true);
 		atualizarColunasTabela();
+		adicionarAcaoApagarNaTabela();
 
 		Button botao = new Button("Buscar");
 		botao.setOnAction(event -> {
@@ -190,6 +198,30 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 			listaCampos.add(info, 0, i);
 			listaCampos.add(componente, 1, i);
 		}
+	}
+
+	private void adicionarAcaoApagarNaTabela() {
+		if (listenerApagar == null)
+			return;
+		tabela.setRowFactory(tableView -> {
+			final TableRow<ModelGenerico> row = new TableRow<>();
+			final ContextMenu contextMenu = new ContextMenu();
+			final MenuItem removeMenuItem = new MenuItem("Apagar item");
+			removeMenuItem.setOnAction(event -> {
+				ObjetoBuscado objetoApagado = obterItensSelecionados().get(0);
+
+				listenerApagar.accept(objetoApagado);
+
+				tabela.getItems().remove(row.getItem());
+				listaOriginal.remove(objetoApagado);
+			});
+			contextMenu.getItems().add(removeMenuItem);
+			// Set context menu on row, but use a binding to make it only show for non-empty
+			// rows:
+			row.contextMenuProperty()
+					.bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+			return row;
+		});
 	}
 
 	private void atualizarColunasTabela() {

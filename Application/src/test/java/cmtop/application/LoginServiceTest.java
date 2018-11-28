@@ -12,6 +12,7 @@ import cmtop.application.service.LoginService;
 import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.TipoBanco;
+import cmtop.persistence.service.ServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class LoginServiceTest {
@@ -45,6 +46,8 @@ public class LoginServiceTest {
 		assertTrue(LoginService.estaLogado());
 
 		assertTrue(LoginService.getFuncionarioLogado().getTipoAcesso() == TipoAcesso.GERENTE);
+		
+		ServidorRedeLocal.fecharConexoes();
 	}
 
 	@Test
@@ -74,6 +77,8 @@ public class LoginServiceTest {
 		assertTrue(LoginService.estaLogado());
 
 		assertTrue(LoginService.getFuncionarioLogado().getTipoAcesso() == TipoAcesso.VENDEDOR);
+
+		ServidorRedeLocal.fecharConexoes();
 	}
 
 }

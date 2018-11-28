@@ -10,14 +10,14 @@ public class Carro {
 
 	private float valorVenda, custo;
 
-	private String dataEntrada;
+	private long dataEntrada;
 
 	private StatusCarro statusCarro;
 
 	private int id;
 
 	public Carro(int id, String numero, String placa, String renavan, String modelo, String marca, String cor, int ano,
-			float valorVenda, float custo, String dataEntrada, StatusCarro statusCarro) {
+			float valorVenda, float custo, long dataEntrada, StatusCarro statusCarro) {
 		this.id = id;
 		this.numero = numero;
 		this.placa = placa;
@@ -104,11 +104,11 @@ public class Carro {
 		this.custo = custo;
 	}
 
-	public String getDataEntrada() {
+	public long getDataEntrada() {
 		return dataEntrada;
 	}
 
-	public void setDataEntrada(String dataEntrada) {
+	public void setDataEntrada(long dataEntrada) {
 		this.dataEntrada = dataEntrada;
 	}
 
@@ -127,7 +127,7 @@ public class Carro {
 		result = prime * result + ano;
 		result = prime * result + ((cor == null) ? 0 : cor.hashCode());
 		result = prime * result + Float.floatToIntBits(custo);
-		result = prime * result + ((dataEntrada == null) ? 0 : dataEntrada.hashCode());
+		//result = prime * result + ((dataEntrada == null) ? 0 : dataEntrada.hashCode());
 		result = prime * result + ((marca == null) ? 0 : marca.hashCode());
 		result = prime * result + ((modelo == null) ? 0 : modelo.hashCode());
 		result = prime * result + ((numero == null) ? 0 : numero.hashCode());

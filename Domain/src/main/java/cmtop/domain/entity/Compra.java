@@ -4,13 +4,13 @@ public class Compra {
 
 	private String localCompra, nomeFornecedor;
 
-	private String data;
+	private long data;
 
 	private float custo;
 
 	private int carro;
 
-	public Compra(String localCompra, String nomeFornecedor, String data, float custo, int id_carro) {
+	public Compra(String localCompra, String nomeFornecedor, long data, float custo, int id_carro) {
 		this.localCompra = localCompra;
 		this.nomeFornecedor = nomeFornecedor;
 		this.data = data;
@@ -34,11 +34,11 @@ public class Compra {
 		this.nomeFornecedor = nomeFornecedor;
 	}
 
-	public String getData() {
+	public long getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(long data) {
 		this.data = data;
 	}
 

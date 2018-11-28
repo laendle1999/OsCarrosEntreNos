@@ -14,7 +14,7 @@ public class ManutencaoTest {
 
 	@Before
 	public void criarManutencao() {
-		this.manutencao = new Manutencao(-1, null, null, 0, 0);
+		this.manutencao = new Manutencao(-1, null, 0, 0, 0);
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class ManutencaoTest {
 	@Test
 	public void testeData() {
 
-		manutencao.setData("121");
+		manutencao.setData(122);
 		Assert.assertEquals("121", manutencao.getData());
 	}
 
@@ -48,9 +48,9 @@ public class ManutencaoTest {
 		Carro carro, carro2;
 
 		carro = new Carro(-1, "Numero", "EWI0392", "6596416", "Honda", "Honda", "Amarelo", 2012, 10000, 1000,
-				"10-10-10", statusCarro);
+				45454, statusCarro);
 		carro2 = new Carro(-1, "Numero", "EWI0392", "6596416", "Honda", "Honda", "Amarelo", 2012, 10000, 1000,
-				"10-10-10", statusCarro);
+				12346, statusCarro);
 
 		manutencao.setCarro(carro.getId());
 		Assert.assertEquals(carro2.getId(), manutencao.getCarro());

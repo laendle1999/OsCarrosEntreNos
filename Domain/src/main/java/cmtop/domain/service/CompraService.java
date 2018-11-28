@@ -19,7 +19,7 @@ public class CompraService {
 		this.banco = banco;
 	}
 
-	public void cadastrarNovaCompraDeCarro(String localCompra, String nomeFornecedor, String data, float custo,
+	public void cadastrarNovaCompraDeCarro(String localCompra, String nomeFornecedor, long data, float custo,
 			Carro carro, ListenerConsulta listener) throws IOException {
 		CarroRepository carroRepository = new CarroRepository(banco);
 		carroRepository.cadastrarCarro(carro, listener);

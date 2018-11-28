@@ -4,7 +4,7 @@ public class Manutencao {
 
 	private String descricao;
 
-	private String data;
+	private long data;
 
 	private float custo;
 
@@ -12,7 +12,7 @@ public class Manutencao {
 
 	private int id;
 
-	public Manutencao(int id, String descricao, String data, float custo, int carro) {
+	public Manutencao(int id, String descricao, long data, float custo, int carro) {
 		this.id = id;
 		this.descricao = descricao;
 		this.data = data;
@@ -28,11 +28,11 @@ public class Manutencao {
 		this.descricao = descricao;
 	}
 
-	public String getData() {
+	public long getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(long data) {
 		this.data = data;
 	}
 

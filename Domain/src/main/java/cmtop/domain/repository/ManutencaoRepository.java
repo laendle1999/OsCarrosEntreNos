@@ -15,6 +15,7 @@ import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class ManutencaoRepository {
@@ -32,7 +33,7 @@ public class ManutencaoRepository {
 
 		int id_carro = registro.get("id_carro").getAsInt();
 		String descricao = registro.get("descricao").getAsString();
-		String dt_manutencao = registro.get("dt_manutencao").getAsString();
+		long dt_manutencao = registro.get("dt_manutencao").getAsLong();
 		float custo = registro.get("custo").getAsFloat();
 
 		return new Manutencao(id, descricao, dt_manutencao, custo, id_carro);
@@ -42,7 +43,7 @@ public class ManutencaoRepository {
 		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_carro", new ValorInt(manutencao.getCarro()));
 		registro.set("descricao", new ValorString(manutencao.getDescricao()));
-		registro.set("dt_manutencao", new ValorString(manutencao.getData()));
+		registro.set("dt_manutencao", new ValorLong(manutencao.getData()));
 		registro.set("custo", new ValorFloat(manutencao.getCusto()));
 
 		return registro;

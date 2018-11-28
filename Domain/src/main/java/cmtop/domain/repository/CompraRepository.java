@@ -14,6 +14,7 @@ import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class CompraRepository {
@@ -29,7 +30,7 @@ public class CompraRepository {
 	private Registro converterCompraEmRegistro(Compra compra) {
 		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_carro", new ValorInt(compra.getCarro()));
-		registro.set("dt_compra", new ValorString(compra.getData()));
+		registro.set("dt_compra", new ValorLong(compra.getData()));
 		registro.set("local_compra", new ValorString(compra.getLocalCompra()));
 		registro.set("custo", new ValorFloat(compra.getCusto()));
 		registro.set("nome_do_fornecedor", new ValorString(compra.getNomeFornecedor()));
@@ -38,7 +39,7 @@ public class CompraRepository {
 
 	private Compra converterRegistroEmCompra(Registro registro) {
 		int id_carro = registro.get("id_carro").getAsInt();
-		String dt_compra = registro.get("dt_compra").getAsString();
+		long dt_compra = registro.get("dt_compra").getAsLong();
 		String local_compra = registro.get("local_compra").getAsString();
 		float custo = registro.get("custo").getAsFloat();
 		String nome_do_fornecedor = registro.get("nome_do_fornecedor").getAsString();

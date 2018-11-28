@@ -15,6 +15,7 @@ import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class CarroRepository {
@@ -39,7 +40,7 @@ public class CarroRepository {
 		String cor = registro.get("cor").getAsString();
 		float valor_carro = registro.get("valor_carro").getAsFloat();
 		float custo = registro.get("custo").getAsFloat();
-		String data_entrada = registro.get("data_entrada").getAsString();
+		long data_entrada = registro.get("data_entrada").getAsLong();
 		int status = registro.get("status").getAsInt();
 
 		StatusCarro statusCarro = StatusCarro.fromInt(status);
@@ -59,7 +60,7 @@ public class CarroRepository {
 		registro.set("cor", new ValorString(carro.getCor()));
 		registro.set("valor_carro", new ValorFloat(carro.getValorVenda()));
 		registro.set("custo", new ValorFloat(carro.getCusto()));
-		registro.set("data_entrada", new ValorString(carro.getDataEntrada()));
+		registro.set("data_entrada", new ValorLong(carro.getDataEntrada()));
 		registro.set("status", new ValorInt(carro.getStatusCarro().asInt()));
 		return registro;
 	}

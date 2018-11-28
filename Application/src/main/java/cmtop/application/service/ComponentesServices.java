@@ -5,7 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +43,26 @@ public class ComponentesServices {
 		new Thread(() -> {
 			String input = JOptionPane.showInputDialog(mensagem);
 			listenerEntrada.accept(input);
+		}).start();
+	}
+
+	public static void mostrarEntradaSenha(String mensagem, Consumer<String> listenerEntrada) {
+		new Thread(() -> {
+			JPanel panel = new JPanel();
+			JLabel label = new JLabel(mensagem);
+			JPasswordField pass = new JPasswordField(10);
+			panel.add(label);
+			panel.add(pass);
+			String[] options = new String[] { "OK", "Cancelar" };
+			int option = JOptionPane.showOptionDialog(null, panel, "Entrada de senha", JOptionPane.NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+			if (option == 0) {
+				char[] password = pass.getPassword();
+				listenerEntrada.accept(new String(password));
+			}
+			else {
+				listenerEntrada.accept(null);
+			}
 		}).start();
 	}
 

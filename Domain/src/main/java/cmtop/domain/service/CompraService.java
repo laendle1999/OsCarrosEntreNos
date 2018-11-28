@@ -7,15 +7,15 @@ import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Compra;
 import cmtop.domain.repository.CarroRepository;
 import cmtop.domain.repository.CompraRepository;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class CompraService {
 
-	private BancoServidorRedeLocal banco;
+	private Banco banco;
 
-	public CompraService(BancoServidorRedeLocal banco) {
+	public CompraService(Banco banco) {
 		this.banco = banco;
 	}
 

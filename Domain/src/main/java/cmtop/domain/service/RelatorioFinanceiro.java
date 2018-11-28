@@ -8,18 +8,18 @@ import cmtop.domain.entity.Compra;
 import cmtop.domain.entity.Venda;
 import cmtop.domain.repository.CompraRepository;
 import cmtop.domain.repository.VendaRepository;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class RelatorioFinanceiro {
 
-	private BancoServidorRedeLocal banco;
+	private Banco banco;
 
-	public RelatorioFinanceiro(BancoServidorRedeLocal banco) {
+	public RelatorioFinanceiro(Banco banco) {
 		this.banco = banco;
 	}
 
-	public void gerarRelatorioFinanceiro(String dataInicio, int limiteRegistros,
+	public void gerarRelatorioFinanceiro(long dataInicio, int limiteRegistros,
 			ListenerConsultaComResposta<String> listener) throws IOException {
 		CompraRepository compraRepository = new CompraRepository(banco);
 		compraRepository.obterComprasRealizadasApos(dataInicio, limiteRegistros,

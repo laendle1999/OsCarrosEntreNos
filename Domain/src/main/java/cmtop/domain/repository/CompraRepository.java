@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cmtop.domain.entity.Compra;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
@@ -19,9 +19,9 @@ import cmtop.persistence.valueobject.ValorString;
 public class CompraRepository {
 
 	private Tabela tabela;
-	private BancoServidorRedeLocal banco;
+	private Banco banco;
 
-	public CompraRepository(BancoServidorRedeLocal banco) throws IOException {
+	public CompraRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("compra");
 	}

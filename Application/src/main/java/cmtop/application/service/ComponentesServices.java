@@ -36,6 +36,13 @@ public class ComponentesServices {
 		JOptionPane.showMessageDialog(null, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
 	}
 
+	public static void mostrarEntradaTexto(String mensagem, Consumer<String> listenerEntrada) {
+		new Thread(() -> {
+			String input = JOptionPane.showInputDialog(mensagem);
+			listenerEntrada.accept(input);
+		}).start();
+	}
+
 	public static void mostrarInformacao(String mensagem) {
 		JOptionPane.showMessageDialog(null, mensagem, "Informação", JOptionPane.INFORMATION_MESSAGE);
 	}

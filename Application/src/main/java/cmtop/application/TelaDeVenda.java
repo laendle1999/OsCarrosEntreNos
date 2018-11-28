@@ -134,6 +134,10 @@ public class TelaDeVenda extends TelaBase {
 				atualizarView();
 			}).show();
 		});
+		
+		botao[2].setOnAction(event -> {
+			new CadastrarPagamento(banco,vendaService.getCarro().getValorVenda()).show();
+		});
 
 		botao[4].setOnAction(event -> {
 			try {

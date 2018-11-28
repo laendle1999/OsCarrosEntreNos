@@ -1,12 +1,16 @@
 package cmtop.application;
 
+import java.io.IOException;
+import java.util.List;
+
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
-import cmtop.busca.BuscarVendedorComEdicao;
-import cmtop.busca.BuscarVendedorComEdicao;
 import cmtop.busca.BuscaComEdicao.ListenerAlteracoes;
+import cmtop.busca.BuscarVendedorComEdicao;
 import cmtop.domain.entity.Vendedor;
+import cmtop.domain.repository.VendedorRepository;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -17,6 +21,24 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class MenuGerenciamentoVendedor extends TelaBase {
+
+	String log, pass;
+	
+	public String getLog() {
+		return log;
+	}
+
+	public void setLog(String log) {
+		this.log = log;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
 
 	public MenuGerenciamentoVendedor(Banco banco) {
 		super("AutoManager - Gerenciamento de vendedores", 700, 600);
@@ -48,7 +70,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 
 		menu.add(botoes[0], 0, 1);
 		menu.add(botoes[1], 1, 1);
-		//menu.add(botoes[2], 2, 1);
+		menu.add(botoes[2], 2, 1);
 		// menu.add(botoes[3], 0, 2);
 		// menu.add(botoes[4], 1, 2);
 		// menu.add(botoes[5], 2, 2);
@@ -75,7 +97,52 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 					});
 			}
 		});
-		//botoes[2].setOnMouseClicked(event -> new CadastrarManutencao(banco).show());
+		botoes[2].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				
+				Vendedor vendedor = null;
+				
+				ComponentesServices.mostrarEntradaTexto("Entre com o Login", login->{
+					setLog(login);
+					ComponentesServices.mostrarEntradaSenha("Entre com a Senha", senha->{
+						setPass(senha);
+					});
+				});
+				
+				
+				
+				try {
+					new VendedorRepository(banco).obterVendedorPorLogin(getLog(), new ListenerConsultaComResposta<Vendedor>() {
+						@Override
+						public void resposta(List<Vendedor> registros) {
+							if(registros.isEmpty()) {
+								System.err.println("Nenhum redistro encontrado");
+							}
+							else {
+								Vendedor vendedor = registros.get(0);
+								try {
+									new VendedorRepository(banco).alterarSenhaVendedor(vendedor, getPass(), null);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}
+						
+						@Override
+						public void erro(Exception e) {
+							// TODO Auto-generated method stub
+						}
+					});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
 
 		definirConteudo(conteudo);
 	}

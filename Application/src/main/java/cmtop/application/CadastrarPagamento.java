@@ -52,7 +52,7 @@ public class CadastrarPagamento extends TelaBase {
 		
 		
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(new HBox(secao,new Text(custo+"")));
+		conteudo.getChildren().add(new HBox(secao,new Text("  	 R$" + custo)));
 		
 		CheckBox[] cb = { new CheckBox("Valor a Vista"),new CheckBox("Financiamento"),new CheckBox("Carro")}; 
 		conteudo.getChildren().add(new HBox(cb[0],cb[1],cb[2]));
@@ -132,6 +132,8 @@ public class CadastrarPagamento extends TelaBase {
 		btn[0].setTranslateY(30);
 
 		definirConteudo(conteudo);
+		
+		
 	}
 
 }

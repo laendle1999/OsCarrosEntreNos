@@ -127,7 +127,7 @@ public class BancoServidorRedeLocal extends Banco {
 			try {
 				Statement statement = getConnection().createStatement();
 				statement.execute(sql);
-				listener.sucesso();
+				listener.sucesso(statement.getUpdateCount());
 			} catch (SQLException | IOException e) {
 				listener.erro(e);
 			}
@@ -187,6 +187,7 @@ public class BancoServidorRedeLocal extends Banco {
 					resultados.add(registro);
 				}
 			} catch (SQLException | IOException e) {
+				e.printStackTrace();
 				listener.erro(e);
 				return;
 			}

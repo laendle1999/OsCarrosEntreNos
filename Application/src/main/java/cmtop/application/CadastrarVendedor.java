@@ -113,7 +113,7 @@ public class CadastrarVendedor extends TelaBase {
 				try {
 					new VendedorRepository(banco).cadastrarVendedor(vendedor,campos[5].getText() , new ListenerConsulta() {
 						@Override
-						public void sucesso(){
+								public void sucesso(int resultadosAfetados) {
 						}
 						@Override
 						public void erro(Exception e){

@@ -27,22 +27,21 @@ public class TabelaTest {
 		registro.set("telefone1", new ValorString("12345678"));
 		registro.set("nome", new ValorString("abc"));
 
-		CountDownLatch latch = new CountDownLatch(1);
-
+		CountDownLatch latchInserir = new CountDownLatch(1);
 		Tabela tabela = getBanco().getTabela("cliente");
 		tabela.inserir(registro, new ListenerConsulta() {
 			@Override
-			public void sucesso() {
-				latch.countDown();
+			public void sucesso(int resultadosAfetados) {
+				latchInserir.countDown();
 			}
 
 			@Override
 			public void erro(Exception e) {
-				latch.countDown();
+				e.printStackTrace();
+				latchInserir.countDown();
 			}
 		});
-
-		latch.await();
+		latchInserir.await();
 
 		// TODO buscar e verificar se resultado é igual
 
@@ -50,15 +49,20 @@ public class TabelaTest {
 		condicao.add("rg", TipoCondicao.IGUAL, new ValorString("10"));
 		condicao.add("nome", TipoCondicao.SIMILAR, new ValorString("abc"));
 
+		CountDownLatch latchRemover = new CountDownLatch(1);
 		tabela.remover(condicao, new ListenerConsulta() {
 			@Override
-			public void sucesso() {
+			public void sucesso(int resultadosAfetados) {
+				latchRemover.countDown();
 			}
 
 			@Override
 			public void erro(Exception e) {
+				e.printStackTrace();
+				latchRemover.countDown();
 			}
 		});
+		latchRemover.await();
 
 		// TODO buscar e verificar se determinado registro foi removido
 

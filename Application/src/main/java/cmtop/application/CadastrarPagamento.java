@@ -2,7 +2,6 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.persistence.entity.Banco;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;

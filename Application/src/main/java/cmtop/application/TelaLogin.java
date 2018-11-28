@@ -69,6 +69,7 @@ public class TelaLogin extends TelaBase {
 		btn.setOnAction(event -> {
 			String login = campos[0].getText();
 			String senha = campos[1].getText();
+
 			try {
 				LoginService.logar(banco, login, senha, new ListenerConsultaComResposta<Boolean>() {
 

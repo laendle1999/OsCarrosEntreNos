@@ -143,7 +143,8 @@ public class TelaDeVenda extends TelaBase {
 					ComponentesServices.mostrarAlerta("Por favor, selecione o carro");
 				} else {
 					vendaService.finalizarVenda();
-					ComponentesServices.mostrarInformacao("Venda finalizada com sucesso");
+					close();
+					// ComponentesServices.mostrarInformacao("Venda finalizada com sucesso");
 				}
 			} catch (IOException e) {
 				ComponentesServices.mostrarErro("Falha ao conectar ao banco de dados");

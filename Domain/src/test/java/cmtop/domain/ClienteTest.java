@@ -12,7 +12,7 @@ public class ClienteTest {
 
 	@Before
 	public void criarCliente() {
-		this.cliente = new Cliente(-1, null, null, null, null, null, null, null);
+		this.cliente = new Cliente(-1, null, null, null, null, null, null, 0);
 	}
 
 	@Test
@@ -53,8 +53,8 @@ public class ClienteTest {
 
 	@Test
 	public void testeData() {
-		cliente.setDataNascimento("12-03-04");
-		Assert.assertEquals("12-03-04", cliente.getDataNascimento());
+		cliente.setDataNascimento(10000);
+		Assert.assertEquals(10000, cliente.getDataNascimento());
 	}
 
 }

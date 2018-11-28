@@ -9,11 +9,11 @@ public class Vendedor {
 
 	private int id;
 
-	private String dataNascimento;
+	private long dataNascimento;
 
 	private String telefone2;
 
-	public Vendedor(int id, String telefone1, String telefone2, String nome, String dataNascimento, String rg,
+	public Vendedor(int id, String telefone1, String telefone2, String nome, long dataNascimento, String rg,
 			String cpf, String endereco, String login, String email, TipoAcesso tipoAcesso) {
 		this.id = id;
 		this.telefone1 = telefone1;
@@ -52,11 +52,11 @@ public class Vendedor {
 		this.nome = nome;
 	}
 
-	public String getDataNascimento() {
+	public long getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(String dataNascimento) {
+	public void setDataNascimento(long dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 

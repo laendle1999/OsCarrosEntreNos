@@ -13,6 +13,7 @@ import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class ClienteRepository {
@@ -34,7 +35,7 @@ public class ClienteRepository {
 		String endereco = registro.get("endereco").getAsString();
 		String telefone1 = registro.get("telefone1").getAsString();
 		String telefone2 = registro.get("telefone1").getAsString();
-		String dataNascimento = registro.get("dt_nasc").getAsString();
+		long dataNascimento = registro.get("dt_nasc").getAsLong();
 
 		return new Cliente(id, nome, rg, cpf, endereco, telefone1, telefone2, dataNascimento);
 	}
@@ -44,7 +45,7 @@ public class ClienteRepository {
 		registro.set("rg", new ValorString(cliente.getRg()));
 		registro.set("cpf", new ValorString(cliente.getCpf()));
 		registro.set("nome", new ValorString(cliente.getNome()));
-		registro.set("dt_nasc", new ValorString(cliente.getDataNascimento()));
+		registro.set("dt_nasc", new ValorLong(cliente.getDataNascimento()));
 		registro.set("endereco", new ValorString(cliente.getEndereco()));
 		registro.set("telefone1", new ValorString(cliente.getTelefone1()));
 		registro.set("telefone2", new ValorString(cliente.getTelefone2()));

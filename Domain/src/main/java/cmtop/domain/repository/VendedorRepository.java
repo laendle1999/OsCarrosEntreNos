@@ -14,6 +14,7 @@ import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class VendedorRepository {
@@ -31,7 +32,7 @@ public class VendedorRepository {
 		String rg = registro.get("rg").getAsString();
 		String cpf = registro.get("cpf").getAsString();
 		String nome = registro.get("nome").getAsString();
-		String dataNascimento = registro.get("dt_nasc").getAsString();
+		long dataNascimento = registro.get("dt_nasc").getAsLong();
 		String endereco = registro.get("endereco").getAsString();
 		String telefone1 = registro.get("telefone1").getAsString();
 		String telefone2 = registro.get("telefone1").getAsString();
@@ -51,7 +52,7 @@ public class VendedorRepository {
 		registro.set("rg", new ValorString(vendedor.getRg()));
 		registro.set("cpf", new ValorString(vendedor.getCpf()));
 		registro.set("nome", new ValorString(vendedor.getNome()));
-		registro.set("dt_nasc", new ValorString(vendedor.getDataNascimento()));
+		registro.set("dt_nasc", new ValorLong(vendedor.getDataNascimento()));
 		registro.set("endereco", new ValorString(vendedor.getEndereco()));
 		registro.set("telefone1", new ValorString(vendedor.getTelefone1()));
 		registro.set("telefone2", new ValorString(vendedor.getTelefone2()));
@@ -78,6 +79,12 @@ public class VendedorRepository {
 		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
+	public void obterVendedorPorLogin(String login, ListenerConsultaComResposta<Vendedor> listener) {
+		Condicao condicao = new Condicao();
+		condicao.add("login", TipoCondicao.IGUAL, new ValorString(login));
+		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
+	}
+	
 	public void obterVendedorPorLoginSenha(String login, String senha, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("login", TipoCondicao.IGUAL, new ValorString(login));
@@ -85,8 +92,9 @@ public class VendedorRepository {
 		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
-	public void cadastrarVendedor(Vendedor vendedor, ListenerConsulta listener) {
+	public void cadastrarVendedor(Vendedor vendedor, String senha, ListenerConsulta listener) {
 		Registro registro = converterVendedorEmRegistro(vendedor);
+		registro.set("senha", new ValorString(senha));
 		tabela.inserir(registro, listener);
 	}
 

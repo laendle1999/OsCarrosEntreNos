@@ -7,10 +7,10 @@ public class Cliente {
 
 	private String telefone2;
 
-	private String dataNascimento;
+	private long dataNascimento;
 
 	public Cliente(int id, String nome, String rg, String cpf, String endereco, String telefone1, String telefone2,
-			String dataNascimento) {
+			long dataNascimento) {
 		this.id = id;
 		this.nome = nome;
 		this.rg = rg;
@@ -69,11 +69,11 @@ public class Cliente {
 		this.telefone2 = telefone2;
 	}
 
-	public String getDataNascimento() {
+	public long getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(String dataNascimento) {
+	public void setDataNascimento(long dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 

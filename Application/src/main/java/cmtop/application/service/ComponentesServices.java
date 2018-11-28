@@ -3,10 +3,12 @@ package cmtop.application.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -52,6 +54,21 @@ public class ComponentesServices {
 			alert.setTitle("Informação");
 			alert.setHeaderText(mensagem);
 			alert.show();
+		});
+	}
+
+	public static void mostrarConfirmacao(String mensagem, Consumer<Boolean> resultado) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.CONFIRMATION, mensagem, ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+			alert.showAndWait();
+
+			if (alert.getResult() == ButtonType.YES) {
+				resultado.accept(true);
+			} else if (alert.getResult() == ButtonType.NO) {
+				resultado.accept(false);
+			} else {
+				resultado.accept(null);
+			}
 		});
 	}
 

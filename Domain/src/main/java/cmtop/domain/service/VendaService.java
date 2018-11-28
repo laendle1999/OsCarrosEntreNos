@@ -85,7 +85,7 @@ public class VendaService {
 		CarroRepository carroRepository = new CarroRepository(banco);
 		carroRepository.definirCarroVendido(carro, new ListenerConsulta() {
 			@Override
-			public void sucesso() {
+			public void sucesso(int resultadosAfetados) {
 			}
 
 			@Override
@@ -98,7 +98,7 @@ public class VendaService {
 			trocaCarro.setIdVenda(venda.getId());
 			new TrocaCarroRepository(banco).adicionarCarroTroca(trocaCarro, new ListenerConsulta() {
 				@Override
-				public void sucesso() {
+				public void sucesso(int resultadosAfetados) {
 				}
 
 				@Override
@@ -112,7 +112,7 @@ public class VendaService {
 			financiamento.setIdVenda(venda.getId());
 			new FinanciamentoRepository(banco).adicionarFinanciamento(financiamento, new ListenerConsulta() {
 				@Override
-				public void sucesso() {
+				public void sucesso(int resultadosAfetados) {
 				}
 
 				@Override
@@ -126,7 +126,7 @@ public class VendaService {
 			valorEntrada.setIdVenda(venda.getId());
 			new ValorEntradaRepository(banco).adicionarValorEntrada(valorEntrada, new ListenerConsulta() {
 				@Override
-				public void sucesso() {
+				public void sucesso(int resultadosAfetados) {
 				}
 
 				@Override
@@ -138,7 +138,7 @@ public class VendaService {
 		VendaRepository vendaRepository = new VendaRepository(banco);
 		vendaRepository.gravarVenda(venda, new ListenerConsulta() {
 			@Override
-			public void sucesso() {
+			public void sucesso(int resultadosAfetados) {
 			}
 
 			@Override

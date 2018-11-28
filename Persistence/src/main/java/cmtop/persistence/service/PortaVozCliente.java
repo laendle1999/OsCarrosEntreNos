@@ -12,9 +12,9 @@ public class PortaVozCliente {
 	private BufferedReader in;
 	private Socket socket;
 
-	public PortaVozCliente(String host, int porta) throws IOException {
+	public PortaVozCliente(String host, int porta, int timeoutSegundos) throws IOException {
 		socket = new Socket(host, porta);
-		socket.setSoTimeout(30000);
+		socket.setSoTimeout(timeoutSegundos * 1000);
 
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

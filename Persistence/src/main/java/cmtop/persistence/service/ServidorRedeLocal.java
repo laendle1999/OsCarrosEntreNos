@@ -107,8 +107,9 @@ public class ServidorRedeLocal {
 			CountDownLatch latch = new CountDownLatch(1);
 			banco.executarConsulta(sql, new ListenerConsulta() {
 				@Override
-				public void sucesso() {
-					resultado = ComandosRede.OK;
+				public void sucesso(int resultadosAfetados) {
+					resultado = ComandosRede.OK + "\n";
+					resultado += resultadosAfetados;
 					latch.countDown();
 				}
 

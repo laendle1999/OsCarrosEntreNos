@@ -51,6 +51,8 @@ public class MenuGerencia extends TelaBase {
 
 		botoes[1].setOnMouseClicked(event -> new MenuGerenciamentoVendedor(banco).show());
 
+		botoes[2].setOnMouseClicked(event -> new GerarRelatorio(banco).show());
+		
 		botoes[3].setOnMouseClicked(event -> new TelaConfiguracao().show());
 
 		definirConteudo(conteudo);

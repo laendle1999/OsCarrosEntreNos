@@ -11,23 +11,24 @@ import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 
-	private BancoServidorRedeLocal banco;
+	private Banco banco;
 
 	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "");
 
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
-	public BuscaCarroComEdicao(BancoServidorRedeLocal banco, ListenerAlteracoes<Carro> listenerAlteracoes,
+	public BuscaCarroComEdicao(Banco banco2, ListenerAlteracoes<Carro> listenerAlteracoes,
 			Consumer<Carro> listenerApagar) {
 		super("Carro", "Selecionar carro", listenerAlteracoes, listenerApagar);
 
-		this.banco = banco;
+		this.banco = banco2;
 		this.definirCamposBusca(PLACA);
 	}
 

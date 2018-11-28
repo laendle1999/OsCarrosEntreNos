@@ -5,7 +5,7 @@ import java.io.IOException;
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Manutencao;
 import cmtop.domain.repository.ManutencaoRepository;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 
 public class CadastrarManutencao extends TelaBase {
 
-	public CadastrarManutencao(BancoServidorRedeLocal banco) {
+	public CadastrarManutencao(Banco banco) {
 		super("AutoManager - Cadastrar Manutenção", 600, 500);
 
 		VBox conteudo = new VBox();

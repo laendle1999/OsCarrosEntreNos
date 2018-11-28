@@ -2,6 +2,10 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
+import cmtop.busca.BuscaCarroComEdicao;
+import cmtop.busca.BuscaComEdicao.ListenerAlteracoes;
+import cmtop.busca.BuscarCarroPorTempo;
+import cmtop.domain.entity.Carro;
 import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -56,6 +60,24 @@ public class MenuGerenciamentoCarros extends TelaBase {
 				new CadastrarCompra(banco).show();
 			}
 		});
+		
+		botoes[1].setOnMouseClicked(event -> new CadastrarManutencao(banco).show());
+		botoes[2].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				new BuscaCarroComEdicao(banco, new ListenerAlteracoes<Carro>() {
+					@Override
+					public boolean aceitarMudanca(Carro objetoBuscado, String campo, String valorNovo) {
+						return false; // << retornar se valorNovo é valido ou não
+					}
+				}, carroSendoApagado -> {
+					/// apagar item do banco
+				});
+			}
+		});
+		
+		botoes[3].setOnMouseClicked(event -> new BuscarCarroPorTempo(banco, null).show());
 
 		definirConteudo(conteudo);
 	}

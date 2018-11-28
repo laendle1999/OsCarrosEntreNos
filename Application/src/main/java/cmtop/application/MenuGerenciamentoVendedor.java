@@ -2,6 +2,10 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
+import cmtop.busca.BuscarVendedorComEdicao;
+import cmtop.busca.BuscarVendedorComEdicao;
+import cmtop.busca.BuscaComEdicao.ListenerAlteracoes;
+import cmtop.domain.entity.Vendedor;
 import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -44,7 +48,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 
 		menu.add(botoes[0], 0, 1);
 		menu.add(botoes[1], 1, 1);
-		menu.add(botoes[2], 2, 1);
+		//menu.add(botoes[2], 2, 1);
 		// menu.add(botoes[3], 0, 2);
 		// menu.add(botoes[4], 1, 2);
 		// menu.add(botoes[5], 2, 2);
@@ -56,6 +60,22 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 				new CadastrarVendedor(banco).show();
 			}
 		});
+		
+		botoes[1].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+					new BuscarVendedorComEdicao(banco, new ListenerAlteracoes<Vendedor>() {
+						@Override
+						public boolean aceitarMudanca(Vendedor objetoBuscado, String campo, String valorNovo) {
+							return false; // << retornar se valorNovo é valido ou não
+						}
+					}, VendedorSendoApagado -> {
+						/// apagar item do banco
+					});
+			}
+		});
+		//botoes[2].setOnMouseClicked(event -> new CadastrarManutencao(banco).show());
 
 		definirConteudo(conteudo);
 	}

@@ -2,7 +2,10 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
-import cmtop.busca.BuscaCliente;
+import cmtop.busca.BuscaComEdicao.ListenerAlteracoes;
+import cmtop.busca.BuscarClienteComEdicao;
+import cmtop.busca.BuscarVendaACliente;
+import cmtop.domain.entity.Cliente;
 import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -62,9 +65,19 @@ public class MenuGerenciamentoCliente extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new BuscaCliente(banco, null).show();
+				new BuscarClienteComEdicao(banco, new ListenerAlteracoes<Cliente>() {
+					@Override
+					public boolean aceitarMudanca(Cliente objetoBuscado, String campo, String valorNovo) {
+						return false; // << retornar se valorNovo é valido ou não
+					}
+				}, ClienteSendoApagado -> {
+					/// apagar item do banco
+				});
+				
 			}
 		});
+		
+		botoes[2].setOnMouseClicked(event -> new BuscarVendaACliente(banco, null).show());
 
 		definirConteudo(conteudo);
 	}

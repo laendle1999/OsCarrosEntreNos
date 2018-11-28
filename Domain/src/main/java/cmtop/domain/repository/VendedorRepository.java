@@ -72,6 +72,15 @@ public class VendedorRepository {
 		return resultado;
 	}
 
+	public void alterarSenhaVendedor(Vendedor vendedor, String senha, ListenerConsulta listener) {
+		Condicao condicao = new Condicao();
+		condicao.add("id_funcionario", TipoCondicao.IGUAL, new ValorInt(vendedor.getId()));
+
+		Registro registro = converterVendedorEmRegistro(vendedor);
+		registro.set("senha", new ValorString(senha));
+		tabela.atualizar(condicao, registro, listener);
+	}
+	
 	public void obterVendedorPorId(int id, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_funcionario", TipoCondicao.IGUAL, new ValorInt(id));

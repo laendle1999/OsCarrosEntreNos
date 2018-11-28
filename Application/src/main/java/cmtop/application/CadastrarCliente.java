@@ -81,8 +81,8 @@ public class CadastrarCliente extends TelaBase {
 				try {
 					new ClienteRepository(banco).cadastrarCliente(cliente , new ListenerConsulta() {
 						@Override
-								public void sucesso(int resultadosAfetados) {
-									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
+						public void sucesso(int resultadosAfetados) {
+							ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
 						}
 						@Override
 						public void erro(Exception e){

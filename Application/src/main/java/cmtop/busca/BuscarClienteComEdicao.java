@@ -11,19 +11,20 @@ import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Cliente;
 import cmtop.domain.repository.ClienteRepository;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscarClienteComEdicao extends BuscaComEdicao<Cliente> {
 
-	private BancoServidorRedeLocal banco;
+	private Banco banco;
 
 	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "");
 
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
-	public BuscarClienteComEdicao(BancoServidorRedeLocal banco, ListenerAlteracoes<Cliente> listenerAlteracoes,
+	public BuscarClienteComEdicao(Banco banco, ListenerAlteracoes<Cliente> listenerAlteracoes,
 			Consumer<Cliente> listenerApagar) {
 		super("Cliente", "Selecionar Cliente", listenerAlteracoes, listenerApagar);
 

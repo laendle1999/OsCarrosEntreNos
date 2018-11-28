@@ -6,6 +6,7 @@ import java.util.List;
 
 import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Manutencao;
+import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
@@ -21,11 +22,11 @@ import cmtop.persistence.valueobject.ValorString;
 public class ManutencaoRepository {
 
 	private Tabela tabela;
-	private BancoServidorRedeLocal banco;
+	private Banco banco;
 
-	public ManutencaoRepository(BancoServidorRedeLocal banco) throws IOException {
-		this.banco = banco;
-		tabela = banco.getTabela("compra");
+	public ManutencaoRepository(Banco banco2) throws IOException {
+		this.banco =  banco2;
+		tabela = banco2.getTabela("compra");
 	}
 
 	private Manutencao converterRegistroEmManutencao(Registro registro) {

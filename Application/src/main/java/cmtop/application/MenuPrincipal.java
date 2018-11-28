@@ -3,6 +3,7 @@ package cmtop.application;
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
 import cmtop.application.service.PortalService;
+import cmtop.busca.BuscarVendas;
 import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.service.ServidorRedeLocal;
@@ -79,7 +80,7 @@ public class MenuPrincipal extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new MenuGerenciamentoCliente(banco).show();
+				new BuscarVendas(banco, null).show();
 			}
 		});
 

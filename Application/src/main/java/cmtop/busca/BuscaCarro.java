@@ -12,6 +12,7 @@ import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscaCarro extends Busca<Carro> {
 
@@ -34,12 +35,22 @@ public class BuscaCarro extends Busca<Carro> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Carro>> callbackListaOriginal)
 			throws IOException {
 		CarroRepository carroRepository = new CarroRepository(banco);
-		List<Carro> resultados = carroRepository.obterCarrosPorPlaca(camposBusca.get(PLACA.getNome()), limite);
-		callbackListaOriginal.accept(resultados);
+		carroRepository.obterCarrosPorPlaca(camposBusca.get(PLACA.getNome()), limite,
+				new ListenerConsultaComResposta<Carro>() {
 
-		List<CarroModel> lista = new ArrayList<>();
-		resultados.forEach(resultado -> lista.add(new CarroModel(resultado)));
-		callbackListaModel.accept(lista);
+					@Override
+					public void erro(Exception e) {
+					}
+
+					@Override
+					public void resposta(List<Carro> resultados) {
+						callbackListaOriginal.accept(resultados);
+
+						List<CarroModel> lista = new ArrayList<>();
+						resultados.forEach(resultado -> lista.add(new CarroModel(resultado)));
+						callbackListaModel.accept(lista);
+					}
+				});
 	}
 
 }

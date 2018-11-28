@@ -12,6 +12,7 @@ import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Cliente;
 import cmtop.domain.repository.ClienteRepository;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscaCliente extends Busca<Cliente> {
 
@@ -34,12 +35,22 @@ public class BuscaCliente extends Busca<Cliente> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Cliente>> callbackListaOriginal)
 			throws IOException {
 		ClienteRepository clienteRepository = new ClienteRepository(banco);
-		List<Cliente> resultados = clienteRepository.consultarClientesPorNome(camposBusca.get(NOME.getNome()), limite);
-		callbackListaOriginal.accept(resultados);
+		clienteRepository.consultarClientesPorNome(camposBusca.get(NOME.getNome()), limite,
+				new ListenerConsultaComResposta<Cliente>() {
 
-		List<ClienteModel> lista = new ArrayList<>();
-		resultados.forEach(resultado -> lista.add(new ClienteModel(resultado)));
-		callbackListaModel.accept(lista);
+					@Override
+					public void erro(Exception e) {
+					}
+
+					@Override
+					public void resposta(List<Cliente> resultados) {
+						callbackListaOriginal.accept(resultados);
+
+						List<ClienteModel> lista = new ArrayList<>();
+						resultados.forEach(resultado -> lista.add(new ClienteModel(resultado)));
+						callbackListaModel.accept(lista);
+					}
+				});
 	}
 
 }

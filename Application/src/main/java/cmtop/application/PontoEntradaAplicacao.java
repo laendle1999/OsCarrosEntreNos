@@ -1,14 +1,39 @@
 package cmtop.application;
 
+import cmtop.application.service.NetworkUtil;
 import cmtop.persistence.entity.Banco;
-import cmtop.persistence.entity.Banco.TipoConexao;
+import cmtop.persistence.entity.BancoClienteRedeLocal;
+import cmtop.persistence.entity.BancoRemoto;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.entity.TipoBanco;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PontoEntradaAplicacao extends Application {
 
+	public enum ConfiguracaoBanco {
+		SERVIDOR_REDE_LOCAL, CLIENTE_REDE_LOCAL, REMOTO_NUVEM
+	}
+
 	public static void iniciarAplicacao() {
-		Banco banco = new Banco("", "", TipoConexao.SERVIDOR_DERBY);
+		ConfiguracaoBanco configuracaoBanco = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
+
+		Banco banco;
+
+		switch (configuracaoBanco) {
+		case SERVIDOR_REDE_LOCAL:
+			banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+			System.out.println(getIpAddress());
+			break;
+		case CLIENTE_REDE_LOCAL:
+			banco = new BancoClienteRedeLocal("", "", "", TipoBanco.DERBY);
+			break;
+		case REMOTO_NUVEM:
+			banco = new BancoRemoto(TipoBanco.AZURE);
+			break;
+		default:
+			return;
+		}
 
 		// new MenuPrincipal().show();
 		// new TelaDeVenda().show();
@@ -29,6 +54,10 @@ public class PontoEntradaAplicacao extends Application {
 		// carro.getModelo())).show();
 
 		new TelaLogin(banco).show();
+	}
+
+	private static String getIpAddress() {
+		return NetworkUtil.getCurrentEnvironmentNetworkIp();
 	}
 
 	@Override

@@ -2,8 +2,6 @@ package cmtop.application;
 
 import org.junit.Test;
 
-import cmtop.application.service.PortalService;
-
 public class PortalServiceTest {
 
 	@Test

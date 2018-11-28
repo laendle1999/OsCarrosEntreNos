@@ -19,6 +19,7 @@ import cmtop.domain.repository.TrocaCarroRepository;
 import cmtop.domain.repository.ValorEntradaRepository;
 import cmtop.domain.repository.VendaRepository;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsulta;
 
 public class VendaService {
 
@@ -82,28 +83,68 @@ public class VendaService {
 		venda.setCarro(carro.getId());
 
 		CarroRepository carroRepository = new CarroRepository(banco);
-		carroRepository.definirCarroVendido(carro);
+		carroRepository.definirCarroVendido(carro, new ListenerConsulta() {
+			@Override
+			public void sucesso() {
+			}
+
+			@Override
+			public void erro(Exception e) {
+			}
+		});
 
 		// Salvar trocas de carro
 		for (TrocaCarro trocaCarro : pagamento.getTrocasCarro()) {
 			trocaCarro.setIdVenda(venda.getId());
-			new TrocaCarroRepository(banco).adicionarCarroTroca(trocaCarro);
+			new TrocaCarroRepository(banco).adicionarCarroTroca(trocaCarro, new ListenerConsulta() {
+				@Override
+				public void sucesso() {
+				}
+
+				@Override
+				public void erro(Exception e) {
+				}
+			});
 		}
 
 		// Salvar financiamentos
 		for (Financiamento financiamento : pagamento.getFinanciamentos()) {
 			financiamento.setIdVenda(venda.getId());
-			new FinanciamentoRepository(banco).adicionarFinanciamento(financiamento);
+			new FinanciamentoRepository(banco).adicionarFinanciamento(financiamento, new ListenerConsulta() {
+				@Override
+				public void sucesso() {
+				}
+
+				@Override
+				public void erro(Exception e) {
+				}
+			});
 		}
 
 		// Salvar valores de entrada
 		for (ValorEntrada valorEntrada : pagamento.getValoresEntrada()) {
 			valorEntrada.setIdVenda(venda.getId());
-			new ValorEntradaRepository(banco).adicionarValorEntrada(valorEntrada);
+			new ValorEntradaRepository(banco).adicionarValorEntrada(valorEntrada, new ListenerConsulta() {
+				@Override
+				public void sucesso() {
+				}
+
+				@Override
+				public void erro(Exception e) {
+				}
+			});
 		}
 
 		VendaRepository vendaRepository = new VendaRepository(banco);
-		vendaRepository.gravarVenda(venda);
+		vendaRepository.gravarVenda(venda, new ListenerConsulta() {
+			@Override
+			public void sucesso() {
+			}
+
+			@Override
+			public void erro(Exception e) {
+			}
+		});
 
 		venda = null;
 		carro = null;

@@ -1,10 +1,12 @@
 package cmtop.application;
 
 import java.io.IOException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -67,11 +69,23 @@ public class TelaLogin extends TelaBase {
 			String login = campos[0].getText();
 			String senha = campos[1].getText();
 			try {
-				if (!LoginService.logar(banco, login, senha)) {
-					ComponentesServices.mostrarErro("Falha ao fazer login, verifique o usuário e a senha");
-				} else {
-					abrirMenu();
-				}
+				LoginService.logar(banco, login, senha, new ListenerConsultaComResposta<Boolean>() {
+
+					@Override
+					public void resposta(List<Boolean> registros) {
+						Boolean resposta = registros.get(0);
+						if (!resposta) {
+							ComponentesServices.mostrarErro("Falha ao fazer login, verifique o usuário e a senha");
+						} else {
+							abrirMenu();
+						}
+					}
+
+					@Override
+					public void erro(Exception e) {
+						ComponentesServices.mostrarErro("Falha ao se comunicar com o banco de dados");
+					}
+				});
 			} catch (IOException e) {
 				ComponentesServices.mostrarErro("Falha ao conectar ao banco de dados");
 				e.printStackTrace();

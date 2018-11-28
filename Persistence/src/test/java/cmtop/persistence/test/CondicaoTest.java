@@ -3,8 +3,8 @@ package cmtop.persistence.test;
 import org.junit.Test;
 
 import cmtop.persistence.valueobject.CampoCondicao;
-import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
 

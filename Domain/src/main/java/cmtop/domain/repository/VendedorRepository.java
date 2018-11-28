@@ -10,6 +10,8 @@ import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -19,7 +21,7 @@ public class VendedorRepository {
 	private Tabela tabela;
 	private Banco banco;
 
-	public VendedorRepository(Banco banco) {
+	public VendedorRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("funcionario");
 	}
@@ -69,48 +71,58 @@ public class VendedorRepository {
 		return resultado;
 	}
 
-	public Vendedor obterVendedorPorId(int id) throws IOException {
+	public void obterVendedorPorId(int id, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_funcionario", TipoCondicao.IGUAL, new ValorInt(id));
 
-		List<Registro> registros = tabela.buscar(condicao, 1);
-		return converterRegistroEmVendedor(registros.get(0));
+		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
-	public Vendedor obterVendedorPorLoginSenha(String login, String senha) throws IOException {
+	public void obterVendedorPorLoginSenha(String login, String senha, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("login", TipoCondicao.IGUAL, new ValorString(login));
 		condicao.add("senha", TipoCondicao.IGUAL, new ValorString(senha));
-
-		List<Registro> registros = tabela.buscar(condicao, 1);
-		if (registros.isEmpty()) {
-			return null;
-		}
-		return converterRegistroEmVendedor(registros.get(0));
+		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
-	public void cadastrarVendedor(Vendedor vendedor) throws IOException {
+	public void cadastrarVendedor(Vendedor vendedor, ListenerConsulta listener) {
 		Registro registro = converterVendedorEmRegistro(vendedor);
-		tabela.inserir(registro);
+		tabela.inserir(registro, listener);
 	}
 
-	public void alterarVendedor(Vendedor vendedor) throws IOException {
+	public void alterarVendedor(Vendedor vendedor, ListenerConsulta listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_funcionario", TipoCondicao.IGUAL, new ValorInt(vendedor.getId()));
 
 		Registro registro = converterVendedorEmRegistro(vendedor);
-		tabela.atualizar(condicao, registro);
+		tabela.atualizar(condicao, registro, listener);
 	}
 
-	public void removerVendedor(Vendedor vendedor) throws IOException {
+	public void removerVendedor(Vendedor vendedor, ListenerConsulta listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_funcionario", TipoCondicao.IGUAL, new ValorInt(vendedor.getId()));
-		tabela.remover(condicao);
+		tabela.remover(condicao, listener);
 	}
 
-	public List<Vendedor> listarVendedores(int limite) throws IOException {
+	public void listarVendedores(int limite, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
-		return converterRegistrosEmVendedores(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
+	}
+
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<Vendedor> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmVendedores(registros));
+			}
+		};
 	}
 
 }

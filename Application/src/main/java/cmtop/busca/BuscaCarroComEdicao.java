@@ -11,18 +11,19 @@ import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
-import cmtop.persistence.entity.Banco;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 
-	private Banco banco;
+	private BancoServidorRedeLocal banco;
 
 	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "");
 
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
 
-	public BuscaCarroComEdicao(Banco banco, ListenerAlteracoes<Carro> listenerAlteracoes,
+	public BuscaCarroComEdicao(BancoServidorRedeLocal banco, ListenerAlteracoes<Carro> listenerAlteracoes,
 			Consumer<Carro> listenerApagar) {
 		super("Carro", "Selecionar carro", listenerAlteracoes, listenerApagar);
 
@@ -35,12 +36,22 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Carro>> callbackListaOriginal)
 			throws IOException {
 		CarroRepository carroRepository = new CarroRepository(banco);
-		List<Carro> resultados = carroRepository.obterCarrosPorPlaca(camposBusca.get(PLACA.getNome()), limite);
-		callbackListaOriginal.accept(resultados);
+		carroRepository.obterCarrosPorPlaca(camposBusca.get(PLACA.getNome()), limite,
+				new ListenerConsultaComResposta<Carro>() {
 
-		List<CarroModel> lista = new ArrayList<>();
-		resultados.forEach(resultado -> lista.add(new CarroModel(resultado)));
-		callbackListaModel.accept(lista);
+					@Override
+					public void erro(Exception e) {
+					}
+
+					@Override
+					public void resposta(List<Carro> resultados) {
+						callbackListaOriginal.accept(resultados);
+
+						List<CarroModel> lista = new ArrayList<>();
+						resultados.forEach(resultado -> lista.add(new CarroModel(resultado)));
+						callbackListaModel.accept(lista);
+					}
+				});
 	}
 
 }

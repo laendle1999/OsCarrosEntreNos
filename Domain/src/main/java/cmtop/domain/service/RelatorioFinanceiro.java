@@ -1,47 +1,79 @@
 package cmtop.domain.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cmtop.domain.entity.Compra;
 import cmtop.domain.entity.Venda;
 import cmtop.domain.repository.CompraRepository;
 import cmtop.domain.repository.VendaRepository;
-import cmtop.persistence.entity.Banco;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class RelatorioFinanceiro {
 
-	private Banco banco;
+	private BancoServidorRedeLocal banco;
 
-	public RelatorioFinanceiro(Banco banco) {
+	public RelatorioFinanceiro(BancoServidorRedeLocal banco) {
 		this.banco = banco;
 	}
 
-	public String gerarRelatorioFinanceiro(String dataInicio, int limiteRegistros) throws IOException {
+	public void gerarRelatorioFinanceiro(String dataInicio, int limiteRegistros,
+			ListenerConsultaComResposta<String> listener) throws IOException {
 		CompraRepository compraRepository = new CompraRepository(banco);
-		List<Compra> compras = compraRepository.obterComprasRealizadasApos(dataInicio, limiteRegistros);
+		compraRepository.obterComprasRealizadasApos(dataInicio, limiteRegistros,
+				new ListenerConsultaComResposta<Compra>() {
 
-		VendaRepository vendaRepository = new VendaRepository(banco);
-		List<Venda> vendas = vendaRepository.obterVendasRealizadasApos(dataInicio, limiteRegistros);
+					@Override
+					public void erro(Exception e) {
+						listener.erro(e);
+					}
 
-		StringBuilder s = new StringBuilder();
+					@Override
+					public void resposta(List<Compra> compras) {
+						VendaRepository vendaRepository;
+						try {
+							vendaRepository = new VendaRepository(banco);
+						} catch (IOException e) {
+							listener.erro(e);
+							return;
+						}
 
-		s.append("<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>");
-		s.append("<title>Relatório financeiro</title>");
-		s.append("<style>*{text-align:center; font-family: sans-serif;}</style>");
-		s.append("</head><body>");
+						vendaRepository.obterVendasRealizadasApos(dataInicio, limiteRegistros,
+								new ListenerConsultaComResposta<Venda>() {
 
-		s.append("<h1>Relatório financeiro</h1>");
+									@Override
+									public void erro(Exception e) {
+										listener.erro(e);
+									}
 
-		s.append("<h2>Compras realizadas após " + dataInicio + "</h2>");
-		adicionarTabelaCompras(s, compras);
+									@Override
+									public void resposta(List<Venda> vendas) {
+										StringBuilder s = new StringBuilder();
 
-		s.append("<h2>Vendas realizadas após " + dataInicio + "</h2>");
-		adicionarTabelaVendas(s, vendas);
+										s.append("<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>");
+										s.append("<title>Relatório financeiro</title>");
+										s.append("<style>*{text-align:center; font-family: sans-serif;}</style>");
+										s.append("</head><body>");
 
-		s.append("</body></html>");
+										s.append("<h1>Relatório financeiro</h1>");
 
-		return null;
+										s.append("<h2>Compras realizadas após " + dataInicio + "</h2>");
+										adicionarTabelaCompras(s, compras);
+
+										s.append("<h2>Vendas realizadas após " + dataInicio + "</h2>");
+										adicionarTabelaVendas(s, vendas);
+
+										s.append("</body></html>");
+
+										List<String> resposta = new ArrayList<String>();
+										resposta.add(s.toString());
+										listener.resposta(resposta);
+									}
+								});
+					}
+				});
 	}
 
 	private void adicionarTabelaCompras(StringBuilder s, List<Compra> compras) {

@@ -9,6 +9,8 @@ import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -18,7 +20,7 @@ public class ClienteRepository {
 	private Tabela tabela;
 	private Banco banco;
 
-	public ClienteRepository(Banco banco) {
+	public ClienteRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("cliente");
 	}
@@ -59,50 +61,64 @@ public class ClienteRepository {
 		return resultado;
 	}
 
-	public List<Cliente> consultarClientePorRg(String valor, int limite) throws IOException {
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<Cliente> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmClientes(registros));
+			}
+		};
+	}
+
+	public void consultarClientePorRg(String valor, int limite, ListenerConsultaComResposta<Cliente> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("rg", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public List<Cliente> consultarClientesPorNome(String valor, int limite) throws IOException {
+	public void consultarClientesPorNome(String valor, int limite, ListenerConsultaComResposta<Cliente> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("nome", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public List<Cliente> consultarClientePorCpf(String valor, int limite) throws IOException {
+	public void consultarClientePorCpf(String valor, int limite, ListenerConsultaComResposta<Cliente> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("cpf", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmClientes(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public Cliente obterClientePorId(int id) throws IOException {
+	public void obterClientePorId(int id, ListenerConsultaComResposta<Cliente> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_cliente", TipoCondicao.IGUAL, new ValorInt(id));
-
-		List<Registro> registros = tabela.buscar(condicao, 1);
-		return converterRegistroEmCliente(registros.get(0));
+		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
-	public void cadastrarCliente(Cliente cliente) throws IOException {
+	public void cadastrarCliente(Cliente cliente, ListenerConsulta listener) {
 		Registro registro = converterClienteEmRegistro(cliente);
-		tabela.inserir(registro);
+		tabela.inserir(registro, listener);
 	}
 
-	public void alterarCliente(Cliente cliente) throws IOException {
+	public void alterarCliente(Cliente cliente, ListenerConsulta listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_cliente", TipoCondicao.IGUAL, new ValorInt(cliente.getId()));
 
 		Registro registro = converterClienteEmRegistro(cliente);
-		tabela.atualizar(condicao, registro);
+		tabela.atualizar(condicao, registro, listener);
 	}
 
-	public void excluirCliente(Cliente cliente) throws IOException {
+	public void excluirCliente(Cliente cliente, ListenerConsulta listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_cliente", TipoCondicao.IGUAL, new ValorInt(cliente.getId()));
 
-		tabela.remover(condicao);
+		tabela.remover(condicao, listener);
 	}
 
 }

@@ -6,6 +6,7 @@ import cmtop.domain.entity.ValorEntrada;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
+import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -15,7 +16,7 @@ public class ValorEntradaRepository {
 	private Tabela tabela;
 	private Banco banco;
 
-	public ValorEntradaRepository(Banco banco) {
+	public ValorEntradaRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("finaciamento");
 	}
@@ -39,9 +40,9 @@ public class ValorEntradaRepository {
 		return registro;
 	}
 
-	public void adicionarValorEntrada(ValorEntrada valorEntrada) throws IOException {
+	public void adicionarValorEntrada(ValorEntrada valorEntrada, ListenerConsulta listener) {
 		Registro registro = converterValorEntradaEmRegistro(valorEntrada);
-		tabela.inserir(registro);
+		tabela.inserir(registro, listener);
 	}
 
 }

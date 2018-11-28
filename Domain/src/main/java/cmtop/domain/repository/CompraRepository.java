@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cmtop.domain.entity.Compra;
-import cmtop.persistence.entity.Banco;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
@@ -17,9 +19,9 @@ import cmtop.persistence.valueobject.ValorString;
 public class CompraRepository {
 
 	private Tabela tabela;
-	private Banco banco;
+	private BancoServidorRedeLocal banco;
 
-	public CompraRepository(Banco banco) {
+	public CompraRepository(BancoServidorRedeLocal banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("compra");
 	}
@@ -44,22 +46,43 @@ public class CompraRepository {
 		return new Compra(local_compra, nome_do_fornecedor, dt_compra, custo, id_carro);
 	}
 
-	public void cadastrarCompra(Compra compra) throws IOException {
-		Registro registro = converterCompraEmRegistro(compra);
+	private List<Compra> converterRegistrosEmEntidades(List<Registro> registros) {
+		List<Compra> resultado = new ArrayList<>();
 
-		tabela.inserir(registro);
+		for (Registro registro : registros) {
+			Compra entidade = converterRegistroEmCompra(registro);
+			resultado.add(entidade);
+		}
+		return resultado;
 	}
 
-	public List<Compra> obterComprasRealizadasApos(String data, int limite) throws IOException {
+	public void cadastrarCompra(Compra compra, ListenerConsulta listener) {
+		Registro registro = converterCompraEmRegistro(compra);
+
+		tabela.inserir(registro, listener);
+	}
+
+	public void obterComprasRealizadasApos(String data, int limite, ListenerConsultaComResposta<Compra> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("dt_compra", TipoCondicao.MAIOR, new ValorString(data));
 
-		List<Registro> registros = tabela.buscar(condicao, limite);
-		List<Compra> resultado = new ArrayList<>();
-		for (Registro registro : registros) {
-			resultado.add(converterRegistroEmCompra(registro));
-		}
-		return resultado;
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
+	}
+
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<Compra> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmEntidades(registros));
+			}
+		};
 	}
 
 }

@@ -3,21 +3,42 @@ package cmtop.application;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.Test;
 
 import cmtop.application.service.LoginService;
 import cmtop.domain.valueobject.TipoAcesso;
-import cmtop.persistence.entity.Banco;
-import cmtop.persistence.entity.Banco.TipoConexao;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
+import cmtop.persistence.entity.TipoBanco;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class LoginServiceTest {
 
-	@Test
-	public void testeLoginGerente() throws IOException {
-		Banco banco = new Banco(TipoConexao.SERVIDOR_DERBY);
+	private boolean logado = false;
 
-		boolean logado = LoginService.logar(banco, "gerente", "1234");
+	@Test
+	public void testeLoginGerente() throws IOException, InterruptedException {
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+
+		CountDownLatch latch = new CountDownLatch(1);
+
+		LoginService.logar(banco, "gerente", "1234", new ListenerConsultaComResposta<Boolean>() {
+
+			@Override
+			public void resposta(List<Boolean> registros) {
+				logado = (boolean) registros.get(0);
+				latch.countDown();
+			}
+
+			@Override
+			public void erro(Exception e) {
+				latch.countDown();
+			}
+		});
+
+		latch.await();
 
 		assertTrue(logado);
 
@@ -27,10 +48,26 @@ public class LoginServiceTest {
 	}
 
 	@Test
-	public void testeLoginVendedor() throws IOException {
-		Banco banco = new Banco(TipoConexao.SERVIDOR_DERBY);
+	public void testeLoginVendedor() throws IOException, InterruptedException {
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
 
-		boolean logado = LoginService.logar(banco, "funcionario", "1234");
+		CountDownLatch latch = new CountDownLatch(1);
+
+		LoginService.logar(banco, "funcionario", "1234", new ListenerConsultaComResposta<Boolean>() {
+
+			@Override
+			public void resposta(List<Boolean> registros) {
+				logado = (boolean) registros.get(0);
+				latch.countDown();
+			}
+
+			@Override
+			public void erro(Exception e) {
+				latch.countDown();
+			}
+		});
+
+		latch.await();
 
 		assertTrue(logado);
 

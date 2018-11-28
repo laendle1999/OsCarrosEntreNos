@@ -6,6 +6,7 @@ import cmtop.domain.entity.TrocaCarro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
+import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -15,7 +16,7 @@ public class TrocaCarroRepository {
 	private Tabela tabela;
 	private Banco banco;
 
-	public TrocaCarroRepository(Banco banco) {
+	public TrocaCarroRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("troca_carro");
 	}
@@ -51,9 +52,9 @@ public class TrocaCarroRepository {
 		return registro;
 	}
 
-	public void adicionarCarroTroca(TrocaCarro trocaCarro) throws IOException {
+	public void adicionarCarroTroca(TrocaCarro trocaCarro, ListenerConsulta listener) {
 		Registro registro = converterTrocaCarroEmRegistro(trocaCarro);
-		tabela.inserir(registro);
+		tabela.inserir(registro, listener);
 	}
 
 }

@@ -1,14 +1,16 @@
 package cmtop.persistence.test;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.Test;
 
-import cmtop.persistence.entity.Banco;
-import cmtop.persistence.entity.Banco.TipoConexao;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
+import cmtop.persistence.entity.TipoBanco;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
@@ -16,8 +18,8 @@ import cmtop.persistence.valueobject.ValorString;
 public class TabelaTest {
 
 	@Test
-	public void inserirRemoverTest() throws IOException {
-		Registro registro = new Registro(TipoConexao.SERVIDOR_DERBY);
+	public void inserirRemoverTest() throws IOException, InterruptedException {
+		Registro registro = new Registro(TipoBanco.DERBY);
 		registro.set("rg", new ValorString("10"));
 		registro.set("cpf", new ValorString("15"));
 		registro.set("dt_nasc", new ValorLong(1543344888115L));
@@ -25,8 +27,22 @@ public class TabelaTest {
 		registro.set("telefone1", new ValorString("12345678"));
 		registro.set("nome", new ValorString("abc"));
 
+		CountDownLatch latch = new CountDownLatch(1);
+
 		Tabela tabela = getBanco().getTabela("cliente");
-		tabela.inserir(registro);
+		tabela.inserir(registro, new ListenerConsulta() {
+			@Override
+			public void sucesso() {
+				latch.countDown();
+			}
+
+			@Override
+			public void erro(Exception e) {
+				latch.countDown();
+			}
+		});
+
+		latch.await();
 
 		// TODO buscar e verificar se resultado é igual
 
@@ -34,14 +50,22 @@ public class TabelaTest {
 		condicao.add("rg", TipoCondicao.IGUAL, new ValorString("10"));
 		condicao.add("nome", TipoCondicao.SIMILAR, new ValorString("abc"));
 
-		tabela.remover(condicao);
+		tabela.remover(condicao, new ListenerConsulta() {
+			@Override
+			public void sucesso() {
+			}
+
+			@Override
+			public void erro(Exception e) {
+			}
+		});
 
 		// TODO buscar e verificar se determinado registro foi removido
 
 	}
 
-	private static Banco getBanco() {
-		return new Banco(TipoConexao.SERVIDOR_DERBY);
+	private static BancoServidorRedeLocal getBanco() {
+		return new BancoServidorRedeLocal(TipoBanco.DERBY);
 	}
 
 }

@@ -10,6 +10,8 @@ import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
@@ -21,7 +23,7 @@ public class CarroRepository {
 
 	private Banco banco;
 
-	public CarroRepository(Banco banco) {
+	public CarroRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("carro");
 	}
@@ -72,63 +74,80 @@ public class CarroRepository {
 		return resultado;
 	}
 
-	public void cadastrarCarro(Carro carro) throws IOException {
+	public void cadastrarCarro(Carro carro, ListenerConsulta listener) {
 		Registro registro = converterCarroEmRegistro(carro);
-		tabela.inserir(registro);
+		tabela.inserir(registro, listener);
 	}
 
-	public List<Carro> obterCarrosPorPlaca(String valor, int limite) throws IOException {
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<Carro> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmCarros(registros));
+			}
+		};
+	}
+
+	public void obterCarrosPorPlaca(String valor, int limite, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("placa", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public List<Carro> obterCarrosPorRenavan(String valor, int limite) throws IOException {
+	public void obterCarrosPorRenavan(String valor, int limite, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("renavan", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public List<Carro> obterCarrosPorNumero(String valor, int limite) throws IOException {
+	public void obterCarrosPorNumero(String valor, int limite, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("numero", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public List<Carro> obterCarrosPorModelo(String valor, int limite) throws IOException {
+	public void obterCarrosPorModelo(String valor, int limite, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("modelo", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public List<Carro> obterCarrosPorCor(String valor, int limite) throws IOException {
+	public void obterCarrosPorCor(String valor, int limite, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("cor", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmCarros(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public Carro obterCarroPorId(int id) throws IOException {
+	public void obterCarroPorId(int id, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(id));
-		List<Registro> registros = tabela.buscar(condicao, 1);
-		return converterRegistroEmCarro(registros.get(0));
+		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
-	public void definirCarroVendido(Carro carro) throws IOException {
+	public void definirCarroVendido(Carro carro, ListenerConsulta listener) {
 		carro.setStatusCarro(StatusCarro.VENDIDO);
 
 		Condicao condicao = new Condicao();
 		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(carro.getId()));
 
 		Registro registro = converterCarroEmRegistro(carro);
-		tabela.atualizar(condicao, registro);
+		tabela.atualizar(condicao, registro, listener);
 	}
 
-	public List<Carro> buscarCarrosComDataEntradaSuperiorA(String data, int limiteResultados) throws IOException {
+	public void buscarCarrosComDataEntradaSuperiorA(String data, int limiteResultados,
+			ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("data_entrada", TipoCondicao.MAIOR, new ValorString(data));
 
-		return converterRegistrosEmCarros(tabela.buscar(condicao, limiteResultados));
+		tabela.buscar(condicao, limiteResultados, construirListenerRegistros(listener));
 	}
 
 }

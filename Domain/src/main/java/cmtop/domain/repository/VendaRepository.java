@@ -10,6 +10,8 @@ import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -22,7 +24,7 @@ public class VendaRepository {
 
 	private Banco banco;
 
-	public VendaRepository(Banco banco) {
+	public VendaRepository(Banco banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("venda");
 		tabelaNotaFiscal = banco.getTabela("nota_fiscal");
@@ -61,36 +63,52 @@ public class VendaRepository {
 		return resultado;
 	}
 
-	public List<Venda> consultarVendaPorNumero(String valor, int limite) throws IOException {
+	public void consultarVendaPorNumero(String valor, int limite, ListenerConsultaComResposta<Venda> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("num_venda", TipoCondicao.SIMILAR, new ValorString(valor));
-		return converterRegistrosEmVendas(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public void gravarVenda(Venda venda) throws IOException {
+	public void gravarVenda(Venda venda, ListenerConsulta listener) {
 		Registro registro = converterVendaEmRegistro(venda);
 
-		tabela.inserir(registro);
+		tabela.inserir(registro, listener);
 	}
 
-	public List<Venda> consultarVendasDeCliente(int id_cliente, int limite) throws IOException {
+	public void consultarVendasDeCliente(int id_cliente, int limite, ListenerConsultaComResposta<Venda> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_cliente", TipoCondicao.IGUAL, new ValorInt(id_cliente));
-		return converterRegistrosEmVendas(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
-	public void addNotaFiscal(Venda venda, NotaFiscal notaFiscal) throws IOException {
+	public void addNotaFiscal(Venda venda, NotaFiscal notaFiscal, ListenerConsulta listener) {
 		Registro registro = new Registro(banco.getTipoConexao());
 		registro.set("id_venda", new ValorInt(venda.getId()));
 		registro.set("endereco_arquivo", new ValorString(notaFiscal.getArquivo()));
 
-		tabelaNotaFiscal.inserir(registro);
+		tabelaNotaFiscal.inserir(registro, listener);
 	}
 
-	public List<Venda> obterVendasRealizadasApos(String data, int limite) throws IOException {
+	public void obterVendasRealizadasApos(String data, int limite, ListenerConsultaComResposta<Venda> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("dt_venda", TipoCondicao.MAIOR, new ValorString(data));
-		return converterRegistrosEmVendas(tabela.buscar(condicao, limite));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
+	}
+
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<Venda> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmVendas(registros));
+			}
+		};
 	}
 
 }

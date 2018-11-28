@@ -6,10 +6,12 @@ import java.util.List;
 
 import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Manutencao;
-import cmtop.persistence.entity.Banco;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
@@ -18,9 +20,9 @@ import cmtop.persistence.valueobject.ValorString;
 public class ManutencaoRepository {
 
 	private Tabela tabela;
-	private Banco banco;
+	private BancoServidorRedeLocal banco;
 
-	public ManutencaoRepository(Banco banco) {
+	public ManutencaoRepository(BancoServidorRedeLocal banco) throws IOException {
 		this.banco = banco;
 		tabela = banco.getTabela("compra");
 	}
@@ -46,24 +48,43 @@ public class ManutencaoRepository {
 		return registro;
 	}
 
-	public void cadastrarManutencao(Manutencao manutencao) throws IOException {
-		Registro registro = converterManutencaoEmRegistro(manutencao);
-
-		tabela.inserir(registro);
-	}
-
-	public List<Manutencao> obterManutencoesDeCarro(Carro carro, int limite) throws IOException {
-		Condicao condicao = new Condicao();
-		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(carro.getId()));
-
-		List<Registro> registros = tabela.buscar(condicao, limite);
+	private List<Manutencao> converterRegistrosEmEntidades(List<Registro> registros) {
 		List<Manutencao> resultado = new ArrayList<>();
 
 		for (Registro registro : registros) {
-			Manutencao objeto = converterRegistroEmManutencao(registro);
-			resultado.add(objeto);
+			Manutencao entidade = converterRegistroEmManutencao(registro);
+			resultado.add(entidade);
 		}
 		return resultado;
+	}
+
+	public void cadastrarManutencao(Manutencao manutencao, ListenerConsulta listener) {
+		Registro registro = converterManutencaoEmRegistro(manutencao);
+
+		tabela.inserir(registro, listener);
+	}
+
+	public void obterManutencoesDeCarro(Carro carro, int limite, ListenerConsultaComResposta<Manutencao> listener) {
+		Condicao condicao = new Condicao();
+		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(carro.getId()));
+
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
+	}
+
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<Manutencao> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmEntidades(registros));
+			}
+		};
 	}
 
 }

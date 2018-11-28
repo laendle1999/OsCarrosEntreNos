@@ -115,7 +115,7 @@ public class CadastrarPagamento extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new CadastrarCompra().show();
+				new CadastrarCompra(banco).show();
 			}
 		});
 

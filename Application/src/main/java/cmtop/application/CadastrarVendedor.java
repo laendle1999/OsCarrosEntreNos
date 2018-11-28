@@ -114,10 +114,12 @@ public class CadastrarVendedor extends TelaBase {
 					new VendedorRepository(banco).cadastrarVendedor(vendedor,campos[5].getText() , new ListenerConsulta() {
 						@Override
 								public void sucesso(int resultadosAfetados) {
+									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
 						}
 						@Override
 						public void erro(Exception e){
 							e.printStackTrace();
+							ComponentesServices.mostrarErro("Houve um erro no Cadastro");
 						}
 						});
 				} catch (IOException e) {
@@ -125,7 +127,7 @@ public class CadastrarVendedor extends TelaBase {
 					System.err.println("alou");
 					e.printStackTrace();
 				}
-				
+				close();
 				
 			}
 		});

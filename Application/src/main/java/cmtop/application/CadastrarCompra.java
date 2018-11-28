@@ -1,6 +1,14 @@
 package cmtop.application;
 
+import java.io.IOException;
+
 import cmtop.application.service.ComponentesServices;
+import cmtop.domain.entity.Carro;
+import cmtop.domain.repository.CarroRepository;
+import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -11,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 
 public class CadastrarCompra extends TelaBase {
 
-	public CadastrarCompra() {
+	public CadastrarCompra(Banco banco) {
 		super("AutoManager - Cadastro de compra", 600, 500);
 
 		VBox conteudo = new VBox();
@@ -63,6 +71,39 @@ public class CadastrarCompra extends TelaBase {
 		conteudo.getChildren().add(btn);
 		btn.setTranslateX(300);
 		btn.setTranslateY(30);
+		btn.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				Carro carro = new Carro(0, null, campos[3].getText(), campos[4].getText(), campos[0].getText(),
+						campos[1].getText(), campos[5].getText(), Integer.parseInt(campos[2].getText()), 0,
+						Float.parseFloat(campos[7].getText()), Long.parseLong(campos[10].getText()), null);
+				
+				//Compra compra = new Compra(campos[8].getText(), campos[9].getText(), Long.parseLong(campos[10].getText()), focusGrabCounter, focusGrabCounter);
+				
+				try {
+					new CarroRepository(banco).cadastrarCarro(carro , new ListenerConsulta() {
+						@Override
+								public void sucesso(int resultadosAfetados) {
+									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
+						}
+						@Override
+						public void erro(Exception e){
+							e.printStackTrace();
+							ComponentesServices.mostrarErro("Houve um erro no Cadastro");
+						}
+						});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.err.println("alou");
+					e.printStackTrace();
+				}
+				close();
+				
+				
+			}
+		});
+
 
 		definirConteudo(conteudo);
 	}

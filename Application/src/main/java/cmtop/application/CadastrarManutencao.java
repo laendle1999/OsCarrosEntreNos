@@ -3,9 +3,9 @@ package cmtop.application;
 import java.io.IOException;
 
 import cmtop.application.service.ComponentesServices;
-import cmtop.domain.entity.Cliente;
-import cmtop.domain.repository.ClienteRepository;
-import cmtop.persistence.entity.Banco;
+import cmtop.domain.entity.Manutencao;
+import cmtop.domain.repository.ManutencaoRepository;
+import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsulta;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,10 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class CadastrarCliente extends TelaBase {
+public class CadastrarManutencao extends TelaBase {
 
-	public CadastrarCliente(Banco banco) {
-		super("AutoManager - Cadastro de cliente", 600, 500);
+	public CadastrarManutencao(BancoServidorRedeLocal banco) {
+		super("AutoManager - Cadastrar Manutenção", 600, 500);
 
 		VBox conteudo = new VBox();
 
@@ -30,22 +30,22 @@ public class CadastrarCliente extends TelaBase {
 		menu.setHgap(10);
 		menu.setVgap(10);
 
-		Text secao = new Text("Cadastro de Cliente");
+		Text secao = new Text("Cadastro de Manutenção");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
 		conteudo.getChildren().add(secao);
 
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
-		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
+		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
 				new TextField() };
-		Text[] labels = { new Text("Nome"), new Text("RG"), new Text("CPF"), new Text("Telefone 1"), new Text("Telefone 2") , 
-				new Text("Endereço"), new Text("Data de Nascimento") };
+		Text[] labels = { new Text("Código do Carro"), new Text("Data da Manutenção"), new Text("Descrição"),
+				new Text("Custo"), new Text("Campo 5"), new Text("Campo 6") };
 		Button btn = new Button("Confirmar");
 
-		for (int x = 0; x < 7; x++) {
+		for (int x = 0; x < 4; x++) {
 			// campos[x].setStyle(
 			// " -fx-background-color: \r\n" +
 			// " rgba(0,0,0,0.08),\r\n" +
@@ -60,6 +60,7 @@ public class CadastrarCliente extends TelaBase {
 			menu.add(campos[x], 1, x + 1);
 		}
 
+		campos[2].setPrefHeight(100);
 		menu.setTranslateY(15);
 
 		btn.setStyle("    -fx-background-color: \r\n" + "        rgba(0,0,0,0.08),\r\n"
@@ -76,10 +77,10 @@ public class CadastrarCliente extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				Cliente cliente = new Cliente(-1,campos[0].getText(),campos[1].getText(),campos[2].getText(),
-						campos[3].getText(),campos[4].getText(),campos[5].getText(),Long.parseLong(campos[6].getText()));
+				Manutencao manutencao = new Manutencao(0, campos[2].getText(), Long.parseLong(campos[1].getText()), 
+						Float.parseFloat(campos[3].getText()), Integer.parseInt(campos[0].getText()));
 				try {
-					new ClienteRepository(banco).cadastrarCliente(cliente , new ListenerConsulta() {
+					new ManutencaoRepository(banco).cadastrarManutencao(manutencao , new ListenerConsulta() {
 						@Override
 								public void sucesso(int resultadosAfetados) {
 									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");

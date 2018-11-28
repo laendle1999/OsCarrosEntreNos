@@ -14,6 +14,7 @@ import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class CompraRepository {
@@ -62,9 +63,9 @@ public class CompraRepository {
 		tabela.inserir(registro, listener);
 	}
 
-	public void obterComprasRealizadasApos(String data, int limite, ListenerConsultaComResposta<Compra> listener) {
+	public void obterComprasRealizadasApos(long data, int limite, ListenerConsultaComResposta<Compra> listener) {
 		Condicao condicao = new Condicao();
-		condicao.add("dt_compra", TipoCondicao.MAIOR, new ValorString(data));
+		condicao.add("dt_compra", TipoCondicao.MAIOR, new ValorLong(data));
 
 		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}

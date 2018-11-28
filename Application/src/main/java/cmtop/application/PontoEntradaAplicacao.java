@@ -39,8 +39,9 @@ public class PontoEntradaAplicacao extends Application {
 		}
 
 		new TelaLogin(banco).show();
-
-		new CadastrarVendedor().show();
+		float x = 3000;
+		new CadastrarPagamento(banco,x).show();
+		//new GerarRelatorio().show();
 
 	}
 

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -31,45 +30,37 @@ public class ComponentesServices {
 	}
 
 	public static void mostrarAlerta(String mensagem) {
-		Platform.runLater(() -> {
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Alerta");
-			alert.setHeaderText(mensagem);
-			alert.show();
-		});
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Alerta");
+		alert.setHeaderText(mensagem);
+		alert.showAndWait();
 	}
 
 	public static void mostrarErro(String mensagem) {
-		Platform.runLater(() -> {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Erro");
-			alert.setHeaderText(mensagem);
-			alert.show();
-		});
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Erro");
+		alert.setHeaderText(mensagem);
+		alert.showAndWait();
 	}
 
 	public static void mostrarInformacao(String mensagem) {
-		Platform.runLater(() -> {
-			Alert alert = new Alert(AlertType.NONE);
-			alert.setTitle("Informação");
-			alert.setHeaderText(mensagem);
-			alert.show();
-		});
+		Alert alert = new Alert(AlertType.NONE);
+		alert.setTitle("Informação");
+		alert.setHeaderText(mensagem);
+		alert.showAndWait();
 	}
 
 	public static void mostrarConfirmacao(String mensagem, Consumer<Boolean> resultado) {
-		Platform.runLater(() -> {
-			Alert alert = new Alert(AlertType.CONFIRMATION, mensagem, ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-			alert.showAndWait();
+		Alert alert = new Alert(AlertType.CONFIRMATION, mensagem, ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+		alert.showAndWait();
 
-			if (alert.getResult() == ButtonType.YES) {
-				resultado.accept(true);
-			} else if (alert.getResult() == ButtonType.NO) {
-				resultado.accept(false);
-			} else {
-				resultado.accept(null);
-			}
-		});
+		if (alert.getResult() == ButtonType.YES) {
+			resultado.accept(true);
+		} else if (alert.getResult() == ButtonType.NO) {
+			resultado.accept(false);
+		} else {
+			resultado.accept(null);
+		}
 	}
 
 }

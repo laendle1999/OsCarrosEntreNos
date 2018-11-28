@@ -1,6 +1,8 @@
 package cmtop.application;
 
 import cmtop.application.service.NetworkUtil;
+import cmtop.busca.BuscaCliente;
+import cmtop.busca.BuscarVendas;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.BancoClienteRedeLocal;
 import cmtop.persistence.entity.BancoRemoto;
@@ -53,7 +55,10 @@ public class PontoEntradaAplicacao extends Application {
 		// }, carro -> System.out.println("Carro apagado: " +
 		// carro.getModelo())).show();
 
-		new TelaLogin(banco).show();
+		//new TelaLogin(banco).show();
+		new CadastrarVendedor().show();
+		
+		
 	}
 
 	private static String getIpAddress() {

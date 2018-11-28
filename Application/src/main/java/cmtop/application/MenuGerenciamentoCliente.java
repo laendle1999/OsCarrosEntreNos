@@ -2,6 +2,7 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
+import cmtop.busca.BuscaCliente;
 import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -54,6 +55,14 @@ public class MenuGerenciamentoCliente extends TelaBase {
 			@Override
 			public void handle(Event event) {
 				new CadastrarCliente().show();
+			}
+		});
+		
+		botoes[1].setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				new BuscaCliente(banco, null).show();
 			}
 		});
 

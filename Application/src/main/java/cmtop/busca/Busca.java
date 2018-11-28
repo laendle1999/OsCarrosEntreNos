@@ -11,6 +11,7 @@ import cmtop.application.model.ModelGenerico.Coluna;
 import cmtop.application.service.ComponentesServices;
 import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -175,23 +176,25 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 	}
 
 	private void atualizarColunasTabela() {
-		List<String> colunasTabela = obterColunasDoModelo();
+		Platform.runLater(() -> {
+			List<String> colunasTabela = obterColunasDoModelo();
 
-		tabela.getColumns().clear();
+			tabela.getColumns().clear();
 
-		for (int i = 0; i < colunasTabela.size(); i++) {
-			final int _i = i;
-			TableColumn<ModelGenerico, String> coluna = new TableColumn<>(colunasTabela.get(_i));
-			coluna.setCellValueFactory(celula -> {
-				return celula.getValue().getColunas().get(_i).getValor();
-			});
+			for (int i = 0; i < colunasTabela.size(); i++) {
+				final int _i = i;
+				TableColumn<ModelGenerico, String> coluna = new TableColumn<>(colunasTabela.get(_i));
+				coluna.setCellValueFactory(celula -> {
+					return celula.getValue().getColunas().get(_i).getValor();
+				});
 
-			tabela.getColumns().add(coluna);
-		}
+				tabela.getColumns().add(coluna);
+			}
 
-		if (colunasTabela.isEmpty()) {
-			tabela.getColumns().add(new TableColumn<>(""));
-		}
+			if (colunasTabela.isEmpty()) {
+				tabela.getColumns().add(new TableColumn<>(""));
+			}
+		});
 	}
 
 	private List<String> obterColunasDoModelo() {

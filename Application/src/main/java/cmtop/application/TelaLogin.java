@@ -7,6 +7,7 @@ import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -84,6 +85,7 @@ public class TelaLogin extends TelaBase {
 					@Override
 					public void erro(Exception e) {
 						ComponentesServices.mostrarErro("Falha ao se comunicar com o banco de dados");
+						e.printStackTrace();
 					}
 				});
 			} catch (IOException e) {
@@ -96,10 +98,12 @@ public class TelaLogin extends TelaBase {
 	}
 
 	private void abrirMenu() {
-		if (LoginService.estaLogado()) {
-			new MenuPrincipal(banco).show();
-			close();
-		}
+		Platform.runLater(() -> {
+			if (LoginService.estaLogado()) {
+				new MenuPrincipal(banco).show();
+				close();
+			}
+		});
 	}
 
 }

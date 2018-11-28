@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -28,24 +29,30 @@ public class ComponentesServices {
 	}
 
 	public static void mostrarAlerta(String mensagem) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Alerta");
-		alert.setHeaderText(mensagem);
-		alert.show();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Alerta");
+			alert.setHeaderText(mensagem);
+			alert.show();
+		});
 	}
 
 	public static void mostrarErro(String mensagem) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Erro");
-		alert.setHeaderText(mensagem);
-		alert.show();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText(mensagem);
+			alert.show();
+		});
 	}
 
 	public static void mostrarInformacao(String mensagem) {
-		Alert alert = new Alert(AlertType.NONE);
-		alert.setTitle("Informação");
-		alert.setHeaderText(mensagem);
-		alert.show();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.NONE);
+			alert.setTitle("Informação");
+			alert.setHeaderText(mensagem);
+			alert.show();
+		});
 	}
 
 }

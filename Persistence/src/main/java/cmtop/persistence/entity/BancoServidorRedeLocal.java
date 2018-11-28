@@ -42,7 +42,7 @@ public class BancoServidorRedeLocal extends Banco {
 
 	private TipoBanco tipoBanco;
 
-	public static int PORTA_PADRAO = 8910;
+	private ServidorRedeLocal servidorRedeLocal;
 
 	public BancoServidorRedeLocal(TipoBanco tipoConexao) {
 		this("root", "", tipoConexao);
@@ -95,8 +95,10 @@ public class BancoServidorRedeLocal extends Banco {
 	}
 
 	private void iniciarServidorRedeLocal() {
-		ServidorRedeLocal servidorRedeLocal = new ServidorRedeLocal();
-		servidorRedeLocal.iniciar(PORTA_PADRAO);
+		if (servidorRedeLocal == null) {
+			servidorRedeLocal = new ServidorRedeLocal(this);
+			servidorRedeLocal.iniciar();
+		}
 	}
 
 	private void createDatabase(Connection connection) throws IOException {
@@ -129,7 +131,7 @@ public class BancoServidorRedeLocal extends Banco {
 			} catch (SQLException | IOException e) {
 				listener.erro(e);
 			}
-		}).run();
+		}).start();
 	}
 
 	public void consultaComResultado(String sql, ListenerConsultaComResposta<Registro> listener) {
@@ -190,7 +192,7 @@ public class BancoServidorRedeLocal extends Banco {
 			}
 
 			listener.resposta(resultados);
-		}).run();
+		}).start();
 	}
 
 }

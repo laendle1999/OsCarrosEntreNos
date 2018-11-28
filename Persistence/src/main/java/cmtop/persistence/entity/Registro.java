@@ -60,7 +60,18 @@ public class Registro {
 			String nome = chaves.get(i);
 			Valor valor = map.get(chaves.get(i));
 			TipoValor tipo = valor.getTipo();
-			source.append(nome + ":" + tipo + ":" + valor.toString().replace(",", "\\,"));
+
+			String valorTratado = valor.toString();
+
+			if (valorTratado != null) {
+				valorTratado = valorTratado.replace("\\", "\\\\");
+				valorTratado = valorTratado.replace(",", "\\,").replace("\n", "\\n");
+				valorTratado = valorTratado.replace("\r", "");
+
+				source.append(nome + ":" + tipo + ":" + valorTratado);
+			} else {
+				source.append(nome + ":" + tipo);
+			}
 
 			if (i + 1 < map.size()) {
 				source.append(",");
@@ -87,12 +98,14 @@ public class Registro {
 				if (!c.equals("{")) {
 					throw new ParseException("Registro inválido", 0);
 				}
+				previousC = c;
 				continue;
 			}
 
 			if (c.equals(",") && !previousC.equals("\\")) {
 				gravarCampoSerializadoEmRegistro(registro, bufferCampo.toString());
 				bufferCampo.setLength(0);
+				previousC = c;
 				continue;
 			}
 
@@ -111,6 +124,48 @@ public class Registro {
 		}
 
 		return registro;
+	}
+
+	public static List<Registro> listaRegistrosFromString(String string, TipoBanco tipoBanco) throws ParseException {
+		String s = string.trim();
+		
+		List<Registro> registros = new ArrayList<>();
+
+		StringBuffer buffer = new StringBuffer();
+
+		String previousC = "";
+		for (int i = 0; i < s.length(); i++) {
+			String c = s.substring(i, i + 1);
+
+			if (c.equals(",") && previousC.equals("}") || c.equals("}") && i == s.length() - 1) {
+				if(c.equals("}")) {
+					buffer.append(c);
+				}
+				
+				registros.add(Registro.fromString(buffer.toString(), tipoBanco));
+				buffer.setLength(0);
+				i++;
+				previousC = c;
+				continue;
+			}
+
+			buffer.append(c);
+
+			previousC = c;
+		}
+
+		return registros;
+	}
+
+	public static String listaRegistrosToString(List<Registro> registros) {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < registros.size(); i++) {
+			s.append(registros.get(i).toString());
+			if (i < registros.size() - 1) {
+				s.append(",");
+			}
+		}
+		return s.toString();
 	}
 
 	private static void gravarCampoSerializadoEmRegistro(Registro registro, String campo) {
@@ -136,36 +191,60 @@ public class Registro {
 			tipoBuffer.append(c);
 		}
 
-		StringBuilder valorBuffer = new StringBuilder();
-		for (; i < campo.length(); i++) {
-			String c = campo.substring(i, i + 1);
-			valorBuffer.append(c);
-		}
-
 		TipoValor tipo = TipoValor.fromString(tipoBuffer.toString().trim());
 
 		Valor valor;
+		if (i < campo.length()) {
+			StringBuilder valorBuffer = new StringBuilder();
+			for (; i < campo.length(); i++) {
+				String c = campo.substring(i, i + 1);
+				valorBuffer.append(c);
+			}
 
-		String valorString = valorBuffer.toString().replace("\\,", ",");
+			String valorString = valorBuffer.toString().replace("\\n", "\n").replace("\\,", ",");
+			valorString = valorString.replace("\\\\", "\\");
 
-		switch (tipo) {
-		case DOUBLE:
-			valor = new ValorDouble(Double.parseDouble(valorString.trim()));
-			break;
-		case FLOAT:
-			valor = new ValorFloat(Float.parseFloat(valorString.trim()));
-			break;
-		case INT:
-			valor = new ValorInt(Integer.parseInt(valorString.trim()));
-			break;
-		case LONG:
-			valor = new ValorLong(Long.parseLong(valorString.trim()));
-			break;
-		case STRING:
-			valor = new ValorString(valorString);
-			break;
-		default:
-			return;
+			switch (tipo) {
+			case DOUBLE:
+				valor = new ValorDouble(Double.parseDouble(valorString.trim()));
+				break;
+			case FLOAT:
+				valor = new ValorFloat(Float.parseFloat(valorString.trim()));
+				break;
+			case INT:
+				valor = new ValorInt(Integer.parseInt(valorString.trim()));
+				break;
+			case LONG:
+				valor = new ValorLong(Long.parseLong(valorString.trim()));
+				break;
+			case STRING:
+				valor = new ValorString(valorString);
+				break;
+			default:
+				return;
+			}
+		} else {
+			// Valor nulo
+
+			switch (tipo) {
+			case DOUBLE:
+				valor = new ValorDouble(0);
+				break;
+			case FLOAT:
+				valor = new ValorFloat(0);
+				break;
+			case INT:
+				valor = new ValorInt(0);
+				break;
+			case LONG:
+				valor = new ValorLong(0);
+				break;
+			case STRING:
+				valor = new ValorString(null);
+				break;
+			default:
+				return;
+			}
 		}
 
 		registro.set(nameBuffer.toString().trim(), valor);

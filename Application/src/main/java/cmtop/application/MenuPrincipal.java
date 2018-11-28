@@ -5,6 +5,7 @@ import cmtop.application.service.LoginService;
 import cmtop.application.service.PortalService;
 import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.service.ServidorRedeLocal;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -72,7 +73,7 @@ public class MenuPrincipal extends TelaBase {
 			}
 		});
 
-		botoes[2].setOnMouseClicked(event -> new Thread(() -> PortalService.abrirTabelaFipe()).run());
+		botoes[2].setOnMouseClicked(event -> new Thread(() -> PortalService.abrirTabelaFipe()).start());
 
 		botoes[3].setOnMouseClicked(new EventHandler<Event>() {
 
@@ -91,6 +92,10 @@ public class MenuPrincipal extends TelaBase {
 		});
 
 		definirConteudo(conteudo);
+
+		setOnCloseRequest(event -> {
+			ServidorRedeLocal.fecharConexoes();
+		});
 	}
 
 }

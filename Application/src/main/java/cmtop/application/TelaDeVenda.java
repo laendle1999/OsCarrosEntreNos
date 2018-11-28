@@ -32,7 +32,6 @@ public class TelaDeVenda extends TelaBase {
 
 	public TelaDeVenda(Banco banco) {
 		super("AutoManager", 700, 600);
-
 		this.vendaService = new VendaService(banco);
 
 		VBox conteudo = new VBox();

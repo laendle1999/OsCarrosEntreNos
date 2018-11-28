@@ -26,7 +26,7 @@ public class CadastrarVendedor extends TelaBase {
 		Text secao = new Text("Cadastro de vendedor");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 177));
 		conteudo.getChildren().add(secao);
 
 		conteudo.getChildren().add(menu);
@@ -56,7 +56,7 @@ public class CadastrarVendedor extends TelaBase {
 		RadioButton[] tipoCad = {new RadioButton("Vendedor"),new RadioButton("Gerente")};
 		menu.add(new Text("Tipo de Conta"),0,7);
 		menu.add(tipoCad[0],1,7);
-		menu.add(tipoCad[0],2,7);
+		menu.add(tipoCad[1],2,7);
 		
 
 		menu.setTranslateY(15);

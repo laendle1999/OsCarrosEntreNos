@@ -40,6 +40,8 @@ public class PontoEntradaAplicacao extends Application {
 
 		new TelaLogin(banco).show();
 
+		new CadastrarVendedor().show();
+
 	}
 
 	private static String getIpAddress() {

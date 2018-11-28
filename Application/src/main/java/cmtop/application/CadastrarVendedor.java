@@ -1,6 +1,17 @@
 package cmtop.application;
 
+import java.io.IOException;
+
 import cmtop.application.service.ComponentesServices;
+import cmtop.domain.entity.Vendedor;
+import cmtop.domain.repository.VendedorRepository;
+import cmtop.domain.valueobject.TipoAcesso;
+import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -11,12 +22,13 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class CadastrarVendedor extends TelaBase {
-
-	public CadastrarVendedor() {
+	private int  i;
+	
+	public CadastrarVendedor(Banco banco) {
 		super("AutoManager - Formulário de entrada", 600, 500);
 
 		VBox conteudo = new VBox();
-
+		
 		GridPane menu = new GridPane();
 		menu.setAlignment(Pos.CENTER);
 		menu.setStyle("-fx-background-fill: black, white ;\n" + "-fx-background-insets: 0, 1 ;");
@@ -33,12 +45,13 @@ public class CadastrarVendedor extends TelaBase {
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
 		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
-				new TextField() };
+				new TextField(), new TextField(), new TextField(), new TextField(), new TextField() };
 		Text[] labels = { new Text("Nome"), new Text("E-mail"), new Text("RG"), new Text("CPF"),
-				new Text("Endereço"), new Text("Login") };
+				new Text("Endereço"), new Text("Login") , new Text("Senha"),
+				new Text("Telefone 1"), new Text("Telefone 2"), new Text("Data de Nascimento") };
 		Button btn = new Button("Confirmar");
 
-		for (int x = 0; x < 6; x++) {
+		for (int x = 0; x < 10; x++) {
 			// campos[x].setStyle(
 			// " -fx-background-color: \r\n" +
 			// " rgba(0,0,0,0.08),\r\n" +
@@ -54,10 +67,29 @@ public class CadastrarVendedor extends TelaBase {
 		}
 		
 		RadioButton[] tipoCad = {new RadioButton("Vendedor"),new RadioButton("Gerente")};
-		menu.add(new Text("Tipo de Conta"),0,7);
-		menu.add(tipoCad[0],1,7);
-		menu.add(tipoCad[1],2,7);
+		menu.add(new Text("Tipo de Conta"),0,11);
+		menu.add(tipoCad[0],1,11);
+		menu.add(tipoCad[1],2,11);
 		
+		tipoCad[0].selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				tipoCad[0].setSelected(newValue);
+				tipoCad[1].setSelected(!newValue);
+				setI(1);
+			}
+		});
+		
+		tipoCad[1].selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				tipoCad[1].setSelected(newValue);
+				tipoCad[0].setSelected(!newValue);
+				setI(0);
+			}
+		});
 
 		menu.setTranslateY(15);
 
@@ -71,7 +103,42 @@ public class CadastrarVendedor extends TelaBase {
 		btn.setTranslateX(300);
 		btn.setTranslateY(30);
 
+		btn.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				Vendedor vendedor = new Vendedor(6,campos[7].getText(),campos[8].getText(),campos[0].getText(),
+						Long.parseLong(campos[9].getText()),campos[2].getText(),campos[3].getText(),campos[4].getText(),
+						campos[5].getText(), campos[1].getText(), TipoAcesso.fromInt(getI()));
+				try {
+					new VendedorRepository(banco).cadastrarVendedor(vendedor,campos[5].getText() , new ListenerConsulta() {
+						@Override
+						public void sucesso(){
+						}
+						@Override
+						public void erro(Exception e){
+							e.printStackTrace();
+						}
+						});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.err.println("alou");
+					e.printStackTrace();
+				}
+				
+				
+			}
+		});
+		
 		definirConteudo(conteudo);
 	}
 
+	void setI(int i){
+		this.i = i;
+	}
+
+	public int getI() {
+		return i;
+	}
+	
 }

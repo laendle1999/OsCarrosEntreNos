@@ -54,7 +54,7 @@ public class MenuGerenciamentoCliente extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new CadastrarCliente().show();
+				new CadastrarCliente(banco).show();
 			}
 		});
 		

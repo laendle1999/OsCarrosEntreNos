@@ -49,7 +49,7 @@ public class MenuGerencia extends TelaBase {
 
 		botoes[0].setOnMouseClicked(event -> new MenuGerenciamentoCarros().show());
 
-		botoes[1].setOnMouseClicked(event -> new MenuGerenciamentoVendedor().show());
+		botoes[1].setOnMouseClicked(event -> new MenuGerenciamentoVendedor(banco).show());
 
 		botoes[3].setOnMouseClicked(event -> new TelaConfiguracao().show());
 

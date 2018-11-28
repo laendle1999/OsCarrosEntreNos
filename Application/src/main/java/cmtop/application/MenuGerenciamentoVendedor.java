@@ -2,6 +2,7 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
+import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -13,7 +14,7 @@ import javafx.scene.text.TextAlignment;
 
 public class MenuGerenciamentoVendedor extends TelaBase {
 
-	public MenuGerenciamentoVendedor() {
+	public MenuGerenciamentoVendedor(Banco banco) {
 		super("AutoManager - Gerenciamento de vendedores", 700, 600);
 
 		VBox conteudo = new VBox();
@@ -52,7 +53,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				new CadastrarVendedor().show();
+				new CadastrarVendedor(banco).show();
 			}
 		});
 

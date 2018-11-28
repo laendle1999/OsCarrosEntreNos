@@ -1,6 +1,14 @@
 package cmtop.application;
 
+import java.io.IOException;
+
 import cmtop.application.service.ComponentesServices;
+import cmtop.domain.entity.Cliente;
+import cmtop.domain.repository.ClienteRepository;
+import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -11,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 
 public class CadastrarCliente extends TelaBase {
 
-	public CadastrarCliente() {
+	public CadastrarCliente(Banco banco) {
 		super("AutoManager - Cadastro de cliente", 600, 500);
 
 		VBox conteudo = new VBox();
@@ -31,13 +39,13 @@ public class CadastrarCliente extends TelaBase {
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
-		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
+		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
 				new TextField() };
-		Text[] labels = { new Text("Nome"), new Text("Idade"), new Text("RG"), new Text("CPF"),
-				new Text("Endereço"), new Text("Campo 6") };
+		Text[] labels = { new Text("Nome"), new Text("RG"), new Text("CPF"), new Text("Telefone 1"), new Text("Telefone 2") , 
+				new Text("Endereço"), new Text("Data de Nascimento") };
 		Button btn = new Button("Confirmar");
 
-		for (int x = 0; x < 5; x++) {
+		for (int x = 0; x < 7; x++) {
 			// campos[x].setStyle(
 			// " -fx-background-color: \r\n" +
 			// " rgba(0,0,0,0.08),\r\n" +
@@ -63,6 +71,31 @@ public class CadastrarCliente extends TelaBase {
 		conteudo.getChildren().add(btn);
 		btn.setTranslateX(300);
 		btn.setTranslateY(30);
+		
+		btn.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				Cliente cliente = new Cliente(-1,campos[0].getText(),campos[1].getText(),campos[2].getText(),
+						campos[3].getText(),campos[4].getText(),campos[5].getText(),Long.parseLong(campos[6].getText()));
+				try {
+					new ClienteRepository(banco).cadastrarCliente(cliente , new ListenerConsulta() {
+						@Override
+						public void sucesso(){
+						}
+						@Override
+						public void erro(Exception e){
+							e.printStackTrace();
+						}
+						});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
+		});
 
 		definirConteudo(conteudo);
 	}

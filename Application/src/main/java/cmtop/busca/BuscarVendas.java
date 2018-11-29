@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import cmtop.application.model.ModelGenerico;
@@ -53,6 +54,8 @@ public class BuscarVendas extends Busca<Venda> {
 
 					@Override
 					public void resposta(List<Venda> resultados) {
+						int tempoLimiteSegundos = 20;
+						
 						callbackListaOriginal.accept(resultados);
 
 						List<VendaModel> lista = new ArrayList<>();
@@ -82,7 +85,7 @@ public class BuscarVendas extends Busca<Venda> {
 						});
 						// Esperar carros serem lidos
 						try {
-							latchCarros.await();
+							latchCarros.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -117,7 +120,7 @@ public class BuscarVendas extends Busca<Venda> {
 						});
 						// Esperar vendedores serem lidos
 						try {
-							latchVendedores.await();
+							latchVendedores.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

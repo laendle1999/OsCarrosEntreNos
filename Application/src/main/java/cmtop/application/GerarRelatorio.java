@@ -6,7 +6,6 @@ import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.ImpressoraService;
-import cmtop.domain.service.DateService;
 import cmtop.domain.service.RelatorioFinanceiro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;

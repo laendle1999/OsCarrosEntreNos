@@ -7,7 +7,6 @@ import java.util.List;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Manutencao;
 import cmtop.persistence.entity.Banco;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;

@@ -96,6 +96,10 @@ public class TelaLogin extends TelaBase {
 		});
 
 		definirConteudo(conteudo);
+
+		setOnCloseRequest(event -> {
+			PontoEntradaAplicacao.finalizarAplicacao();
+		});
 	}
 
 	private void abrirMenu() {

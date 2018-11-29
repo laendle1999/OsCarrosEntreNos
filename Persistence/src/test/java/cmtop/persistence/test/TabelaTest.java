@@ -2,6 +2,7 @@ package cmtop.persistence.test;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
@@ -19,6 +20,8 @@ public class TabelaTest {
 
 	@Test
 	public void inserirRemoverTest() throws IOException, InterruptedException {
+		int tempoLimiteSegundos = 20;
+
 		Registro registro = new Registro(TipoBanco.DERBY);
 		registro.set("rg", new ValorString("10"));
 		registro.set("cpf", new ValorString("15"));
@@ -41,7 +44,7 @@ public class TabelaTest {
 				latchInserir.countDown();
 			}
 		});
-		latchInserir.await();
+		latchInserir.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 
 		// TODO buscar e verificar se resultado é igual
 
@@ -62,14 +65,14 @@ public class TabelaTest {
 				latchRemover.countDown();
 			}
 		});
-		latchRemover.await();
+		latchRemover.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 
 		// TODO buscar e verificar se determinado registro foi removido
 
 	}
 
-	private static BancoServidorRedeLocal getBanco() {
-		return new BancoServidorRedeLocal(TipoBanco.DERBY);
+	private static BancoServidorRedeLocal getBanco() throws IOException {
+		return new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 	}
 
 }

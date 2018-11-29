@@ -47,7 +47,7 @@ public class Tabela {
 		}
 
 		if (banco.getTipoConexao() == TipoBanco.DERBY) {
-			sql += "fetch first " + limite + " rows only";
+			sql += " fetch first " + limite + " rows only";
 		} else {
 			sql += " LIMIT " + limite;
 		}

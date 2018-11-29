@@ -23,7 +23,7 @@ import javafx.scene.text.TextAlignment;
 public class MenuGerenciamentoVendedor extends TelaBase {
 
 	String log, pass;
-	
+
 	public String getLog() {
 		return log;
 	}
@@ -82,65 +82,64 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 				new CadastrarVendedor(banco).show();
 			}
 		});
-		
+
 		botoes[1].setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
-					new BuscarVendedorComEdicao(banco, new ListenerAlteracoes<Vendedor>() {
-						@Override
-						public boolean aceitarMudanca(Vendedor objetoBuscado, String campo, String valorNovo) {
-							return false; // << retornar se valorNovo é valido ou não
-						}
-					}, VendedorSendoApagado -> {
-						/// apagar item do banco
-					});
+				new BuscarVendedorComEdicao(banco, new ListenerAlteracoes<Vendedor>() {
+					@Override
+					public boolean aceitarMudanca(Vendedor objetoBuscado, String campo, String valorNovo) {
+						return false; // << retornar se valorNovo é valido ou não
+					}
+				}, VendedorSendoApagado -> {
+					/// apagar item do banco
+				});
 			}
 		});
 		botoes[2].setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
-				
+
 				Vendedor vendedor = null;
-				
-				ComponentesServices.mostrarEntradaTexto("Entre com o Login", login->{
+
+				ComponentesServices.mostrarEntradaTexto("Entre com o Login", login -> {
 					setLog(login);
-					ComponentesServices.mostrarEntradaSenha("Entre com a Senha", senha->{
+					ComponentesServices.mostrarEntradaSenha("Entre com a Senha", senha -> {
 						setPass(senha);
 					});
 				});
-				
-				
-				
+
 				try {
-					new VendedorRepository(banco).obterVendedorPorLogin(getLog(), new ListenerConsultaComResposta<Vendedor>() {
-						@Override
-						public void resposta(List<Vendedor> registros) {
-							if(registros.isEmpty()) {
-								System.err.println("Nenhum redistro encontrado");
-							}
-							else {
-								Vendedor vendedor = registros.get(0);
-								try {
-									new VendedorRepository(banco).alterarSenhaVendedor(vendedor, getPass(), null);
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+					new VendedorRepository(banco).obterVendedorPorLogin(getLog(),
+							new ListenerConsultaComResposta<Vendedor>() {
+								@Override
+								public void resposta(List<Vendedor> registros) {
+									if (registros.isEmpty()) {
+										System.err.println("Nenhum redistro encontrado");
+									} else {
+										Vendedor vendedor = registros.get(0);
+										try {
+											new VendedorRepository(banco).alterarSenhaVendedor(vendedor, getPass(),
+													null);
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
 								}
-							}
-						}
-						
-						@Override
-						public void erro(Exception e) {
-							// TODO Auto-generated method stub
-						}
-					});
+
+								@Override
+								public void erro(Exception e) {
+									// TODO Auto-generated method stub
+								}
+							});
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 

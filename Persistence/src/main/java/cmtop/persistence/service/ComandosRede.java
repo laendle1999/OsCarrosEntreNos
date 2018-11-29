@@ -14,4 +14,6 @@ public abstract class ComandosRede {
 	public static final String CONSULTA_SQL_COM_RESPOSTA = "consulta_sql_com_resposta";
 
 	public static final String COMANDO_DESCONHECIDO = "comando_desconhecido";
+
+	public static final String NAO_AUTENTICADO = "nao_autenticado";
 }

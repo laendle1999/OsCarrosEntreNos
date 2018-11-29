@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PortaVozCliente {
 
 	private PrintWriter out;
 	private BufferedReader in;
 	private Socket socket;
+
+	private static List<PortaVozCliente> conexoes = new ArrayList<>();
 
 	public PortaVozCliente(String host, int porta, int timeoutSegundos) throws IOException {
 		socket = new Socket(host, porta);
@@ -25,7 +29,11 @@ public class PortaVozCliente {
 	}
 
 	public String aguardarMensagem() throws IOException {
-		return in.readLine();
+		String message = null;
+		while (message == null) {
+			message = in.readLine();
+		}
+		return message;
 	}
 
 	public void fecharConexao() {
@@ -33,6 +41,10 @@ public class PortaVozCliente {
 			socket.close();
 		} catch (IOException e) {
 		}
+	}
+
+	public static void fecharConexoes() {
+		conexoes.forEach(c -> c.fecharConexao());
 	}
 
 }

@@ -20,7 +20,7 @@ public class OuvidorDeClienteRedeLocal {
 		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-		new Thread(() -> {
+		new MyThread(() -> {
 			while (executando) {
 				try {
 					String message = in.readLine();
@@ -28,12 +28,12 @@ public class OuvidorDeClienteRedeLocal {
 						continue;
 
 					String resposta = mensagemClienteListener.onMensagemRecebida(message);
+					
 					out.println(resposta);
-				} catch (IOException e) {
-					break;
+				} catch (Exception e) {
 				}
 			}
-		}).start();
+		}, "OuvidorDeClienteRedeLocal").start();
 	}
 
 	public void interromper() {

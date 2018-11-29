@@ -138,6 +138,8 @@ public class TelaDeVenda extends TelaBase {
 		});
 
 		botao[2].setOnAction(event -> {
+			if(!isCarro() && !isCliente())
+				return;
 			new GerenciarPagamento(banco, vendaService).show();
 		});
 

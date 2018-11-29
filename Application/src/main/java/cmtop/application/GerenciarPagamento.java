@@ -26,6 +26,8 @@ public class GerenciarPagamento extends TelaBase {
 	private VendaService vendaService;
 	private CheckBox[] checkBoxes;
 	private TextField[] campos;
+	private String valorPago = "R$ 0.00";
+	private HBox valorEntrada = new HBox();
 
 	public GerenciarPagamento(Banco banco, VendaService vendaService) {
 		super("AutoManager - Gerenciar pagamento", 600, 500, TipoBotaoVoltar.VOLTAR);
@@ -62,6 +64,8 @@ public class GerenciarPagamento extends TelaBase {
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
 		conteudo.getChildren().add(new HBox(secao, new Text("  	 R$" + vendaService.getCarro().getValorVenda())));
+		conteudo.getChildren().add(valorEntrada);
+		valorEntrada.getChildren().add(new Text(valorPago));
 
 		checkBoxes = new CheckBox[] { new CheckBox("Valor a Vista"), new CheckBox("Financiamento"),
 				new CheckBox("Carro") };
@@ -148,6 +152,7 @@ public class GerenciarPagamento extends TelaBase {
 					return;
 				}
 				this.trocaCarro = trocaCarro;
+				setValorPago(trocaCarro.getValorCarro());
 
 				Platform.runLater(() -> atualizarTrocasCarro(trocaCarro));
 			}).show();
@@ -172,6 +177,7 @@ public class GerenciarPagamento extends TelaBase {
 				try {
 					float valor = Float.parseFloat(campos[0].getText());
 					vendaService.adicionarValorEntrada(new ValorEntrada("", valor));
+					setValorPago(valor);
 				} catch (NumberFormatException e) {
 					ComponentesServices.mostrarAlerta("Valor inválido, digite um número");
 					return;
@@ -185,6 +191,7 @@ public class GerenciarPagamento extends TelaBase {
 					float valorFinanciado = Float.parseFloat(campos[1].getText());
 					String bancoFinanc = campos[2].getText();
 					vendaService.adicionarFinanciamento(new Financiamento(bancoFinanc, valorFinanciado, -1));
+					setValorPago(valorFinanciado);
 				} catch (NumberFormatException e) {
 					ComponentesServices.mostrarAlerta("Valor financiado inválido, digite um número");
 					return;
@@ -215,4 +222,21 @@ public class GerenciarPagamento extends TelaBase {
 		}
 	}
 
+	public String getValorPago() {
+		return valorPago;
+	}
+
+	public void setValorPago(float valorPago) {
+		valorPago += Float.parseFloat(this.valorPago);
+		this.valorPago = String.valueOf(valorPago);
+		autualizarView();
+		
+	}
+	
+	private void autualizarView() {
+		valorEntrada.getChildren().clear();
+		valorEntrada.getChildren().add(new Text(valorPago));
+	}
+	
+	
 }

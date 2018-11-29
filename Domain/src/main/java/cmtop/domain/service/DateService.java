@@ -1,5 +1,7 @@
 package cmtop.domain.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -24,6 +26,18 @@ public class DateService {
 		gregorianCalendar.setTimeInMillis(timestamp);
 
 		return gregorianCalendar.getTime();
+	}
+
+	public static long converterDataStringParaLong(String string) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Date data = format.parse(string);
+		return DateService.converterDataEmTimestamp(data);
+	}
+
+	public static String converterTimestampParaDataString(long timestamp) {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = converterTimestampEmData(timestamp);
+		return format.format(date);
 	}
 
 }

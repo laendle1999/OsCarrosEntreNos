@@ -13,6 +13,7 @@ import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
+import cmtop.persistence.valueobject.ValorLong;
 import cmtop.persistence.valueobject.ValorString;
 
 public class TrocaCarroRepository {
@@ -35,7 +36,7 @@ public class TrocaCarroRepository {
 		String local = registro.get("local").getAsString();
 		int ano = registro.get("ano").getAsInt();
 		float valor_carro = registro.get("valor_carro").getAsFloat();
-		String data_entrada = registro.get("data_entrada").getAsString();
+		long data_entrada = registro.get("data_entrada").getAsLong();
 		int id_venda = registro.get("id_venda").getAsInt();
 
 		return new TrocaCarro(id, placa, modelo, marca, cor, local, ano, valor_carro, data_entrada, id_venda);
@@ -60,7 +61,7 @@ public class TrocaCarroRepository {
 		registro.set("local", new ValorString(trocaCarro.getLocal()));
 		registro.set("ano", new ValorInt(trocaCarro.getAno()));
 		registro.set("valor_carro", new ValorFloat(trocaCarro.getValorCarro()));
-		registro.set("data_entrada", new ValorString(trocaCarro.getDataEntrada()));
+		registro.set("data_entrada", new ValorLong(trocaCarro.getDataEntrada()));
 		registro.set("id_venda", new ValorInt(trocaCarro.getIdVenda()));
 		return registro;
 	}

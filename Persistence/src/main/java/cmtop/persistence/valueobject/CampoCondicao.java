@@ -80,7 +80,9 @@ public class CampoCondicao {
 		}
 
 		if (valor.getTipo() == TipoValor.STRING || condicao == TipoCondicao.SIMILAR) {
-			source.append(limparString(valor.toString()).replace("'", "''"));
+			if (valor != null && valor.toString() != null) {
+				source.append(limparString(valor.toString()).replace("'", "''"));
+			}
 		} else {
 			source.append(valor);
 		}

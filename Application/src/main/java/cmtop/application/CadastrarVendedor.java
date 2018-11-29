@@ -2,8 +2,6 @@ package cmtop.application;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Vendedor;
@@ -96,7 +94,7 @@ public class CadastrarVendedor extends TelaBase {
 			public void handle(Event event) {
 				long dataNascimento;
 				try {
-					dataNascimento = converterDataNascimentoParaLong(campos[9].getText());
+					dataNascimento = DateService.converterDataStringParaLong(campos[9].getText());
 				} catch (ParseException e1) {
 					ComponentesServices.mostrarAlerta(
 							"A data de nascimento deve estar no formato dia/mês/ano, por exemplo 10/10/1990");
@@ -134,12 +132,6 @@ public class CadastrarVendedor extends TelaBase {
 		});
 
 		definirConteudo(conteudo);
-	}
-
-	private long converterDataNascimentoParaLong(String string) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		Date data = format.parse(string);
-		return DateService.converterDataEmTimestamp(data);
 	}
 
 }

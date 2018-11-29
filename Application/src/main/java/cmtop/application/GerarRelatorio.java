@@ -1,11 +1,12 @@
 package cmtop.application;
 
-import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.ImpressoraService;
+import cmtop.domain.service.DateService;
 import cmtop.domain.service.RelatorioFinanceiro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
@@ -23,8 +24,7 @@ import javafx.stage.FileChooser;
 public class GerarRelatorio extends TelaBase {
 
 	private String htmlRelatorio = null;
-	private File saidaPdf = null;
-	
+
 	public GerarRelatorio(Banco banco) {
 		super("AutoManager - Gerar Relatório", 600, 500, TipoBotaoVoltar.VOLTAR);
 
@@ -39,19 +39,18 @@ public class GerarRelatorio extends TelaBase {
 		Text secao = new Text("Gerar Relatório");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 177));
 		conteudo.getChildren().add(secao);
 
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
 		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
-				new TextField(),new TextField(), new TextField(), new TextField(), new TextField(),
-				new TextField() };
+				new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField() };
 		Text[] labels = { new Text("Apartir de"), new Text("Até"), new Text("Ano"), new Text("Placa"),
-				new Text("RENAVAN"), new Text("Cor"), new Text("Adicionais"), new Text("Custo"), new Text("Local da Compra"),
-				new Text("Nome do Fornecedor"), new Text("Data da Compra") };
-		Button[] btn = {new Button("Buscar"),new Button("Gerar PDF"),new Button("Imprimir")};
+				new Text("RENAVAN"), new Text("Cor"), new Text("Adicionais"), new Text("Custo"),
+				new Text("Local da Compra"), new Text("Nome do Fornecedor"), new Text("Data da Compra") };
+		Button[] btn = { new Button("Buscar"), new Button("Gerar PDF"), new Button("Imprimir") };
 
 		for (int x = 0; x < 3; x++) {
 			// campos[x].setStyle(
@@ -64,78 +63,71 @@ public class GerarRelatorio extends TelaBase {
 			// " -fx-padding: 3 30 3 30;\r\n" +
 			// " -fx-text-fill: #242d35;\r\n" +
 			// " -fx-font-size: 14px;");
-			//menu.add(labels[x], 0, x + 1);
-			//menu.add(campos[x], 1, x + 1);
-			
-			
+			// menu.add(labels[x], 0, x + 1);
+			// menu.add(campos[x], 1, x + 1);
+
 			btn[x].setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
-				+ "    -fx-padding: 3 3 3 3; -fx-text-fill: #242d35;"
-				+ "    -fx-font-size: 14px;");
+					+ "    -fx-padding: 3 3 3 3; -fx-text-fill: #242d35;" + "    -fx-font-size: 14px;");
 		}
-		
-		menu.add(labels[0],0,1);
-		menu.add(campos[0],1,1);
-		menu.add(btn[0],3,1);
-		
-		btn[0].setOnMouseClicked(new EventHandler<Event>() {
 
-			@Override
-			public void handle(Event event) {
-	
-					try {
-						new RelatorioFinanceiro(banco).gerarRelatorioFinanceiro(Long.parseLong(campos[0].getText()), 30, new ListenerConsultaComResposta<String>() {
-									
-									@Override
-									public void resposta(List<String> registros) {
-										setHtmlRelatorio(registros.get(0));
-										
-										
-									}
-									
-									@Override
-									public void erro(Exception e) {
-										// mostrar mensagem
-									}
-								});
-					} catch (NumberFormatException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					btn[1].setVisible(true);
-					btn[2].setVisible(true);
+		menu.add(labels[0], 0, 1);
+		menu.add(campos[0], 1, 1);
+		menu.add(btn[0], 3, 1);
 
+		btn[0].setOnMouseClicked(event -> {
+
+			try {
+				new RelatorioFinanceiro(banco).gerarRelatorioFinanceiro(
+						DateService.converterDataStringParaLong(campos[0].getText()), 30,
+						new ListenerConsultaComResposta<String>() {
+
+							@Override
+							public void resposta(List<String> registros) {
+								setHtmlRelatorio(registros.get(0));
+							}
+
+							@Override
+							public void erro(Exception e) {
+								// mostrar mensagem
+								e.printStackTrace();
+							}
+						});
+			} catch (NumberFormatException | IOException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
+
+			btn[1].setVisible(true);
+			btn[2].setVisible(true);
 		});
-		
+
 		menu.add(btn[1], 0, 3);
 		menu.add(btn[2], 3, 3);
 
 		btn[1].setVisible(false);
 		btn[2].setVisible(false);
-		
+
 		btn[1].setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
 				try {
-					
+
 					FileChooser fileChooser = new FileChooser();
 					fileChooser.setTitle("Salvar relatório");
 					fileChooser.getExtensionFilters().addAll(
-							new FileChooser.ExtensionFilter("Todos os arquivos","*", ".","*"),
+							new FileChooser.ExtensionFilter("Todos os arquivos", "*.*"),
 							new FileChooser.ExtensionFilter("PDF", "*.pdf"));
-					File arquivo = fileChooser.showSaveDialog(null);
-					
-					setSaidaPdf(arquivo); // << pedir para o usuário escolher um local para salvar
-					ImpressoraService.salvarHtmlComoPdf(getHtmlRelatorio(), getSaidaPdf());
+
+					ImpressoraService.salvarHtmlComoPdf(getHtmlRelatorio(), fileChooser.showSaveDialog(null));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		
+
 		btn[2].setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
@@ -146,17 +138,15 @@ public class GerarRelatorio extends TelaBase {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
-		
+
 		menu.setTranslateY(15);
 
-		
-
-		//conteudo.getChildren().add(btn);
-		//btn[1].setTranslateX(300);
-		//btn[1].setTranslateY(30);
+		// conteudo.getChildren().add(btn);
+		// btn[1].setTranslateX(300);
+		// btn[1].setTranslateY(30);
 
 		definirConteudo(conteudo);
 	}
@@ -169,14 +159,4 @@ public class GerarRelatorio extends TelaBase {
 		this.htmlRelatorio = htmlRelatorio;
 	}
 
-	public File getSaidaPdf() {
-		return saidaPdf;
-	}
-
-	public void setSaidaPdf(File saidaPdf) {
-		this.saidaPdf = saidaPdf;
-	}
-
-	
-	
 }

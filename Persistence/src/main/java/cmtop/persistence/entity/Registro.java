@@ -303,7 +303,9 @@ public class Registro {
 
 			if (valor.getTipo() == TipoValor.STRING) {
 				sql += "'";
-				sql += CampoCondicao.limparString(valor.toString()).replace("'", "''");
+				if(valor != null && valor.toString() != null) {
+					sql += CampoCondicao.limparString(valor.toString()).replace("'", "''");
+				}
 				sql += "'";
 			} else {
 				sql += valor;

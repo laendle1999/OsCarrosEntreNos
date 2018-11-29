@@ -8,14 +8,14 @@ public class TrocaCarro {
 
 	private float valorCarro;
 
-	private String dataEntrada;
+	private long dataEntrada;
 
 	private int id;
 
 	private int idVenda;
 
 	public TrocaCarro(int id, String placa, String modelo, String marca, String cor, String local, int ano,
-			float valorCarro, String dataEntrada, int idVenda) {
+			float valorCarro, long dataEntrada, int idVenda) {
 		this.id = id;
 		this.placa = placa;
 		this.modelo = modelo;
@@ -84,11 +84,11 @@ public class TrocaCarro {
 		this.valorCarro = valorCarro;
 	}
 
-	public String getDataEntrada() {
+	public long getDataEntrada() {
 		return dataEntrada;
 	}
 
-	public void setDataEntrada(String dataEntrada) {
+	public void setDataEntrada(long dataEntrada) {
 		this.dataEntrada = dataEntrada;
 	}
 

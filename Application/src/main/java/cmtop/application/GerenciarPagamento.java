@@ -1,18 +1,15 @@
 package cmtop.application;
 
-import cmtop.application.model.CarroModel;
 import cmtop.application.model.TrocaCarroModel;
 import cmtop.application.service.ComponentesServices;
-import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Financiamento;
 import cmtop.domain.entity.TrocaCarro;
 import cmtop.domain.entity.ValorEntrada;
 import cmtop.domain.service.VendaService;
 import cmtop.persistence.entity.Banco;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -25,8 +22,14 @@ import javafx.scene.text.TextAlignment;
 
 public class GerenciarPagamento extends TelaBase {
 
+	private TrocaCarro trocaCarro;
+	private VendaService vendaService;
+	private CheckBox[] checkBoxes;
+	private TextField[] campos;
+
 	public GerenciarPagamento(Banco banco, VendaService vendaService) {
-		super("AutoManager - Cadastrar Pagamento", 600, 500, TipoBotaoVoltar.VOLTAR);
+		super("AutoManager - Gerenciar pagamento", 600, 500, TipoBotaoVoltar.VOLTAR);
+		this.vendaService = vendaService;
 
 		VBox conteudo = new VBox();
 
@@ -54,55 +57,56 @@ public class GerenciarPagamento extends TelaBase {
 		menuCarro.setVgap(10);
 		menuCarro.setVisible(false);
 
-		Text secao = new Text("Cadastro Pagamento");
+		Text secao = new Text("Gerenciar pagamento");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(new HBox(secao, new Text("  	 R$" + vendaService)));
+		conteudo.getChildren().add(new HBox(secao, new Text(/*"  	 R$" + vendaService.get*/)));
 
-		CheckBox[] cb = { new CheckBox("Valor a Vista"), new CheckBox("Financiamento"), new CheckBox("Carro") };
-		conteudo.getChildren().add(new HBox(cb[0], cb[1], cb[2]));
+		checkBoxes = new CheckBox[] { new CheckBox("Valor a Vista"), new CheckBox("Financiamento"),
+				new CheckBox("Carro") };
+		conteudo.getChildren().add(new HBox(checkBoxes[0], checkBoxes[1], checkBoxes[2]));
 
 		conteudo.getChildren().add(menuVista);
 		conteudo.getChildren().add(menuFinanciamento);
 		conteudo.getChildren().add(menuCarro);
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
-		cb[0].selectedProperty().addListener(new ChangeListener<Boolean>() {
+		checkBoxes[0].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				cb[0].setSelected(newValue);
+				checkBoxes[0].setSelected(newValue);
 				menuVista.setVisible(newValue);
 
 			}
 		});
 
-		cb[1].selectedProperty().addListener(new ChangeListener<Boolean>() {
+		checkBoxes[1].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				cb[1].setSelected(newValue);
+				checkBoxes[1].setSelected(newValue);
 				menuFinanciamento.setVisible(newValue);
 
 			}
 		});
 
-		cb[2].selectedProperty().addListener(new ChangeListener<Boolean>() {
+		checkBoxes[2].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				cb[2].setSelected(newValue);
+				checkBoxes[2].setSelected(newValue);
 				menuCarro.setVisible(newValue);
 
 			}
 		});
 
-		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
+		campos = new TextField[] { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
 				new TextField() };
 		Text[] labels = { new Text("Valor à Vista"), new Text("Valor Financiado"), new Text("Banco"), new Text("Carro"),
 				new Text("Campo 5"), new Text("Campo 6") };
-		Button[] btn = { new Button("Confirmar"), new Button("Cadastrar Carro") };
+		Button[] btn = { new Button("Confirmar"), new Button("Carro recebido em troca") };
 
 		menuVista.add(labels[0], 0, 0);
 		menuVista.add(campos[0], 1, 0);
@@ -113,33 +117,40 @@ public class GerenciarPagamento extends TelaBase {
 		menuFinanciamento.add(campos[2], 1, 1);
 
 		if (!vendaService.getValoresEntrada().isEmpty()) {
-			cb[0].setSelected(true);
+			checkBoxes[0].setSelected(true);
 			ValorEntrada valorEntrada = vendaService.getValoresEntrada().get(0);
 			campos[0].setText(valorEntrada.getValor() + "");
 		}
 
 		if (!vendaService.getFinanciamentos().isEmpty()) {
-			cb[1].setSelected(true);
+			checkBoxes[1].setSelected(true);
 			Financiamento financiamento = vendaService.getFinanciamentos().get(0);
 			campos[1].setText(financiamento.getValorFinanciado() + "");
-			campos[1].setText(financiamento.getBanco() + "");
+			campos[2].setText(financiamento.getBanco() + "");
 		}
 
 		if (!vendaService.getTrocasCarro().isEmpty()) {
-			cb[2].setSelected(true);
+			checkBoxes[2].setSelected(true);
 			TrocaCarro trocaCarro = vendaService.getTrocasCarro().get(0);
-			campos[1].setText(new TrocaCarroModel(trocaCarro).toString());
+			campos[3].setText(new TrocaCarroModel(trocaCarro).toString());
 		}
 
 		menuCarro.add(labels[3], 0, 0);
 		menuCarro.add(btn[1], 1, 0);
+		
+		menuCarro.add(campos[3], 0, 1);
+		GridPane.setColumnSpan(campos[3], 2);
+		campos[3].setEditable(false);
 
-		btn[1].setOnMouseClicked(new EventHandler<Event>() {
+		btn[1].setOnMouseClicked(event -> {
+			new FormularioCriacaoTrocaCarro(banco, trocaCarro -> {
+				if (trocaCarro == null) {
+					return;
+				}
+				this.trocaCarro = trocaCarro;
 
-			@Override
-			public void handle(Event event) {
-				new CadastrarCompra(banco).show();
-			}
+				Platform.runLater(() -> atualizarTrocasCarro(trocaCarro));
+			}).show();
 		});
 
 		// menu.setTranslateY(15);
@@ -157,24 +168,51 @@ public class GerenciarPagamento extends TelaBase {
 		btn[0].setOnAction(event -> {
 			// valor a vista
 			vendaService.limparValoresEntrada();
-			if (cb[0].isSelected()) {
+			if (checkBoxes[0].isSelected()) {
 				try {
 					float valor = Float.parseFloat(campos[0].getText());
 					vendaService.adicionarValorEntrada(new ValorEntrada("", valor));
 				} catch (NumberFormatException e) {
 					ComponentesServices.mostrarAlerta("Valor inválido, digite um número");
+					return;
 				}
 			}
 
-			// TODO financiamento
+			// financiamento
+			vendaService.limparFinanciamentos();
+			if (checkBoxes[1].isSelected()) {
+				try {
+					float valorFinanciado = Float.parseFloat(campos[1].getText());
+					String bancoFinanc = campos[2].getText();
+					vendaService.adicionarFinanciamento(new Financiamento(bancoFinanc, valorFinanciado, -1));
+				} catch (NumberFormatException e) {
+					ComponentesServices.mostrarAlerta("Valor financiado inválido, digite um número");
+					return;
+				}
+			}
 
-			// TODO carro troca
+			// carro troca
+			atualizarTrocasCarro(trocaCarro);
 
 			close();
 		});
 
 		definirConteudo(conteudo);
 
+	}
+
+	public void setTrocaCarro(TrocaCarro trocaCarro) {
+		this.trocaCarro = trocaCarro;
+	}
+
+	private void atualizarTrocasCarro(TrocaCarro trocaCarro) {
+		vendaService.limparTrocasCarro();
+		if (checkBoxes[2].isSelected()) {
+			if (trocaCarro == null)
+				return;
+			campos[3].setText(new TrocaCarroModel(trocaCarro).toString());
+			vendaService.adicionarTrocaCarro(trocaCarro);
+		}
 	}
 
 }

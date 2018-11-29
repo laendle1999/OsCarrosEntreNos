@@ -143,10 +143,10 @@ public class CarroRepository {
 		tabela.atualizar(condicao, registro, listener);
 	}
 
-	public void buscarCarrosComDataEntradaSuperiorA(String data, int limiteResultados,
+	public void buscarCarrosComDataEntradaSuperiorA(long data, int limiteResultados,
 			ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
-		condicao.add("data_entrada", TipoCondicao.MAIOR, new ValorString(data));
+		condicao.add("data_entrada", TipoCondicao.MAIOR, new ValorLong(data));
 
 		tabela.buscar(condicao, limiteResultados, construirListenerRegistros(listener));
 	}

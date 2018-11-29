@@ -23,9 +23,9 @@ public class ManutencaoRepository {
 	private Tabela tabela;
 	private Banco banco;
 
-	public ManutencaoRepository(Banco banco2) throws IOException {
-		this.banco =  banco2;
-		tabela = banco2.getTabela("compra");
+	public ManutencaoRepository(Banco banco) throws IOException {
+		this.banco = banco;
+		tabela = banco.getTabela("manutencao");
 	}
 
 	private Manutencao converterRegistroEmManutencao(Registro registro) {

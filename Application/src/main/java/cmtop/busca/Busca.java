@@ -41,7 +41,7 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 	private Campo[] camposBusca;
 
 	public Busca(String nomeObjetoParaBuscar, String mensagemBotaoEscolher, Consumer<ObjetoBuscado> callback) {
-		super("AutoManager", 700, 600, TipoBotaoVoltar.VOLTAR);
+		super("AutoManager", 700, 600, TipoBotaoVoltar.NENHUM);
 
 		VBox conteudo = new VBox();
 
@@ -100,13 +100,17 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 				return;
 			}
 
-			callback.accept(itens.get(0));
+			if (callback != null) {
+				callback.accept(itens.get(0));
+			}
 			close();
 		});
 
 		Button botaoCancelar = new Button("Cancelar");
 		botaoCancelar.setOnAction(event -> {
-			callback.accept(null);
+			if (callback != null) {
+				callback.accept(null);
+			}
 			close();
 		});
 
@@ -114,7 +118,9 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 		linhaBotoesEscolherCancelar.setStyle("-fx-padding: 10px;");
 		linhaBotoesEscolherCancelar.setAlignment(Pos.BOTTOM_CENTER);
 		linhaBotoesEscolherCancelar.getChildren().add(botaoCancelar);
-		linhaBotoesEscolherCancelar.getChildren().add(botaoEscolher);
+		if (callback != null) {
+			linhaBotoesEscolherCancelar.getChildren().add(botaoEscolher);
+		}
 		conteudo.getChildren().add(linhaBotoesEscolherCancelar);
 
 		definirConteudo(conteudo);

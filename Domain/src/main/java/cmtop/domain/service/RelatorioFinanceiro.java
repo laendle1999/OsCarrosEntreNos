@@ -55,14 +55,17 @@ public class RelatorioFinanceiro {
 										s.append("<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>");
 										s.append("<title>Relatório financeiro</title>");
 										s.append("<style>*{text-align:center; font-family: sans-serif;}</style>");
+										s.append("<style>table{margin: 0 auto; width: 90%;}</style>");
 										s.append("</head><body>");
 
 										s.append("<h1>Relatório financeiro</h1>");
 
-										s.append("<h2>Compras realizadas após " + dataInicio + "</h2>");
+										s.append("<h2>Compras realizadas após "
+												+ DateService.converterTimestampParaDataString(dataInicio) + "</h2>");
 										adicionarTabelaCompras(s, compras);
 
-										s.append("<h2>Vendas realizadas após " + dataInicio + "</h2>");
+										s.append("<h2>Vendas realizadas após "
+												+ DateService.converterTimestampParaDataString(dataInicio) + "</h2>");
 										adicionarTabelaVendas(s, vendas);
 
 										s.append("</body></html>");

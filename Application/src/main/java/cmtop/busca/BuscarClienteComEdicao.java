@@ -18,10 +18,10 @@ public class BuscarClienteComEdicao extends BuscaComEdicao<Cliente> {
 
 	private Banco banco;
 
-	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "");
+	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "placa", "");
 
 	@SuppressWarnings("unused")
-	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
+	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");
 
 	public BuscarClienteComEdicao(Banco banco, ListenerAlteracoes<Cliente> listenerAlteracoes,
 			Consumer<Cliente> listenerApagar) {
@@ -36,7 +36,7 @@ public class BuscarClienteComEdicao extends BuscaComEdicao<Cliente> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Cliente>> callbackListaOriginal)
 			throws IOException {
 		ClienteRepository clienteRepository = new ClienteRepository(banco);
-		clienteRepository.consultarClientesPorNome(camposBusca.get(PLACA.getNome()), limite,
+		clienteRepository.consultarClientesPorNome(camposBusca.get(PLACA.getIdentificador()), limite,
 				new ListenerConsultaComResposta<Cliente>() {
 
 					@Override

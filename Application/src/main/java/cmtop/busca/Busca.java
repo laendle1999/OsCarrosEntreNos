@@ -136,7 +136,7 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 		for (int i = 0; i < componentesCampos.size(); i++) {
 			Node componente = componentesCampos.get(i);
 
-			String nome = camposBusca[i].getNome();
+			String nome = camposBusca[i].getIdentificador();
 			String valor = null;
 
 			if (componente instanceof TextField) {

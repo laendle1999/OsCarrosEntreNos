@@ -30,7 +30,7 @@ public class MenuGerenciamentoCarros extends TelaBase {
 		Text vendedor = new Text("Olá " + nomeVendedor);
 		vendedor.setTextAlignment(TextAlignment.LEFT);
 
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(400, 177));
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER);
 		menu.add(vendedor, 2, 0);

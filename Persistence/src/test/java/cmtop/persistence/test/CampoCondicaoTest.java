@@ -29,7 +29,7 @@ public class CampoCondicaoTest {
 
 	@Test
 	public void similarTest() {
-		CampoCondicao d = new CampoCondicao("d", TipoCondicao.SIMILAR, new ValorString("abc"));
+		CampoCondicao d = new CampoCondicao("d", TipoCondicao.SIMILAR, new ValorString("a'bc"));
 		System.out.println("Similar: " + d.toSQL());
 	}
 

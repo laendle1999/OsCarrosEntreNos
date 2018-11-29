@@ -20,7 +20,7 @@ import javafx.scene.text.TextAlignment;
 public class CadastrarManutencao extends TelaBase {
 
 	public CadastrarManutencao(Banco banco) {
-		super("AutoManager - Cadastrar Manutenção", 600, 500);
+		super("AutoManager - Cadastrar Manutenção", 600, 500, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

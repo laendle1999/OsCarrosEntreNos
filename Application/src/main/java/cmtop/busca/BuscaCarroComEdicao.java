@@ -12,7 +12,6 @@ import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
 import cmtop.persistence.entity.Banco;
-import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {

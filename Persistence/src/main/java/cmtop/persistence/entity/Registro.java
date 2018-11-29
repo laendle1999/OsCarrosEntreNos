@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cmtop.persistence.valueobject.CampoCondicao;
 import cmtop.persistence.valueobject.TipoValor;
 import cmtop.persistence.valueobject.Valor;
 import cmtop.persistence.valueobject.ValorDouble;
@@ -128,7 +129,7 @@ public class Registro {
 
 	public static List<Registro> listaRegistrosFromString(String string, TipoBanco tipoBanco) throws ParseException {
 		String s = string.trim();
-		
+
 		List<Registro> registros = new ArrayList<>();
 
 		StringBuffer buffer = new StringBuffer();
@@ -138,13 +139,13 @@ public class Registro {
 			String c = s.substring(i, i + 1);
 
 			if (c.equals(",") && previousC.equals("}") || c.equals("}") && i == s.length() - 1) {
-				if(c.equals("}")) {
+				if (c.equals("}")) {
 					buffer.append(c);
 				}
-				
-				registros.add(Registro.fromString(buffer.toString(), tipoBanco));
+
+				Registro registro = Registro.fromString(buffer.toString(), tipoBanco);
+				registros.add(registro);
 				buffer.setLength(0);
-				i++;
 				previousC = c;
 				continue;
 			}
@@ -302,10 +303,10 @@ public class Registro {
 
 			if (valor.getTipo() == TipoValor.STRING) {
 				sql += "'";
-			}
-			sql += valor;
-			if (valor.getTipo() == TipoValor.STRING) {
+				sql += CampoCondicao.limparString(valor.toString()).replace("'", "''");
 				sql += "'";
+			} else {
+				sql += valor;
 			}
 
 			if (i + 1 < chaves.size()) {

@@ -10,6 +10,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
 
+import cmtop.persistence.service.MyThread;
+
 //import org.apache.log4j.Logger;
 
 /**
@@ -102,7 +104,7 @@ public final class NetworkUtil {
 		return inet.isReachable(5000);
 	}
 
-	public static void getNetworkIPs(Consumer<List<String>> listener) {
+	public static void getNetworkIPs(int timeoutSegundos, Consumer<List<String>> listener) {
 		List<String> list = new ArrayList<>();
 
 		final int[] ip = getIp();
@@ -125,7 +127,7 @@ public final class NetworkUtil {
 			public void run() {
 				for (int i = 1; i <= 254; i++) {
 					final int _i = i;
-					new Thread(new Runnable() {
+					new MyThread(new Runnable() {
 						public void run() {
 							try {
 								ip[ip.length - 1] = _i;
@@ -137,7 +139,7 @@ public final class NetworkUtil {
 
 								InetAddress address = InetAddress.getByAddress(byteIp);
 								String output = address.toString().substring(1);
-								if (address.isReachable(5000)) {
+								if (address.isReachable(timeoutSegundos)) {
 									adicionarIpNaLista(output);
 								}
 							} catch (Exception e) {
@@ -145,7 +147,7 @@ public final class NetworkUtil {
 							}
 							incrementarThreads();
 						}
-					}).start();
+					}, "getNetworkIPs").start();
 				}
 			}
 		}.run();

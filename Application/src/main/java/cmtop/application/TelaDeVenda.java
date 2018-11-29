@@ -31,7 +31,7 @@ public class TelaDeVenda extends TelaBase {
 			+ "  -fx-text-fill: #242d35;";
 
 	public TelaDeVenda(Banco banco) {
-		super("AutoManager", 700, 600);
+		super("AutoManager", 700, 600, TipoBotaoVoltar.VOLTAR);
 		this.vendaService = new VendaService(banco);
 
 		VBox conteudo = new VBox();

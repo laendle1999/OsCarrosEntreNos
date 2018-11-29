@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
@@ -12,6 +13,7 @@ import cmtop.application.service.LoginService;
 import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.TipoBanco;
+import cmtop.persistence.service.ServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class LoginServiceTest {
@@ -20,7 +22,9 @@ public class LoginServiceTest {
 
 	@Test
 	public void testeLoginGerente() throws IOException, InterruptedException {
-		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+		int tempoLimiteSegundos = 20;
+
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 
 		CountDownLatch latch = new CountDownLatch(1);
 
@@ -38,18 +42,22 @@ public class LoginServiceTest {
 			}
 		});
 
-		latch.await();
+		latch.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 
 		assertTrue(logado);
 
 		assertTrue(LoginService.estaLogado());
 
 		assertTrue(LoginService.getFuncionarioLogado().getTipoAcesso() == TipoAcesso.GERENTE);
+
+		ServidorRedeLocal.fecharConexoes();
 	}
 
 	@Test
 	public void testeLoginVendedor() throws IOException, InterruptedException {
-		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+		int tempoLimiteSegundos = 20;
+
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 
 		CountDownLatch latch = new CountDownLatch(1);
 
@@ -67,13 +75,15 @@ public class LoginServiceTest {
 			}
 		});
 
-		latch.await();
+		latch.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 
 		assertTrue(logado);
 
 		assertTrue(LoginService.estaLogado());
 
 		assertTrue(LoginService.getFuncionarioLogado().getTipoAcesso() == TipoAcesso.VENDEDOR);
+
+		ServidorRedeLocal.fecharConexoes();
 	}
 
 }

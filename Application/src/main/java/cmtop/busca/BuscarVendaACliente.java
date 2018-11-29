@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import cmtop.application.model.ModelGenerico;
@@ -38,9 +39,9 @@ public class BuscarVendaACliente extends Busca<Venda> {
 	@Override
 	protected void buscar(ValoresCamposBusca camposBusca, int limite,
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Venda>> callbackListaOriginal)
-	
+
 			throws IOException {
-		
+
 		Carro carro = null;
 		Vendedor vend = null;
 		VendaRepository vendaRepository = new VendaRepository(banco);
@@ -53,28 +54,31 @@ public class BuscarVendaACliente extends Busca<Venda> {
 
 					@Override
 					public void resposta(List<Venda> resultados) {
+						int tempoLimiteSegundos = 20;
+
 						callbackListaOriginal.accept(resultados);
 
 						List<VendaModel> lista = new ArrayList<>();
 						List<Carro> carros = new ArrayList<>();
-						
+
 						CountDownLatch latchCarros = new CountDownLatch(resultados.size());
 						resultados.forEach(resultado -> {
 							try {
-								new CarroRepository(banco).obterCarroPorId(resultado.getCarro(), new ListenerConsultaComResposta<Carro>() {
-									
-									public void resposta(List<Carro> registros) {
-										Carro carro = registros.get(0);
-										carros.add(carro);
-										latchCarros.countDown();
-									}
-									
-									@Override
-									public void erro(Exception e) {
-										carros.add(null);
-										latchCarros.countDown();
-									}
-								});
+								new CarroRepository(banco).obterCarroPorId(resultado.getCarro(),
+										new ListenerConsultaComResposta<Carro>() {
+
+											public void resposta(List<Carro> registros) {
+												Carro carro = registros.get(0);
+												carros.add(carro);
+												latchCarros.countDown();
+											}
+
+											@Override
+											public void erro(Exception e) {
+												carros.add(null);
+												latchCarros.countDown();
+											}
+										});
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -82,34 +86,33 @@ public class BuscarVendaACliente extends Busca<Venda> {
 						});
 						// Esperar carros serem lidos
 						try {
-							latchCarros.await();
+							latchCarros.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
-						
+
 						List<Vendedor> vendedores = new ArrayList<>();
 
 						CountDownLatch latchVendedores = new CountDownLatch(resultados.size());
 						resultados.forEach(resultado -> {
 							try {
-								new VendedorRepository(banco).obterVendedorPorId(resultado.getVendedor(), new ListenerConsultaComResposta<Vendedor>() {
-									
-									public void resposta(List<Vendedor> registros) {
-										Vendedor vendedor = registros.get(0);
-										vendedores.add(vendedor);
-										latchVendedores.countDown();
-									}
-									
-									@Override
-									public void erro(Exception e) {
-										vendedores.add(null);
-										latchVendedores.countDown();
-									}
+								new VendedorRepository(banco).obterVendedorPorId(resultado.getVendedor(),
+										new ListenerConsultaComResposta<Vendedor>() {
 
-									
-								});
+											public void resposta(List<Vendedor> registros) {
+												Vendedor vendedor = registros.get(0);
+												vendedores.add(vendedor);
+												latchVendedores.countDown();
+											}
+
+											@Override
+											public void erro(Exception e) {
+												vendedores.add(null);
+												latchVendedores.countDown();
+											}
+
+										});
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -117,24 +120,21 @@ public class BuscarVendaACliente extends Busca<Venda> {
 						});
 						// Esperar vendedores serem lidos
 						try {
-							latchVendedores.await();
+							latchVendedores.await(tempoLimiteSegundos, TimeUnit.SECONDS);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
-
-						//List<VendaModel> lista = new ArrayList<>();
-						for(int i = 0; i < resultados.size() ; i++) {
+						// List<VendaModel> lista = new ArrayList<>();
+						for (int i = 0; i < resultados.size(); i++) {
 							lista.add(new VendaModel(resultados.get(i), carros.get(i), vendedores.get(i)));
 						}
 						callbackListaModel.accept(lista);
-						resultados.forEach(resultado -> lista.add(new VendaModel(resultado,carro,vend)));
+						resultados.forEach(resultado -> lista.add(new VendaModel(resultado, carro, vend)));
 						callbackListaModel.accept(lista);
 					}
 				});
 	}
-
-	
 
 }

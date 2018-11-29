@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
@@ -20,7 +21,7 @@ public class ServidorRedeLocal {
 
 	private static boolean aguardandoConsultaComResposta = false;
 
-	public static int PORTA_PADRAO = 8910;
+	public static int PORTA_PADRAO = 6370;
 
 	private Banco banco;
 
@@ -33,7 +34,7 @@ public class ServidorRedeLocal {
 
 		private Banco banco;
 
-		public SessaoCliente(Banco banco, Socket socket) throws IOException {
+		public SessaoCliente(Banco banco, Socket socket, int timeoutSegundos) throws IOException {
 			this.banco = banco;
 			ouvidorCliente = new OuvidorDeClienteRedeLocal(socket, mensagem -> {
 				if (!autenticado) {
@@ -41,18 +42,18 @@ public class ServidorRedeLocal {
 						autenticado = true;
 						return ComandosRede.OK;
 					}
-					return ComandosRede.ERRO;
+					return ComandosRede.NAO_AUTENTICADO;
 				} else {
 					if (aguardandoConsulta) {
 						aguardandoConsulta = false;
 
 						String sql = mensagem;
-						return processarConsulta(sql);
+						return processarConsulta(sql, timeoutSegundos);
 					} else if (aguardandoConsultaComResposta) {
 						aguardandoConsultaComResposta = false;
 
 						String sql = mensagem;
-						return processarConsultaComResposta(sql);
+						return processarConsultaComResposta(sql, timeoutSegundos);
 					}
 
 					if (mensagem.equals(ComandosRede.COMANDO_CONECTAR)) {
@@ -73,7 +74,7 @@ public class ServidorRedeLocal {
 			});
 		}
 
-		private String processarConsultaComResposta(String sql) {
+		private String processarConsultaComResposta(String sql, int timeoutSegundos) {
 			resultado = ComandosRede.ERRO;
 
 			CountDownLatch latch = new CountDownLatch(1);
@@ -89,19 +90,20 @@ public class ServidorRedeLocal {
 				@Override
 				public void erro(Exception e) {
 					resultado = ComandosRede.ERRO;
+					e.printStackTrace();
 					latch.countDown();
 				}
 			});
 
 			try {
-				latch.await();
-			} catch (InterruptedException e1) {
+				latch.await(timeoutSegundos, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
 			}
 
 			return resultado;
 		}
 
-		private String processarConsulta(String sql) {
+		private String processarConsulta(String sql, int timeoutSegundos) {
 			resultado = ComandosRede.ERRO;
 
 			CountDownLatch latch = new CountDownLatch(1);
@@ -116,12 +118,13 @@ public class ServidorRedeLocal {
 				@Override
 				public void erro(Exception e) {
 					resultado = ComandosRede.ERRO;
+					e.printStackTrace();
 					latch.countDown();
 				}
 			});
 
 			try {
-				latch.await();
+				latch.await(timeoutSegundos, TimeUnit.SECONDS);
 			} catch (InterruptedException e1) {
 			}
 
@@ -141,31 +144,36 @@ public class ServidorRedeLocal {
 
 	private static CountDownLatch clientWaitLatch = new CountDownLatch(1);
 
-	public void iniciar() {
+	public void iniciar(int timeoutSegundos) {
 		running = true;
 
-		new Thread(() -> {
+		new MyThread(() -> {
 			try (ServerSocket serverSocket = new ServerSocket(ServidorRedeLocal.PORTA_PADRAO)) {
+				serverSocket.setSoTimeout(timeoutSegundos * 1000);
 				while (running) {
 					clientWaitLatch = new CountDownLatch(1);
 
-					new Thread(() -> {
+					new MyThread(() -> {
 						try {
 							Socket socket = serverSocket.accept();
-							socket.setSoTimeout(30000);
+							socket.setSoTimeout(timeoutSegundos * 1000);
 							clientWaitLatch.countDown();
 
-							SESSOES.add(new SessaoCliente(banco, socket));
+							SESSOES.add(new SessaoCliente(banco, socket, timeoutSegundos));
 						} catch (IOException e) {
+							clientWaitLatch.countDown();
 						}
-					}).start();
+					}, "ServidorRedeLocal iniciar AguardandoCliente").start();
 
-					clientWaitLatch.await();
+					try {
+						clientWaitLatch.await(timeoutSegundos * 3, TimeUnit.SECONDS);
+					} catch (InterruptedException e) {
+					}
 				}
-			} catch (IOException | InterruptedException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}).start();
+		}, "ServidorRedeLocal iniciar").start();
 	}
 
 	public static void fecharConexoes() {

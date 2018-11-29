@@ -13,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 public class FormularioEntrada extends TelaBase {
 
 	public FormularioEntrada(BancoServidorRedeLocal banco) {
-		super("AutoManager - Formulário de entrada", 600, 500);
+		super("AutoManager - Formulário de entrada", 600, 500, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

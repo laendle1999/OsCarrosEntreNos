@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 public class MenuGerenciamentoCarros extends TelaBase {
 
 	public MenuGerenciamentoCarros(Banco banco) {
-		super("AutoManager - Gerenciamento de carros", 700, 600);
+		super("AutoManager - Gerenciamento de carros", 700, 600, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 
@@ -73,7 +73,7 @@ public class MenuGerenciamentoCarros extends TelaBase {
 					}
 				}, carroSendoApagado -> {
 					/// apagar item do banco
-				});
+				}).show();
 			}
 		});
 		

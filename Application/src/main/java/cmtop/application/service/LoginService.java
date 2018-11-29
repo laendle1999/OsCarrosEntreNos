@@ -25,14 +25,14 @@ public class LoginService {
 
 			@Override
 			public void resposta(List<Vendedor> registros) {
-				Vendedor vendedor = registros.get(0);
 				List<Boolean> resposta = new ArrayList<>();
-				if (vendedor == null) {
+				if (registros.isEmpty()) {
 					resposta.add(false);
 					listener.resposta(resposta);
 					return;
 				}
 
+				Vendedor vendedor = registros.get(0);
 				funcionarioLogado = vendedor;
 				resposta.add(true);
 				listener.resposta(resposta);

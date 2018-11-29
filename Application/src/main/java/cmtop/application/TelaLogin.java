@@ -23,7 +23,7 @@ public class TelaLogin extends TelaBase {
 	private Banco banco;
 
 	public TelaLogin(Banco banco) {
-		super("AutoManager - Autenticação", 600, 500);
+		super("AutoManager - Autenticação", 600, 500, TipoBotaoVoltar.NENHUM);
 		this.banco = banco;
 
 		VBox conteudo = new VBox();
@@ -96,6 +96,10 @@ public class TelaLogin extends TelaBase {
 		});
 
 		definirConteudo(conteudo);
+
+		setOnCloseRequest(event -> {
+			PontoEntradaAplicacao.finalizarAplicacao();
+		});
 	}
 
 	private void abrirMenu() {

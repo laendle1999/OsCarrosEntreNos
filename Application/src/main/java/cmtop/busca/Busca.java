@@ -41,7 +41,7 @@ public abstract class Busca<ObjetoBuscado> extends TelaBase {
 	private Campo[] camposBusca;
 
 	public Busca(String nomeObjetoParaBuscar, String mensagemBotaoEscolher, Consumer<ObjetoBuscado> callback) {
-		super("AutoManager", 700, 600);
+		super("AutoManager", 700, 600, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

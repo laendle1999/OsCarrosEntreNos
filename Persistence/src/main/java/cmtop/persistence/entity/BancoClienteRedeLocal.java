@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import cmtop.persistence.service.ComandosRede;
+import cmtop.persistence.service.MyThread;
 import cmtop.persistence.service.PortaVozCliente;
 import cmtop.persistence.service.ServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsulta;
@@ -51,7 +52,7 @@ public class BancoClienteRedeLocal extends Banco {
 
 	@Override
 	public void executarConsulta(String sql, ListenerConsulta listener) {
-		new Thread(() -> {
+		new MyThread(() -> {
 			try {
 				getPortaVozCliente().enviarMensagem(sql);
 				String resposta = getPortaVozCliente().aguardarMensagem();
@@ -65,12 +66,12 @@ public class BancoClienteRedeLocal extends Banco {
 			} catch (IOException e) {
 				listener.erro(e);
 			}
-		}).start();
+		}, "executarConsulta").start();
 	}
 
 	@Override
 	public void consultaComResultado(String sql, ListenerConsultaComResposta<Registro> listener) {
-		new Thread(() -> {
+		new MyThread(() -> {
 			try {
 				getPortaVozCliente().enviarMensagem(ComandosRede.CONSULTA_SQL_COM_RESPOSTA);
 				String status = getPortaVozCliente().aguardarMensagem();
@@ -91,9 +92,10 @@ public class BancoClienteRedeLocal extends Banco {
 				String resultado = getPortaVozCliente().aguardarMensagem();
 				listener.resposta(Registro.listaRegistrosFromString(resultado, tipoBanco));
 			} catch (IOException | ParseException e) {
+				e.printStackTrace();
 				listener.erro(e);
 			}
-		}).start();
+		}, "BancoClienteRedeLocal consultaComResultado").start();
 	}
 
 }

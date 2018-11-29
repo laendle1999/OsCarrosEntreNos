@@ -128,7 +128,7 @@ public class Registro {
 
 	public static List<Registro> listaRegistrosFromString(String string, TipoBanco tipoBanco) throws ParseException {
 		String s = string.trim();
-		
+
 		List<Registro> registros = new ArrayList<>();
 
 		StringBuffer buffer = new StringBuffer();
@@ -138,13 +138,13 @@ public class Registro {
 			String c = s.substring(i, i + 1);
 
 			if (c.equals(",") && previousC.equals("}") || c.equals("}") && i == s.length() - 1) {
-				if(c.equals("}")) {
+				if (c.equals("}")) {
 					buffer.append(c);
 				}
-				
-				registros.add(Registro.fromString(buffer.toString(), tipoBanco));
+
+				Registro registro = Registro.fromString(buffer.toString(), tipoBanco);
+				registros.add(registro);
 				buffer.setLength(0);
-				i++;
 				previousC = c;
 				continue;
 			}

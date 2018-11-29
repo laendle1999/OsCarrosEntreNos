@@ -68,7 +68,7 @@ public class TabelaTest {
 
 	}
 
-	private static BancoServidorRedeLocal getBanco() {
+	private static BancoServidorRedeLocal getBanco() throws IOException {
 		return new BancoServidorRedeLocal(TipoBanco.DERBY);
 	}
 

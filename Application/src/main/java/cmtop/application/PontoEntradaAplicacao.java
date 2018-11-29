@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
@@ -14,7 +15,11 @@ import cmtop.persistence.entity.BancoClienteRedeLocal;
 import cmtop.persistence.entity.BancoRemoto;
 import cmtop.persistence.entity.BancoServidorRedeLocal;
 import cmtop.persistence.entity.TipoBanco;
+import cmtop.persistence.service.MyThread;
+import cmtop.persistence.service.PortaVozCliente;
+import cmtop.persistence.service.ServidorRedeLocal;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class PontoEntradaAplicacao extends Application {
@@ -25,8 +30,9 @@ public class PontoEntradaAplicacao extends Application {
 		SERVIDOR_REDE_LOCAL, CLIENTE_REDE_LOCAL, REMOTO_NUVEM
 	}
 
-	public static void iniciarAplicacao() {
+	private static Banco banco;
 
+	public static void iniciarAplicacao() {
 		int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como servidor?", "",
 				JOptionPane.YES_NO_OPTION);
 		if (dialogResult == JOptionPane.YES_OPTION) {
@@ -35,18 +41,32 @@ public class PontoEntradaAplicacao extends Application {
 			configuracaoBanco = ConfiguracaoBanco.CLIENTE_REDE_LOCAL;
 		}
 
-		Banco banco;
-
 		switch (configuracaoBanco) {
 		case SERVIDOR_REDE_LOCAL:
-			banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+			try {
+				banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Não foi possível iniciar banco servidor");
+				PontoEntradaAplicacao.finalizarAplicacao();
+				return;
+			}
 			break;
 		case CLIENTE_REDE_LOCAL:
+			CountDownLatch latch = new CountDownLatch(1);
+			System.out.println("Procurando servidor...");
+			procurarBancoServidorLocal(TipoBanco.DERBY,20, b -> {
+				banco = b;
+				latch.countDown();
+			});
 			try {
-				banco = procurarBancoServidorLocal(TipoBanco.DERBY, 5);
-			} catch (Exception e) {
+				latch.await(20, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+			}
+			if (banco == null) {
+				System.out.println("Servidor não encontrado");
 				JOptionPane.showMessageDialog(null, "Servidor não encontrado na rede local");
-				e.printStackTrace();
+				PontoEntradaAplicacao.finalizarAplicacao();
 				return;
 			}
 			break;
@@ -54,6 +74,7 @@ public class PontoEntradaAplicacao extends Application {
 			banco = new BancoRemoto(TipoBanco.AZURE);
 			break;
 		default:
+			PontoEntradaAplicacao.finalizarAplicacao();
 			return;
 		}
 
@@ -64,34 +85,61 @@ public class PontoEntradaAplicacao extends Application {
 		// new GerarRelatorio().show();
 	}
 
-	private static Banco procurarBancoServidorLocal(TipoBanco tipoBanco, int timeoutSegundos) throws Exception {
-		List<String> listaIps = new ArrayList<>();
+	private static void procurarBancoServidorLocal(TipoBanco tipoBanco, int timeoutSegundos, Consumer<Banco> listener) {
+		new MyThread(new Runnable() {
 
-		CountDownLatch latch = new CountDownLatch(1);
+			private boolean buscaInterrompida;
 
-		System.out.println("Procurando servidor...");
-		NetworkUtil.getNetworkIPs(list -> {
-			listaIps.addAll(list);
-		});
+			private int computadoresFaltantes;
 
-		latch.await(timeoutSegundos, TimeUnit.SECONDS);
+			private synchronized void decrementarComputadoresFaltantes() {
+				if (buscaInterrompida) {
+					return;
+				}
 
-		Banco banco = null;
-
-		for (int i = 0; i < listaIps.size(); i++) {
-			try {
-				banco = new BancoClienteRedeLocal(listaIps.get(i), "", "", tipoBanco, timeoutSegundos);
-				System.out.println("Servidor encontrado: " + listaIps.get(i));
-			} catch (IOException e) {
-				continue;
+				computadoresFaltantes--;
+				if (computadoresFaltantes == 0) {
+					listener.accept(null);
+				}
 			}
-		}
 
-		if (banco == null) {
-			throw new Exception("Servidor não encontrado na rede local");
-		}
+			private synchronized void interromperBusca() {
+				buscaInterrompida = true;
+			}
 
-		return banco;
+			private synchronized void servidorEncontrado(Banco banco) {
+				listener.accept(banco);
+			}
+
+			@Override
+			public void run() {
+				List<String> listaIps = new ArrayList<>();
+
+				CountDownLatch latch = new CountDownLatch(1);
+				NetworkUtil.getNetworkIPs(timeoutSegundos, list -> {
+					listaIps.addAll(list);
+					latch.countDown();
+				});
+				try {
+					latch.await(timeoutSegundos, TimeUnit.SECONDS);
+				} catch (InterruptedException e1) {
+				}
+
+				computadoresFaltantes = listaIps.size();
+
+				for (int i = 0; i < listaIps.size(); i++) {
+					try {
+						Banco banco = new BancoClienteRedeLocal(listaIps.get(i), "", "", tipoBanco, timeoutSegundos);
+						interromperBusca();
+						servidorEncontrado(banco);
+						System.out.println("Servidor encontrado: " + listaIps.get(i));
+					} catch (IOException e) {
+						decrementarComputadoresFaltantes();
+						continue;
+					}
+				}
+			}
+		}, "procurarBancoServidorLocal").start();
 	}
 
 	@SuppressWarnings("unused")
@@ -106,6 +154,12 @@ public class PontoEntradaAplicacao extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	public static void finalizarAplicacao() {
+		ServidorRedeLocal.fecharConexoes();
+		PortaVozCliente.fecharConexoes();
+		Platform.exit();
 	}
 
 }

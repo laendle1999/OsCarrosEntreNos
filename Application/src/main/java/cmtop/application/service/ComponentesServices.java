@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -30,33 +32,50 @@ public class ComponentesServices {
 	}
 
 	public static void mostrarAlerta(String mensagem) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Alerta");
-		alert.setHeaderText(mensagem);
-		alert.showAndWait();
+		JOptionPane.showMessageDialog(null, mensagem, "Alerta", JOptionPane.WARNING_MESSAGE);
 	}
 
 	public static void mostrarErro(String mensagem) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Erro");
-		alert.setHeaderText(mensagem);
-		alert.showAndWait();
+		JOptionPane.showMessageDialog(null, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public static void mostrarEntradaTexto(String mensagem, Consumer<String> listenerEntrada) {
+		new Thread(() -> {
+			String input = JOptionPane.showInputDialog(mensagem);
+			listenerEntrada.accept(input);
+		}).start();
+	}
+
+	public static void mostrarEntradaSenha(String mensagem, Consumer<String> listenerEntrada) {
+		new Thread(() -> {
+			JPanel panel = new JPanel();
+			JLabel label = new JLabel(mensagem);
+			JPasswordField pass = new JPasswordField(10);
+			panel.add(label);
+			panel.add(pass);
+			String[] options = new String[] { "OK", "Cancelar" };
+			int option = JOptionPane.showOptionDialog(null, panel, "Entrada de senha", JOptionPane.NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+			if (option == 0) {
+				char[] password = pass.getPassword();
+				listenerEntrada.accept(new String(password));
+			}
+			else {
+				listenerEntrada.accept(null);
+			}
+		}).start();
 	}
 
 	public static void mostrarInformacao(String mensagem) {
-		Alert alert = new Alert(AlertType.NONE);
-		alert.setTitle("Informação");
-		alert.setHeaderText(mensagem);
-		alert.showAndWait();
+		JOptionPane.showMessageDialog(null, mensagem, "Informação", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void mostrarConfirmacao(String mensagem, Consumer<Boolean> resultado) {
-		Alert alert = new Alert(AlertType.CONFIRMATION, mensagem, ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-		alert.showAndWait();
-
-		if (alert.getResult() == ButtonType.YES) {
+		int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como servidor?", "",
+				JOptionPane.YES_NO_OPTION);
+		if (dialogResult == JOptionPane.YES_OPTION) {
 			resultado.accept(true);
-		} else if (alert.getResult() == ButtonType.NO) {
+		} else if (dialogResult == JOptionPane.NO_OPTION) {
 			resultado.accept(false);
 		} else {
 			resultado.accept(null);

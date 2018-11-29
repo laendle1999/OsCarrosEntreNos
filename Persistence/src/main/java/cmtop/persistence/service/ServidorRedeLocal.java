@@ -41,7 +41,7 @@ public class ServidorRedeLocal {
 						autenticado = true;
 						return ComandosRede.OK;
 					}
-					return ComandosRede.ERRO;
+					return ComandosRede.NAO_AUTENTICADO;
 				} else {
 					if (aguardandoConsulta) {
 						aguardandoConsulta = false;
@@ -89,13 +89,14 @@ public class ServidorRedeLocal {
 				@Override
 				public void erro(Exception e) {
 					resultado = ComandosRede.ERRO;
+					e.printStackTrace();
 					latch.countDown();
 				}
 			});
 
 			try {
 				latch.await();
-			} catch (InterruptedException e1) {
+			} catch (InterruptedException e) {
 			}
 
 			return resultado;
@@ -116,6 +117,7 @@ public class ServidorRedeLocal {
 				@Override
 				public void erro(Exception e) {
 					resultado = ComandosRede.ERRO;
+					e.printStackTrace();
 					latch.countDown();
 				}
 			});
@@ -144,28 +146,28 @@ public class ServidorRedeLocal {
 	public void iniciar() {
 		running = true;
 
-		new Thread(() -> {
+		new MyThread(() -> {
 			try (ServerSocket serverSocket = new ServerSocket(ServidorRedeLocal.PORTA_PADRAO)) {
 				while (running) {
 					clientWaitLatch = new CountDownLatch(1);
 
-					new Thread(() -> {
+					new MyThread(() -> {
 						try {
 							Socket socket = serverSocket.accept();
-							socket.setSoTimeout(30000);
+							socket.setSoTimeout(2000);
 							clientWaitLatch.countDown();
 
 							SESSOES.add(new SessaoCliente(banco, socket));
 						} catch (IOException e) {
 						}
-					}).start();
+					}, "inicarServidorRedeLocal AguardandoCliente").start();
 
 					clientWaitLatch.await();
 				}
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
-		}).start();
+		}, "iniciarServidorRedeLocal").start();
 	}
 
 	public static void fecharConexoes() {

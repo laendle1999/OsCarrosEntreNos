@@ -18,6 +18,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import cmtop.persistence.service.MyThread;
 import cmtop.persistence.service.ScriptRunner;
 import cmtop.persistence.service.ServidorRedeLocal;
 import cmtop.persistence.valueobject.ListenerConsulta;
@@ -44,11 +45,11 @@ public class BancoServidorRedeLocal extends Banco {
 
 	private ServidorRedeLocal servidorRedeLocal;
 
-	public BancoServidorRedeLocal(TipoBanco tipoConexao) {
+	public BancoServidorRedeLocal(TipoBanco tipoConexao) throws IOException {
 		this("root", "", tipoConexao);
 	}
 
-	public BancoServidorRedeLocal(String user, String password, TipoBanco tipoBanco) {
+	public BancoServidorRedeLocal(String user, String password, TipoBanco tipoBanco) throws IOException {
 		super(tipoBanco);
 		this.user = user;
 		this.password = password;
@@ -61,6 +62,8 @@ public class BancoServidorRedeLocal extends Banco {
 		} else {
 			throw new InvalidParameterException("Tipo de banco não aceito");
 		}
+
+		connection = getConnection();
 	}
 
 	public TipoBanco getTipoConexao() {
@@ -68,12 +71,12 @@ public class BancoServidorRedeLocal extends Banco {
 	}
 
 	private Connection getConnection() throws IOException {
-		boolean shouldCreateDatabase = false;
-		if (Files.notExists(Paths.get(DEFAULT_DATABASE_NAME))) {
-			shouldCreateDatabase = true;
-		}
-
 		if (connection == null) {
+			boolean shouldCreateDatabase = false;
+			if (Files.notExists(Paths.get(DEFAULT_DATABASE_NAME))) {
+				shouldCreateDatabase = true;
+			}
+
 			try {
 				if (tipoBanco == TipoBanco.DERBY) {
 					connection = DriverManager.getConnection(url);
@@ -83,22 +86,18 @@ public class BancoServidorRedeLocal extends Banco {
 			} catch (SQLException e) {
 				throw new IOException(e);
 			}
-		}
 
-		if (shouldCreateDatabase) {
-			createDatabase(connection);
-		}
+			if (shouldCreateDatabase) {
+				createDatabase(connection);
+			}
 
-		iniciarServidorRedeLocal();
+			if (servidorRedeLocal == null) {
+				servidorRedeLocal = new ServidorRedeLocal(this);
+				servidorRedeLocal.iniciar();
+			}
+		}
 
 		return connection;
-	}
-
-	private void iniciarServidorRedeLocal() {
-		if (servidorRedeLocal == null) {
-			servidorRedeLocal = new ServidorRedeLocal(this);
-			servidorRedeLocal.iniciar();
-		}
 	}
 
 	private void createDatabase(Connection connection) throws IOException {
@@ -123,7 +122,7 @@ public class BancoServidorRedeLocal extends Banco {
 	}
 
 	public void executarConsulta(String sql, ListenerConsulta listener) {
-		new Thread(() -> {
+		new MyThread(() -> {
 			try {
 				Statement statement = getConnection().createStatement();
 				statement.execute(sql);
@@ -131,11 +130,11 @@ public class BancoServidorRedeLocal extends Banco {
 			} catch (SQLException | IOException e) {
 				listener.erro(e);
 			}
-		}).start();
+		}, "executarConsulta").start();
 	}
 
 	public void consultaComResultado(String sql, ListenerConsultaComResposta<Registro> listener) {
-		new Thread(() -> {
+		new MyThread(() -> {
 			List<Registro> resultados = new ArrayList<>();
 
 			try {
@@ -143,6 +142,7 @@ public class BancoServidorRedeLocal extends Banco {
 
 				if (!statement.execute(sql)) {
 					listener.resposta(resultados);
+					return;
 				}
 
 				ResultSet resultSet = statement.getResultSet();
@@ -193,7 +193,7 @@ public class BancoServidorRedeLocal extends Banco {
 			}
 
 			listener.resposta(resultados);
-		}).start();
+		}, "consultaComResultado").start();
 	}
 
 }

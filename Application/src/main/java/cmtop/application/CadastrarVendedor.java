@@ -29,7 +29,7 @@ public class CadastrarVendedor extends TelaBase {
 	private int i;
 
 	public CadastrarVendedor(Banco banco) {
-		super("AutoManager - Formulário de entrada", 600, 700);
+		super("AutoManager - Formulário de entrada", 600, 700, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

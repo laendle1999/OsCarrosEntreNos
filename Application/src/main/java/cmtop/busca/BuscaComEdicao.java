@@ -56,7 +56,7 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 
 	public BuscaComEdicao(String nomeObjetoParaBuscar, String mensagemBotaoEscolher,
 			ListenerAlteracoes<ObjetoBuscado> listenerAlteracoes, Consumer<ObjetoBuscado> listenerApagar) {
-		super("AutoManager", 700, 600);
+		super("AutoManager", 700, 600, TipoBotaoVoltar.VOLTAR);
 		this.listenerAlteracoes = listenerAlteracoes;
 		this.listenerApagar = listenerApagar;
 

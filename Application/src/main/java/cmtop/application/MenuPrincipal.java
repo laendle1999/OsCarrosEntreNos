@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 public class MenuPrincipal extends TelaBase {
 
 	public MenuPrincipal(Banco banco) {
-		super("AutoManager - Menu principal", 700, 600);
+		super("AutoManager - Menu principal", 700, 600, TipoBotaoVoltar.SAIR);
 
 		VBox conteudo = new VBox();
 

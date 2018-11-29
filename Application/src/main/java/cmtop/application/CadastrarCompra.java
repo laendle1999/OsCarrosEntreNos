@@ -20,7 +20,7 @@ import javafx.scene.text.TextAlignment;
 public class CadastrarCompra extends TelaBase {
 
 	public CadastrarCompra(Banco banco) {
-		super("AutoManager - Cadastro de compra", 600, 500);
+		super("AutoManager - Cadastro de compra", 600, 500, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

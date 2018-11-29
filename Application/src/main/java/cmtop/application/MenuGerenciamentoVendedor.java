@@ -41,7 +41,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 	}
 
 	public MenuGerenciamentoVendedor(Banco banco) {
-		super("AutoManager - Gerenciamento de vendedores", 700, 600);
+		super("AutoManager - Gerenciamento de vendedores", 700, 600, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

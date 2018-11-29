@@ -13,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 public class MenuGerencia extends TelaBase {
 
 	public MenuGerencia(Banco banco) {
-		super("AutoManager - Menu de gerenciamento", 700, 600);
+		super("AutoManager - Menu de gerenciamento", 700, 600, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

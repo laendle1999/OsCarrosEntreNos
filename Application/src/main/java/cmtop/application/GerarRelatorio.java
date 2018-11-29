@@ -25,7 +25,7 @@ public class GerarRelatorio extends TelaBase {
 	private File saidaPdf = null;
 	
 	public GerarRelatorio(Banco banco) {
-		super("AutoManager - Gerar Relatório", 600, 500);
+		super("AutoManager - Gerar Relatório", 600, 500, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

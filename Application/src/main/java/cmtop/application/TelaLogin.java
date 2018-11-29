@@ -38,10 +38,10 @@ public class TelaLogin extends TelaBase {
 		secao.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(secao);
+		//conteudo.getChildren().add(secao);
 
-		conteudo.getChildren().add(new Label("usuario: funcionario, senha: 1234"));
-		conteudo.getChildren().add(new Label("usuario: gerente, senha: 1234"));
+		//conteudo.getChildren().add(new Label("usuario: funcionario, senha: 1234"));
+		//conteudo.getChildren().add(new Label("usuario: gerente, senha: 1234"));
 
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER_LEFT);

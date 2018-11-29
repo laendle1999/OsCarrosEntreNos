@@ -100,16 +100,13 @@ public class TelaConfiguracao extends TelaBase {
 			}
 
 		});
-
 		btnBackup[0].setOnMouseClicked(event -> {
 
 			ConfiguracaoBanco configuracaoBanco = PontoEntradaAplicacao.getConfiguracaoBanco();
 			if (configuracaoBanco == ConfiguracaoBanco.SERVIDOR_REDE_LOCAL) {
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Salvar relatório");
-				fileChooser.getExtensionFilters().addAll(
-						new FileChooser.ExtensionFilter("Todos os arquivos", "*", ".", "*"),
-						new FileChooser.ExtensionFilter("PDF", "*.zip"));
+				fileChooser.setTitle("Exportar Backup");
+				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Todos os arquivos", "*.*"));
 				File arquivo = fileChooser.showSaveDialog(null);
 				ConfiguracaoService.backupBanco(arquivo);
 			} else if (configuracaoBanco == ConfiguracaoBanco.CLIENTE_REDE_LOCAL) {
@@ -122,16 +119,21 @@ public class TelaConfiguracao extends TelaBase {
 
 		btnBackup[1].setOnMouseClicked(event -> {
 			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Salvar relatório");
-			fileChooser.getExtensionFilters().addAll(
-					new FileChooser.ExtensionFilter("Todos os arquivos", "*", ".", "*"),
-					new FileChooser.ExtensionFilter("PDF", "*.zip"));
+			fileChooser.setTitle("Importar Backup");
+			fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("ZIP", "*.zip"),
+					new FileChooser.ExtensionFilter("Todos os arquivos", "*.*"));
 			File arquivo = fileChooser.showOpenDialog(null);
+
+			System.out.println("Comecando o backup");
 
 			ComponentesServices.mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos",
 					resultado -> {
 						if (!resultado)
 							return;
+						new Thread(() -> {
+							System.out.println("Sou uma thread livre");
+							ComponentesServices.mostrarAlerta("Por Favor Aguarde");
+						}, "TelaConfiguracao importarBackup").start();
 						ConfiguracaoService.importarBackup(arquivo);
 					});
 		});

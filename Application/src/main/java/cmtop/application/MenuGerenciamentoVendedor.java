@@ -55,7 +55,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 		Text textVendedor = new Text("Olá " + nomeVendedor);
 		textVendedor.setTextAlignment(TextAlignment.LEFT);
 
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(400, 177));
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER);
 		menu.add(textVendedor, 2, 0);

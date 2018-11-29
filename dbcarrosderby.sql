@@ -38,8 +38,8 @@ CREATE TABLE carro (
     ano INT NOT NULL,
     marca VARCHAR(255) NOT NULL,
     cor VARCHAR(255) NOT NULL,
-    valor_carro DECIMAL NOT NULL,
-    custo DECIMAL NOT NULL,
+    valor_carro FLOAT NOT NULL,
+    custo FLOAT NOT NULL,
     data_entrada BIGINT NOT NULL,
     status INT NOT NULL
 );
@@ -49,7 +49,7 @@ CREATE TABLE compra (
     id_carro INT NOT NULL,
     dt_compra BIGINT NOT NULL,
     local_compra VARCHAR(255) NOT NULL,
-    custo DECIMAL NOT NULL,
+    custo FLOAT NOT NULL,
     nome_do_fornecedor VARCHAR(255) NOT NULL,
 
     FOREIGN KEY (id_carro) REFERENCES carro (id_carro)  ON DELETE CASCADE  
@@ -60,7 +60,7 @@ CREATE TABLE manutencao (
     id_carro INT NOT NULL,
     descricao VARCHAR(255) NOT NULL,
     dt_manutencao BIGINT NOT NULL,
-    custo DECIMAL NOT NULL,
+    custo FLOAT NOT NULL,
 
     FOREIGN KEY (id_carro) REFERENCES carro (id_carro) ON DELETE CASCADE
 );
@@ -82,7 +82,7 @@ CREATE TABLE finaciamento (
     id_financiamento INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
     id_venda INT NOT NULL ,
     banco VARCHAR(255) NOT NULL,
-    valorFinanciamento DECIMAL NOT NULL,
+    valorFinanciamento FLOAT NOT NULL,
     nParcelas INT NOT NULL,
 
     FOREIGN KEY (id_venda) REFERENCES venda (id_venda) ON DELETE CASCADE
@@ -93,7 +93,7 @@ CREATE TABLE valor_entrada (
     id_entrada INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
     id_venda INT NOT NULL,
     descricao VARCHAR(32670),
-    valor_entrada DECIMAL NOT NULL,
+    valor_entrada FLOAT NOT NULL,
 
     FOREIGN KEY (id_venda) REFERENCES venda (id_venda) ON DELETE CASCADE
 );
@@ -106,7 +106,7 @@ CREATE TABLE troca_carro (
     cor VARCHAR(255) NOT NULL,
     local VARCHAR(255),
     ano INT NOT NULL,
-    valor_carro DECIMAL NOT NULL,
+    valor_carro FLOAT NOT NULL,
     data_entrada BIGINT NOT NULL,
     
     id_venda INT NOT NULL,

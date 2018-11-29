@@ -1,6 +1,7 @@
 package cmtop.application;
 
 import java.io.IOException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Carro;
@@ -83,7 +84,7 @@ public class CadastrarCompra extends TelaBase {
 				try {
 					new CarroRepository(banco).cadastrarCarro(carro, new ListenerConsulta() {
 						@Override
-						public void sucesso(int resultadosAfetados) {
+						public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 							ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
 						}
 

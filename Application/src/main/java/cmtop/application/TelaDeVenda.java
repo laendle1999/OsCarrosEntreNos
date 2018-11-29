@@ -1,8 +1,8 @@
 package cmtop.application;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
@@ -12,6 +12,8 @@ import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Cliente;
 import cmtop.domain.service.VendaService;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsulta;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -134,19 +136,25 @@ public class TelaDeVenda extends TelaBase {
 		});
 
 		botao[4].setOnAction(event -> {
-			try {
-				if (vendaService.getCliente() == null) {
-					ComponentesServices.mostrarAlerta("Por favor, selecione o cliente");
-				} else if (vendaService.getCarro() == null) {
-					ComponentesServices.mostrarAlerta("Por favor, selecione o carro");
-				} else {
-					vendaService.finalizarVenda();
-					close();
-					// ComponentesServices.mostrarInformacao("Venda finalizada com sucesso");
-				}
-			} catch (IOException e) {
-				ComponentesServices.mostrarErro("Falha ao conectar ao banco de dados");
-				e.printStackTrace();
+			if (vendaService.getCliente() == null) {
+				ComponentesServices.mostrarAlerta("Por favor, selecione o cliente");
+			} else if (vendaService.getCarro() == null) {
+				ComponentesServices.mostrarAlerta("Por favor, selecione o carro");
+			} else {
+				vendaService.finalizarVenda(new ListenerConsulta() {
+
+					@Override
+					public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
+						ComponentesServices.mostrarInformacao("Venda finalizada com sucesso");
+						Platform.runLater(() -> close());
+					}
+
+					@Override
+					public void erro(Exception e) {
+						ComponentesServices.mostrarErro("Falha ao finalizar venda");
+						e.printStackTrace();
+					}
+				});
 			}
 		});
 

@@ -2,6 +2,7 @@ package cmtop.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import cmtop.application.PontoEntradaAplicacao.ConfiguracaoBanco;
 import cmtop.application.service.ComponentesServices;
@@ -99,41 +100,42 @@ public class TelaConfiguracao extends TelaBase {
 			}
 
 		});
-		
-		btnBackup[0].setOnMouseClicked(event->{
-			
-			ConfiguracaoBanco configuracaoBanco = new PontoEntradaAplicacao().getConfiguracaoBanco();
-			if(configuracaoBanco == ConfiguracaoBanco.SERVIDOR_REDE_LOCAL) {
+
+		btnBackup[0].setOnMouseClicked(event -> {
+
+			ConfiguracaoBanco configuracaoBanco = PontoEntradaAplicacao.getConfiguracaoBanco();
+			if (configuracaoBanco == ConfiguracaoBanco.SERVIDOR_REDE_LOCAL) {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Salvar relatório");
 				fileChooser.getExtensionFilters().addAll(
-						new FileChooser.ExtensionFilter("Todos os arquivos","*", ".","*"),
+						new FileChooser.ExtensionFilter("Todos os arquivos", "*", ".", "*"),
 						new FileChooser.ExtensionFilter("PDF", "*.zip"));
 				File arquivo = fileChooser.showSaveDialog(null);
-				new ConfiguracaoService().backupBanco(arquivo);
-			}else if(configuracaoBanco == ConfiguracaoBanco.CLIENTE_REDE_LOCAL){
-				new ComponentesServices().mostrarErro("Não é possivel fazer Backup pelo computador do Cliente");
-			}else {
-				new ComponentesServices().mostrarInformacao("Banco em Nuvem não necessita de Backup");
+				ConfiguracaoService.backupBanco(arquivo);
+			} else if (configuracaoBanco == ConfiguracaoBanco.CLIENTE_REDE_LOCAL) {
+				ComponentesServices.mostrarErro("Não é possivel fazer Backup pelo computador do Cliente");
+			} else {
+				ComponentesServices.mostrarInformacao("Banco em Nuvem não necessita de Backup");
 			}
-			
+
 		});
-		
-		btnBackup[1].setOnMouseClicked(event->{
+
+		btnBackup[1].setOnMouseClicked(event -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Salvar relatório");
 			fileChooser.getExtensionFilters().addAll(
-					new FileChooser.ExtensionFilter("Todos os arquivos","*", ".","*"),
+					new FileChooser.ExtensionFilter("Todos os arquivos", "*", ".", "*"),
 					new FileChooser.ExtensionFilter("PDF", "*.zip"));
 			File arquivo = fileChooser.showOpenDialog(null);
-			
-			new ComponentesServices().mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos", resultado->{
-				if(!resultado)
-					return;
-				new ConfiguracaoService().importarBackup(arquivo);
-			});
+
+			ComponentesServices.mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos",
+					resultado -> {
+						if (!resultado)
+							return;
+						ConfiguracaoService.importarBackup(arquivo);
+					});
 		});
-		
+
 		definirConteudo(conteudo);
 	}
 
@@ -143,7 +145,7 @@ public class TelaConfiguracao extends TelaBase {
 			new VendedorRepository(banco).alterarSenhaVendedor(vendedor, senha, new ListenerConsulta() {
 
 				@Override
-				public void sucesso(int resultadosAfetados) {
+				public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 					ComponentesServices.mostrarInformacao("Senhas alterada com sucesso");
 				}
 

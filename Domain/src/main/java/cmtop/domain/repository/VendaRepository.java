@@ -36,7 +36,7 @@ public class VendaRepository {
 		int id_cliente = registro.get("id_cliente").getAsInt();
 		int id_carro = registro.get("id_carro").getAsInt();
 		int id_funcionario = registro.get("id_funcionario").getAsInt();
-		String dt_venda = registro.get("dt_venda").getAsString();
+		long dt_venda = registro.get("dt_venda").getAsLong();
 		String num_venda = registro.get("num_venda").getAsString();
 
 		Venda venda = new Venda(id, num_venda, dt_venda, id_cliente, id_funcionario);
@@ -49,7 +49,7 @@ public class VendaRepository {
 		registro.set("id_cliente", new ValorInt(venda.getCliente()));
 		registro.set("id_carro", new ValorInt(venda.getCarro()));
 		registro.set("id_funcionario", new ValorInt(venda.getVendedor()));
-		registro.set("dt_venda", new ValorString(venda.getDataVenda()));
+		registro.set("dt_venda", new ValorLong(venda.getDataVenda()));
 		registro.set("num_venda", new ValorString(venda.getNumeroVenda()));
 		return registro;
 	}

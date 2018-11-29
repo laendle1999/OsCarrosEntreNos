@@ -35,16 +35,17 @@ public class PontoEntradaAplicacao extends Application {
 	private static Banco banco;
 
 	public static void iniciarAplicacao() {
-//		int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como servidor?", "",
-//				JOptionPane.YES_NO_OPTION);
-//		if (dialogResult == JOptionPane.YES_OPTION) {
-//			configuracaoBanco = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
-//		} else {
-//			configuracaoBanco = ConfiguracaoBanco.CLIENTE_REDE_LOCAL;
-//		}
+		// int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como
+		// servidor?", "",
+		// JOptionPane.YES_NO_OPTION);
+		// if (dialogResult == JOptionPane.YES_OPTION) {
+		// configuracaoBanco = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
+		// } else {
+		// configuracaoBanco = ConfiguracaoBanco.CLIENTE_REDE_LOCAL;
+		// }
 
 		configuracaoBanco = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
-		
+
 		switch (configuracaoBanco) {
 		case SERVIDOR_REDE_LOCAL:
 			try {
@@ -160,6 +161,10 @@ public class PontoEntradaAplicacao extends Application {
 		ServidorRedeLocal.fecharConexoes();
 		PortaVozCliente.fecharConexoes();
 		Platform.exit();
+	}
+
+	public static ConfiguracaoBanco getConfiguracaoBanco() {
+		return configuracaoBanco;
 	}
 
 }

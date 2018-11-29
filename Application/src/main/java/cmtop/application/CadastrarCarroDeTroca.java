@@ -7,10 +7,10 @@ import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.TrocaCarro;
 import cmtop.domain.repository.CarroRepository;
+import cmtop.domain.repository.TrocaCarroRepository;
+import cmtop.domain.valueobject.StatusCarro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -50,9 +50,9 @@ public class CadastrarCarroDeTroca extends TelaBase {
 		campos[2].setText(troca.getAno() + "");
 		campos[3].setText(troca.getPlaca());
 		campos[4].setText("");
-		campos[4].setText(troca.getCor());
-		campos[4].setText(troca.getValorCarro() + "");
-		
+		campos[5].setText(troca.getCor());
+		campos[6].setText(troca.getValorCarro() + "");
+
 		Button btn = new Button("Confirmar");
 
 		for (int x = 0; x < labels.length; x++) {
@@ -78,36 +78,77 @@ public class CadastrarCarroDeTroca extends TelaBase {
 		conteudo.getChildren().add(btn);
 		btn.setTranslateX(300);
 		btn.setTranslateY(30);
-		btn.setOnMouseClicked(new EventHandler<Event>() {
-			@Override
-			public void handle(Event event) {
-				Carro carro = new Carro(0, null, campos[3].getText(), campos[4].getText(), campos[0].getText(),
-						campos[1].getText(), campos[5].getText(), Integer.parseInt(campos[2].getText()), 0,
-						Float.parseFloat(campos[7].getText()), Long.parseLong(campos[10].getText()), null);
-
-				try {
-					new CarroRepository(banco).cadastrarCarro(carro, new ListenerConsulta() {
-						@Override
-						public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
-							ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
-						}
-
-						@Override
-						public void erro(Exception e) {
-							e.printStackTrace();
-							ComponentesServices.mostrarErro("Houve um erro no cadastro");
-						}
-					});
-				} catch (IOException e) {
-					System.err.println(e.getMessage());
-					e.printStackTrace();
-				}
-				close();
-
+		btn.setOnAction(event -> {
+			String numero = "";
+			String placa = campos[3].getText();
+			String renavan = campos[4].getText();
+			String modelo = campos[0].getText();
+			String marca = campos[1].getText();
+			String cor = campos[5].getText();
+			int ano;
+			try {
+				ano = Integer.parseInt(campos[2].getText());
+			} catch (NumberFormatException e) {
+				ComponentesServices.mostrarAlerta("O ano deve ser um número");
+				return;
 			}
+			float valorVenda = troca.getValorCarro();
+			float custo;
+			try {
+				custo = Float.parseFloat(campos[6].getText());
+			} catch (NumberFormatException e) {
+				ComponentesServices.mostrarAlerta("O custo deve ser um número");
+				return;
+			}
+			long dataEntrada = troca.getDataEntrada();
+			StatusCarro statusCarro = StatusCarro.DISPONIVEL;
+
+			Carro carro = new Carro(-1, numero, placa, renavan, modelo, marca, cor, ano, valorVenda, custo, dataEntrada,
+					statusCarro);
+
+			try {
+				new CarroRepository(banco).cadastrarCarro(carro, new ListenerConsulta() {
+					@Override
+					public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
+						ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
+
+						apagarTrocaCarro(banco, troca);
+					}
+
+					@Override
+					public void erro(Exception e) {
+						e.printStackTrace();
+						ComponentesServices.mostrarErro("Houve um erro no cadastro");
+					}
+				});
+			} catch (IOException e) {
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+			close();
+
 		});
 
 		definirConteudo(conteudo);
+	}
+
+	private void apagarTrocaCarro(Banco banco, TrocaCarro troca) {
+		try {
+			new TrocaCarroRepository(banco).removerTrocaCarro(troca, new ListenerConsulta() {
+
+				@Override
+				public void sucesso(int resultadosAfetados, List<Long> chaves) {
+					System.out.println("Troca carro antiga foi removida do banco");
+				}
+
+				@Override
+				public void erro(Exception e) {
+					e.printStackTrace();
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

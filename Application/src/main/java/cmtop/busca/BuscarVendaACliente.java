@@ -24,7 +24,7 @@ public class BuscarVendaACliente extends Busca<Venda> {
 
 	private Banco banco;
 
-	private static Campo CLIENTE = new Campo(TipoCampo.TEXTO, "", "venda", "");
+	private static Campo CLIENTE = new Campo(TipoCampo.TEXTO, "Codigo Cliente", "venda", "");
 
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");

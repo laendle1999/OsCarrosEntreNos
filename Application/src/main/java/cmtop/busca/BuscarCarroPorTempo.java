@@ -18,7 +18,7 @@ public class BuscarCarroPorTempo extends Busca<Carro> {
 
 	private Banco banco;
 
-	private static Campo DATA = new Campo(TipoCampo.TEXTO, "Placa", "placa", "");
+	private static Campo DATA = new Campo(TipoCampo.TEXTO, "Data", "placa", "");
 
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");

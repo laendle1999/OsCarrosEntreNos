@@ -1,6 +1,11 @@
 package cmtop.application;
 
+import cmtop.application.model.CarroModel;
+import cmtop.application.model.TrocaCarroModel;
 import cmtop.application.service.ComponentesServices;
+import cmtop.domain.entity.Carro;
+import cmtop.domain.entity.Financiamento;
+import cmtop.domain.entity.TrocaCarro;
 import cmtop.domain.entity.ValorEntrada;
 import cmtop.domain.service.VendaService;
 import cmtop.persistence.entity.Banco;
@@ -106,6 +111,25 @@ public class GerenciarPagamento extends TelaBase {
 		menuFinanciamento.add(campos[1], 1, 0);
 		menuFinanciamento.add(labels[2], 0, 1);
 		menuFinanciamento.add(campos[2], 1, 1);
+
+		if (!vendaService.getValoresEntrada().isEmpty()) {
+			cb[0].setSelected(true);
+			ValorEntrada valorEntrada = vendaService.getValoresEntrada().get(0);
+			campos[0].setText(valorEntrada.getValor() + "");
+		}
+
+		if (!vendaService.getFinanciamentos().isEmpty()) {
+			cb[1].setSelected(true);
+			Financiamento financiamento = vendaService.getFinanciamentos().get(0);
+			campos[1].setText(financiamento.getValorFinanciado() + "");
+			campos[1].setText(financiamento.getBanco() + "");
+		}
+
+		if (!vendaService.getTrocasCarro().isEmpty()) {
+			cb[2].setSelected(true);
+			TrocaCarro trocaCarro = vendaService.getTrocasCarro().get(0);
+			campos[1].setText(new TrocaCarroModel(trocaCarro).toString());
+		}
 
 		menuCarro.add(labels[3], 0, 0);
 		menuCarro.add(btn[1], 1, 0);

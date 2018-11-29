@@ -3,6 +3,7 @@ package cmtop.domain.service;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import cmtop.domain.aggregate.Pagamento;
@@ -82,6 +83,18 @@ public class VendaService {
 
 	public void limparFinanciamentos() {
 		pagamento.getFinanciamentos().clear();
+	}
+
+	public List<ValorEntrada> getValoresEntrada() {
+		return pagamento.getValoresEntrada();
+	}
+
+	public List<TrocaCarro> getTrocasCarro() {
+		return pagamento.getTrocasCarro();
+	}
+
+	public List<Financiamento> getFinanciamentos() {
+		return pagamento.getFinanciamentos();
 	}
 
 	public void escolherCarro(Carro carro) {

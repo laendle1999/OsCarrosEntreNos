@@ -129,7 +129,6 @@ public class BancoServidorRedeLocal extends Banco {
 		new MyThread(() -> {
 			try {
 				Statement statement = getConnection().createStatement();
-				System.out.println(sql);
 				statement.execute(sql);
 				listener.sucesso(statement.getUpdateCount());
 			} catch (SQLException | IOException e) {
@@ -144,7 +143,6 @@ public class BancoServidorRedeLocal extends Banco {
 
 			try {
 				Statement statement = getConnection().createStatement();
-System.out.println(sql);
 				if (!statement.execute(sql)) {
 					listener.resposta(resultados);
 					return;

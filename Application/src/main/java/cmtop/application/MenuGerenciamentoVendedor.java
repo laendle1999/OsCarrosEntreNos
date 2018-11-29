@@ -1,16 +1,16 @@
 package cmtop.application;
 
 import java.io.IOException;
-import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
 import cmtop.busca.BuscaComEdicao.ListenerAlteracoes;
+import cmtop.busca.BuscaVendedor;
 import cmtop.busca.BuscarVendedorComEdicao;
 import cmtop.domain.entity.Vendedor;
 import cmtop.domain.repository.VendedorRepository;
 import cmtop.persistence.entity.Banco;
-import cmtop.persistence.valueobject.ListenerConsultaComResposta;
+import cmtop.persistence.valueobject.ListenerConsulta;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -51,13 +51,13 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 		menu.setVgap(10);
 
 		String nomeVendedor = LoginService.getFuncionarioLogado().getNome().split("\\s")[0];
-		Text vendedor = new Text("Olá " + nomeVendedor);
-		vendedor.setTextAlignment(TextAlignment.LEFT);
+		Text textVendedor = new Text("Olá " + nomeVendedor);
+		textVendedor.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER);
-		menu.add(vendedor, 2, 0);
+		menu.add(textVendedor, 2, 0);
 
 		Button[] botoes = { new Button("Cadastrar"), new Button("Alterar"), new Button("Nova Senha"),
 				new Button("Buscar Venda"), new Button("Gerencia "), new Button("Funcao 6") };
@@ -97,50 +97,37 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 				});
 			}
 		});
-		botoes[2].setOnMouseClicked(new EventHandler<Event>() {
+		botoes[2].setOnMouseClicked(event -> {
+			new BuscaVendedor(banco, vendedorEscolhido -> {
+				if (vendedorEscolhido == null)
+					return;
+				ComponentesServices.mostrarEntradaSenha("Digite uma nova senha para o vendedor", senha -> {
+					if (senha == null)
+						return;
+					VendedorRepository repository;
+					try {
+						repository = new VendedorRepository(banco);
+					} catch (IOException e1) {
+						ComponentesServices.mostrarInformacao("Falha ao se conectar ao banco");
+						e1.printStackTrace();
+						return;
+					}
 
-			@Override
-			public void handle(Event event) {
+					repository.alterarSenhaVendedor(vendedorEscolhido, senha, new ListenerConsulta() {
+						@Override
+						public void sucesso(int resultadosAfetados) {
+							ComponentesServices.mostrarInformacao("Senha alterada com sucesso");
+						}
 
-				Vendedor vendedor = null;
-
-				ComponentesServices.mostrarEntradaTexto("Entre com o Login", login -> {
-					setLog(login);
-					ComponentesServices.mostrarEntradaSenha("Entre com a Senha", senha -> {
-						setPass(senha);
+						@Override
+						public void erro(Exception e) {
+							ComponentesServices.mostrarInformacao("Falha ao alterar senha");
+							e.printStackTrace();
+						}
 					});
+
 				});
-
-				try {
-					new VendedorRepository(banco).obterVendedorPorLogin(getLog(),
-							new ListenerConsultaComResposta<Vendedor>() {
-								@Override
-								public void resposta(List<Vendedor> registros) {
-									if (registros.isEmpty()) {
-										System.err.println("Nenhum redistro encontrado");
-									} else {
-										Vendedor vendedor = registros.get(0);
-										try {
-											new VendedorRepository(banco).alterarSenhaVendedor(vendedor, getPass(),
-													null);
-										} catch (IOException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
-									}
-								}
-
-								@Override
-								public void erro(Exception e) {
-									// TODO Auto-generated method stub
-								}
-							});
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
+			}).show();
 		});
 
 		definirConteudo(conteudo);

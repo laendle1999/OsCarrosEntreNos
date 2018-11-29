@@ -143,31 +143,32 @@ public class ServidorRedeLocal {
 
 	private static CountDownLatch clientWaitLatch = new CountDownLatch(1);
 
-	public void iniciar() {
+	public void iniciar(int timeoutSegundos) {
 		running = true;
 
 		new MyThread(() -> {
 			try (ServerSocket serverSocket = new ServerSocket(ServidorRedeLocal.PORTA_PADRAO)) {
+				serverSocket.setSoTimeout(timeoutSegundos * 1000);
 				while (running) {
 					clientWaitLatch = new CountDownLatch(1);
 
 					new MyThread(() -> {
 						try {
 							Socket socket = serverSocket.accept();
-							socket.setSoTimeout(2000);
+							socket.setSoTimeout(timeoutSegundos * 1000);
 							clientWaitLatch.countDown();
 
 							SESSOES.add(new SessaoCliente(banco, socket));
 						} catch (IOException e) {
 						}
-					}, "inicarServidorRedeLocal AguardandoCliente").start();
+					}, "ServidorRedeLocal iniciar AguardandoCliente").start();
 
 					clientWaitLatch.await();
 				}
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
-		}, "iniciarServidorRedeLocal").start();
+		}, "ServidorRedeLocal iniciar").start();
 	}
 
 	public static void fecharConexoes() {

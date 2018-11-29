@@ -21,7 +21,7 @@ public class LoginServiceTest {
 
 	@Test
 	public void testeLoginGerente() throws IOException, InterruptedException {
-		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 
 		CountDownLatch latch = new CountDownLatch(1);
 
@@ -46,13 +46,13 @@ public class LoginServiceTest {
 		assertTrue(LoginService.estaLogado());
 
 		assertTrue(LoginService.getFuncionarioLogado().getTipoAcesso() == TipoAcesso.GERENTE);
-		
+
 		ServidorRedeLocal.fecharConexoes();
 	}
 
 	@Test
 	public void testeLoginVendedor() throws IOException, InterruptedException {
-		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 
 		CountDownLatch latch = new CountDownLatch(1);
 

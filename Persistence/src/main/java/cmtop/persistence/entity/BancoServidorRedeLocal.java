@@ -45,15 +45,19 @@ public class BancoServidorRedeLocal extends Banco {
 
 	private ServidorRedeLocal servidorRedeLocal;
 
-	public BancoServidorRedeLocal(TipoBanco tipoConexao) throws IOException {
-		this("root", "", tipoConexao);
+	private int timeoutSegundos;
+
+	public BancoServidorRedeLocal(TipoBanco tipoConexao, int timeoutSegundos) throws IOException {
+		this("root", "", tipoConexao, timeoutSegundos);
 	}
 
-	public BancoServidorRedeLocal(String user, String password, TipoBanco tipoBanco) throws IOException {
+	public BancoServidorRedeLocal(String user, String password, TipoBanco tipoBanco, int timeoutSegundos)
+			throws IOException {
 		super(tipoBanco);
 		this.user = user;
 		this.password = password;
 		this.tipoBanco = tipoBanco;
+		this.timeoutSegundos = timeoutSegundos;
 
 		if (tipoBanco == TipoBanco.DERBY) {
 			this.url = "jdbc:derby:" + DEFAULT_DATABASE_NAME + ";create=true";
@@ -93,7 +97,7 @@ public class BancoServidorRedeLocal extends Banco {
 
 			if (servidorRedeLocal == null) {
 				servidorRedeLocal = new ServidorRedeLocal(this);
-				servidorRedeLocal.iniciar();
+				servidorRedeLocal.iniciar(timeoutSegundos);
 			}
 		}
 
@@ -130,7 +134,7 @@ public class BancoServidorRedeLocal extends Banco {
 			} catch (SQLException | IOException e) {
 				listener.erro(e);
 			}
-		}, "executarConsulta").start();
+		}, "BancoServidorRedeLocal executarConsulta").start();
 	}
 
 	public void consultaComResultado(String sql, ListenerConsultaComResposta<Registro> listener) {
@@ -193,7 +197,7 @@ public class BancoServidorRedeLocal extends Banco {
 			}
 
 			listener.resposta(resultados);
-		}, "consultaComResultado").start();
+		}, "BancoServidorRedeLocal consultaComResultado").start();
 	}
 
 }

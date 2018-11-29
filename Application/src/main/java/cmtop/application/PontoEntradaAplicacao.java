@@ -26,6 +26,8 @@ public class PontoEntradaAplicacao extends Application {
 
 	private static ConfiguracaoBanco configuracaoBanco;
 
+	private final static int TEMPO_LIMITE_BANCO_SEGUNDOS = 5;
+
 	public enum ConfiguracaoBanco {
 		SERVIDOR_REDE_LOCAL, CLIENTE_REDE_LOCAL, REMOTO_NUVEM
 	}
@@ -44,7 +46,7 @@ public class PontoEntradaAplicacao extends Application {
 		switch (configuracaoBanco) {
 		case SERVIDOR_REDE_LOCAL:
 			try {
-				banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+				banco = new BancoServidorRedeLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Não foi possível iniciar banco servidor");
@@ -55,12 +57,12 @@ public class PontoEntradaAplicacao extends Application {
 		case CLIENTE_REDE_LOCAL:
 			CountDownLatch latch = new CountDownLatch(1);
 			System.out.println("Procurando servidor...");
-			procurarBancoServidorLocal(TipoBanco.DERBY,20, b -> {
+			procurarBancoServidorLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS, b -> {
 				banco = b;
 				latch.countDown();
 			});
 			try {
-				latch.await(20, TimeUnit.SECONDS);
+				latch.await(TEMPO_LIMITE_BANCO_SEGUNDOS, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 			}
 			if (banco == null) {

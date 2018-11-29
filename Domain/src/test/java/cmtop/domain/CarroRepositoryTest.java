@@ -15,7 +15,7 @@ public class CarroRepositoryTest {
 
 	@Test
 	public void test() throws IOException {
-		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY);
+		BancoServidorRedeLocal banco = new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 
 		CarroRepository carroRepository = new CarroRepository(banco);
 		carroRepository.obterCarrosPorPlaca("a", 100, new ListenerConsultaComResposta<Carro>() {

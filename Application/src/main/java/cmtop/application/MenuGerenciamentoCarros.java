@@ -69,7 +69,7 @@ public class MenuGerenciamentoCarros extends TelaBase {
 				new BuscaCarroComEdicao(banco, new ListenerAlteracoes<Carro>() {
 					@Override
 					public boolean aceitarMudanca(Carro objetoBuscado, String campo, String valorNovo) {
-						return false; // << retornar se valorNovo é valido ou não
+						return true; // << retornar se valorNovo é valido ou não
 					}
 				}, carroSendoApagado -> {
 					/// apagar item do banco

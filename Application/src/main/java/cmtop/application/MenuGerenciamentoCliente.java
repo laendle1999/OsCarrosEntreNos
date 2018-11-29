@@ -69,7 +69,7 @@ public class MenuGerenciamentoCliente extends TelaBase {
 				new BuscarClienteComEdicao(banco, new ListenerAlteracoes<Cliente>() {
 					@Override
 					public boolean aceitarMudanca(Cliente objetoBuscado, String campo, String valorNovo) {
-						return false; // << retornar se valorNovo é valido ou não
+						return true; // << retornar se valorNovo é valido ou não
 					}
 				}, ClienteSendoApagado -> {
 					/// apagar item do banco

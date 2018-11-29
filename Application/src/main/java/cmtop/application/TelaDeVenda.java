@@ -26,6 +26,9 @@ public class TelaDeVenda extends TelaBase {
 	private VendaService vendaService;
 
 	private VBox[] celulasTabela;
+	
+	private boolean carro = false, 
+					cliente = false;
 
 	private static final String BUTTON_STYLE = "-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
 			+ "  -fx-text-fill: #242d35;";
@@ -136,7 +139,10 @@ public class TelaDeVenda extends TelaBase {
 		});
 		
 		botao[2].setOnAction(event -> {
-			new CadastrarPagamento(banco,vendaService.getCarro().getValorVenda()).show();
+			if(isCarro() && isCliente())
+				new CadastrarPagamento(banco,vendaService.getCarro().getValorVenda()).show();
+			else
+				return;
 		});
 
 		botao[4].setOnAction(event -> {
@@ -174,6 +180,7 @@ public class TelaDeVenda extends TelaBase {
 			Label label = new Label();
 			label.setText(carro.getModelo() + " - " + carro.getMarca() + " - " + carro.getAno());
 			celulasTabela[4].getChildren().add(label);
+			setCarro(true);
 		}
 	}
 
@@ -184,7 +191,25 @@ public class TelaDeVenda extends TelaBase {
 			Label label = new Label();
 			label.setText(cliente.getNome() + " - " + cliente.getCpf());
 			celulasTabela[5].getChildren().add(label);
+			setCliente(true);
 		}
 	}
 
+	public boolean isCarro() {
+		return carro;
+	}
+
+	public void setCarro(boolean carro) {
+		this.carro = carro;
+	}
+
+	public boolean isCliente() {
+		return cliente;
+	}
+
+	public void setCliente(boolean cliente) {
+		this.cliente = cliente;
+	}
+
+	
 }

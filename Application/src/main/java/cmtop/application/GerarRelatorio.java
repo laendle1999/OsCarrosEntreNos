@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 
 public class GerarRelatorio extends TelaBase {
 
@@ -88,7 +89,6 @@ public class GerarRelatorio extends TelaBase {
 									public void resposta(List<String> registros) {
 										setHtmlRelatorio(registros.get(0));
 										
-										setSaidaPdf(new File("relatorio.pdf")); // << pedir para o usuário escolher um local para salvar
 										
 									}
 									
@@ -119,6 +119,15 @@ public class GerarRelatorio extends TelaBase {
 			@Override
 			public void handle(Event event) {
 				try {
+					
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Salvar relatório");
+					fileChooser.getExtensionFilters().addAll(
+							new FileChooser.ExtensionFilter("Todos os arquivos","*", ".","*"),
+							new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+					File arquivo = fileChooser.showSaveDialog(null);
+					
+					setSaidaPdf(arquivo); // << pedir para o usuário escolher um local para salvar
 					ImpressoraService.salvarHtmlComoPdf(getHtmlRelatorio(), getSaidaPdf());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

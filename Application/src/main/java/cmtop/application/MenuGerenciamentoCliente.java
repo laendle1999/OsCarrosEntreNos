@@ -65,6 +65,7 @@ public class MenuGerenciamentoCliente extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
+				System.out.println("Entrou no botao");
 				new BuscarClienteComEdicao(banco, new ListenerAlteracoes<Cliente>() {
 					@Override
 					public boolean aceitarMudanca(Cliente objetoBuscado, String campo, String valorNovo) {
@@ -72,7 +73,7 @@ public class MenuGerenciamentoCliente extends TelaBase {
 					}
 				}, ClienteSendoApagado -> {
 					/// apagar item do banco
-				});
+				}).show();
 				
 			}
 		});

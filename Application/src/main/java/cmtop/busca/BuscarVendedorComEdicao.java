@@ -18,10 +18,10 @@ public class BuscarVendedorComEdicao extends BuscaComEdicao<Vendedor> {
 
 	private Banco banco;
 
-	private static Campo LOGIN = new Campo(TipoCampo.TEXTO, "Placa", "");
+	private static Campo LOGIN = new Campo(TipoCampo.TEXTO, "Placa", "placa", "");
 
 	@SuppressWarnings("unused")
-	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
+	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");
 
 	public BuscarVendedorComEdicao(Banco banco, ListenerAlteracoes<Vendedor> listenerAlteracoes,
 			Consumer<Vendedor> listenerApagar) {
@@ -36,7 +36,7 @@ public class BuscarVendedorComEdicao extends BuscaComEdicao<Vendedor> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Vendedor>> callbackListaOriginal)
 			throws IOException {
 		VendedorRepository vendedorRepository = new VendedorRepository(banco);
-		vendedorRepository.obterVendedoresPorLogin(camposBusca.get(LOGIN.getNome()), 1,
+		vendedorRepository.obterVendedoresPorLogin(camposBusca.get(LOGIN.getIdentificador()), 1,
 				new ListenerConsultaComResposta<Vendedor>() {
 
 					@Override

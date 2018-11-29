@@ -24,10 +24,10 @@ public class BuscarVendas extends Busca<Venda> {
 
 	private Banco banco;
 
-	private static Campo VENDA = new Campo(TipoCampo.TEXTO, "Numero da Venda", "");
+	private static Campo VENDA = new Campo(TipoCampo.TEXTO, "Numero da Venda", "venda", "");
 
 	@SuppressWarnings("unused")
-	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
+	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");
 
 	public BuscarVendas(Banco banco, Consumer<Venda> callback) {
 		super("Venda", "Selecionar venda", callback);
@@ -39,13 +39,13 @@ public class BuscarVendas extends Busca<Venda> {
 	@Override
 	protected void buscar(ValoresCamposBusca camposBusca, int limite,
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Venda>> callbackListaOriginal)
-	
+
 			throws IOException {
-		
+
 		Carro carro = null;
 		Vendedor vend = null;
 		VendaRepository vendaRepository = new VendaRepository(banco);
-		vendaRepository.consultarVendaPorNumero(camposBusca.get(VENDA.getNome()), limite,
+		vendaRepository.consultarVendaPorNumero(camposBusca.get(VENDA.getIdentificador()), limite,
 				new ListenerConsultaComResposta<Venda>() {
 
 					@Override
@@ -55,29 +55,30 @@ public class BuscarVendas extends Busca<Venda> {
 					@Override
 					public void resposta(List<Venda> resultados) {
 						int tempoLimiteSegundos = 20;
-						
+
 						callbackListaOriginal.accept(resultados);
 
 						List<VendaModel> lista = new ArrayList<>();
 						List<Carro> carros = new ArrayList<>();
-						
+
 						CountDownLatch latchCarros = new CountDownLatch(resultados.size());
 						resultados.forEach(resultado -> {
 							try {
-								new CarroRepository(banco).obterCarroPorId(resultado.getCarro(), new ListenerConsultaComResposta<Carro>() {
-									
-									public void resposta(List<Carro> registros) {
-										Carro carro = registros.get(0);
-										carros.add(carro);
-										latchCarros.countDown();
-									}
-									
-									@Override
-									public void erro(Exception e) {
-										carros.add(null);
-										latchCarros.countDown();
-									}
-								});
+								new CarroRepository(banco).obterCarroPorId(resultado.getCarro(),
+										new ListenerConsultaComResposta<Carro>() {
+
+											public void resposta(List<Carro> registros) {
+												Carro carro = registros.get(0);
+												carros.add(carro);
+												latchCarros.countDown();
+											}
+
+											@Override
+											public void erro(Exception e) {
+												carros.add(null);
+												latchCarros.countDown();
+											}
+										});
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -90,30 +91,31 @@ public class BuscarVendas extends Busca<Venda> {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
-						
+
 						List<Vendedor> vendedores = new ArrayList<>();
 
 						CountDownLatch latchVendedores = new CountDownLatch(resultados.size());
 						resultados.forEach(resultado -> {
 							try {
-								new VendedorRepository(banco).obterVendedorPorId(resultado.getVendedor(), new ListenerConsultaComResposta<Vendedor>() {
-									
-									public void resposta(List<Vendedor> registros) {
-										Vendedor vendedor = registros.get(0);
-										vendedores.add(vendedor);
-										latchVendedores.countDown();
-									}
-									
-									@Override
-									public void erro(Exception e) {
-										vendedores.add(null);
-										latchVendedores.countDown();
-									}
+								new VendedorRepository(banco).obterVendedorPorId(resultado.getVendedor(),
+										new ListenerConsultaComResposta<Vendedor>() {
 
-									
-								});
-							} catch (IOException e) {
+											public void resposta(List<Vendedor> registros) {
+												Vendedor vendedor = registros.get(0);
+												vendedores.add(vendedor);
+												latchVendedores.countDown();
+											}
+
+											@Override
+											public void erro(Exception e) {
+												vendedores.add(null);
+												latchVendedores.countDown();
+											}
+
+										});
+							} catch (
+
+				IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -126,18 +128,15 @@ public class BuscarVendas extends Busca<Venda> {
 							e.printStackTrace();
 						}
 
-
-						//List<VendaModel> lista = new ArrayList<>();
-						for(int i = 0; i < resultados.size() ; i++) {
+						// List<VendaModel> lista = new ArrayList<>();
+						for (int i = 0; i < resultados.size(); i++) {
 							lista.add(new VendaModel(resultados.get(i), carros.get(i), vendedores.get(i)));
 						}
 						callbackListaModel.accept(lista);
-						resultados.forEach(resultado -> lista.add(new VendaModel(resultado,carro,vend)));
+						resultados.forEach(resultado -> lista.add(new VendaModel(resultado, carro, vend)));
 						callbackListaModel.accept(lista);
 					}
 				});
 	}
-
-	
 
 }

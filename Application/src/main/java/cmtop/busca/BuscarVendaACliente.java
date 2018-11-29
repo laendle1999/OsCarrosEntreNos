@@ -24,10 +24,10 @@ public class BuscarVendaACliente extends Busca<Venda> {
 
 	private Banco banco;
 
-	private static Campo CLIENTE = new Campo(TipoCampo.TEXTO, "", "");
+	private static Campo CLIENTE = new Campo(TipoCampo.TEXTO, "", "venda", "");
 
 	@SuppressWarnings("unused")
-	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
+	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");
 
 	public BuscarVendaACliente(Banco banco, Consumer<Venda> callback) {
 		super("Venda", "Selecionar venda", callback);
@@ -45,7 +45,7 @@ public class BuscarVendaACliente extends Busca<Venda> {
 		Carro carro = null;
 		Vendedor vend = null;
 		VendaRepository vendaRepository = new VendaRepository(banco);
-		vendaRepository.consultarVendasDeCliente(Integer.parseInt(camposBusca.get(CLIENTE.getNome())), limite,
+		vendaRepository.consultarVendasDeCliente(Integer.parseInt(camposBusca.get(CLIENTE.getIdentificador())), limite,
 				new ListenerConsultaComResposta<Venda>() {
 
 					@Override

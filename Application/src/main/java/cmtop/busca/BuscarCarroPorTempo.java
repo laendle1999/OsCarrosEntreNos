@@ -18,10 +18,10 @@ public class BuscarCarroPorTempo extends Busca<Carro> {
 
 	private Banco banco;
 
-	private static Campo DATA = new Campo(TipoCampo.TEXTO, "Placa", "");
+	private static Campo DATA = new Campo(TipoCampo.TEXTO, "Placa", "placa", "");
 
 	@SuppressWarnings("unused")
-	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");
+	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");
 
 	public BuscarCarroPorTempo(Banco banco, Consumer<Carro> callback) {
 		super("Carro", "Selecionar carro", callback);
@@ -35,7 +35,7 @@ public class BuscarCarroPorTempo extends Busca<Carro> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Carro>> callbackListaOriginal)
 			throws IOException {
 		CarroRepository carroRepository = new CarroRepository(banco);
-		carroRepository.buscarCarrosComDataEntradaSuperiorA(camposBusca.get(DATA.getNome()), limite,
+		carroRepository.buscarCarrosComDataEntradaSuperiorA(camposBusca.get(DATA.getIdentificador()), limite,
 				new ListenerConsultaComResposta<Carro>() {
 
 					@Override

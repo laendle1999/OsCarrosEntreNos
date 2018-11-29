@@ -14,10 +14,12 @@ public class CamposBusca extends ArrayList<CamposBusca.Campo> {
 		private TipoCampo tipoCampo;
 		private Object valorInicial;
 		private String nome;
+		private String identificador;
 
-		public Campo(TipoCampo tipoCampo, String nome, Object valorInicial) {
+		public Campo(TipoCampo tipoCampo, String nome, String identificador, Object valorInicial) {
 			this.tipoCampo = tipoCampo;
 			this.nome = nome;
+			this.identificador = identificador;
 			this.valorInicial = valorInicial;
 		}
 
@@ -27,6 +29,10 @@ public class CamposBusca extends ArrayList<CamposBusca.Campo> {
 
 		public String getNome() {
 			return nome;
+		}
+
+		public String getIdentificador() {
+			return identificador;
 		}
 
 		public Object getValorInicial() {

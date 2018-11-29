@@ -80,7 +80,7 @@ public class VendedorRepository {
 		registro.set("senha", new ValorString(senha));
 		tabela.atualizar(condicao, registro, listener);
 	}
-	
+
 	public void obterVendedorPorId(int id, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("id_funcionario", TipoCondicao.IGUAL, new ValorInt(id));
@@ -88,12 +88,12 @@ public class VendedorRepository {
 		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
 	}
 
-	public void obterVendedorPorLogin(String login, ListenerConsultaComResposta<Vendedor> listener) {
+	public void obterVendedoresPorLogin(String login, int limite, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
-		condicao.add("login", TipoCondicao.IGUAL, new ValorString(login));
-		tabela.buscar(condicao, 1, construirListenerRegistros(listener));
+		condicao.add("login", TipoCondicao.SIMILAR, new ValorString(login));
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
-	
+
 	public void obterVendedorPorLoginSenha(String login, String senha, ListenerConsultaComResposta<Vendedor> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("login", TipoCondicao.IGUAL, new ValorString(login));

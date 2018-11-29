@@ -18,10 +18,10 @@ public class BuscaCliente extends Busca<Cliente> {
 
 	private Banco banco;
 
-	private static Campo NOME = new Campo(TipoCampo.TEXTO, "Nome", "");
+	private static Campo NOME = new Campo(TipoCampo.TEXTO, "Nome", "nome", "");
 
 	@SuppressWarnings("unused")
-	private static Campo RG = new Campo(TipoCampo.TEXTO, "RG", "");
+	private static Campo RG = new Campo(TipoCampo.TEXTO, "RG", "rg", "");
 
 	public BuscaCliente(Banco banco, Consumer<Cliente> callback) {
 		super("Cliente", "Selecionar cliente", callback);
@@ -35,7 +35,7 @@ public class BuscaCliente extends Busca<Cliente> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Cliente>> callbackListaOriginal)
 			throws IOException {
 		ClienteRepository clienteRepository = new ClienteRepository(banco);
-		clienteRepository.consultarClientesPorNome(camposBusca.get(NOME.getNome()), limite,
+		clienteRepository.consultarClientesPorNome(camposBusca.get(NOME.getIdentificador()), limite,
 				new ListenerConsultaComResposta<Cliente>() {
 
 					@Override

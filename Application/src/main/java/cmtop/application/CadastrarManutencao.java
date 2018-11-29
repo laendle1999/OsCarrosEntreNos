@@ -3,7 +3,10 @@ package cmtop.application;
 import java.io.IOException;
 
 import cmtop.application.service.ComponentesServices;
+import cmtop.busca.BuscaCarro;
+import cmtop.domain.entity.Carro;
 import cmtop.domain.entity.Manutencao;
+import cmtop.domain.repository.CarroRepository;
 import cmtop.domain.repository.ManutencaoRepository;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
@@ -19,6 +22,8 @@ import javafx.scene.text.TextAlignment;
 
 public class CadastrarManutencao extends TelaBase {
 
+	private Carro carro;
+	
 	public CadastrarManutencao(Banco banco) {
 		super("AutoManager - Cadastrar Manutenção", 600, 500, TipoBotaoVoltar.VOLTAR);
 
@@ -44,6 +49,7 @@ public class CadastrarManutencao extends TelaBase {
 		Text[] labels = { new Text("Código do Carro"), new Text("Data da Manutenção"), new Text("Descrição"),
 				new Text("Custo"), new Text("Campo 5"), new Text("Campo 6") };
 		Button btn = new Button("Confirmar");
+		Button[] botao = {new Button("Busca Carro")};
 
 		for (int x = 0; x < 4; x++) {
 			// campos[x].setStyle(
@@ -59,7 +65,8 @@ public class CadastrarManutencao extends TelaBase {
 			menu.add(labels[x], 0, x + 1);
 			menu.add(campos[x], 1, x + 1);
 		}
-
+		menu.add(botao[0], 2, 1);
+		
 		campos[2].setPrefHeight(100);
 		menu.setTranslateY(15);
 
@@ -73,29 +80,39 @@ public class CadastrarManutencao extends TelaBase {
 		btn.setTranslateX(300);
 		btn.setTranslateY(30);
 		
+		botao[0].setOnMouseClicked(event->{
+			new BuscaCarro(banco, carro->{
+				if(carro == null)
+					return;
+				setCarro(carro);
+				campos[0].setText(carro.getId()+"");
+			}).show();
+			
+		});
+		
 		btn.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
 				Manutencao manutencao = new Manutencao(0, campos[2].getText(), Long.parseLong(campos[1].getText()), 
-						Float.parseFloat(campos[3].getText()), Integer.parseInt(campos[0].getText()));
-				try {
-					new ManutencaoRepository(banco).cadastrarManutencao(manutencao , new ListenerConsulta() {
-						@Override
-								public void sucesso(int resultadosAfetados) {
-									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
-						}
-						@Override
-						public void erro(Exception e){
-							e.printStackTrace();
-							ComponentesServices.mostrarErro("Houve um erro no Cadastro");
-						}
-						});
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.err.println("alou");
-					e.printStackTrace();
-				}
+						Float.parseFloat(campos[3].getText()), getCarro().getId());
+//				try {
+//					new ManutencaoRepository(banco).cadastrarManutencao(manutencao , new ListenerConsulta() {
+//						@Override
+//						public void sucesso(int resultadosAfetados) {
+//							ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
+//						}
+//						@Override
+//						public void erro(Exception e){
+//							e.printStackTrace();
+//							ComponentesServices.mostrarErro("Houve um erro no Cadastro");
+//						}
+//						});
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					System.err.println("alou");
+//					e.printStackTrace();
+//				}
 				close();
 				
 				
@@ -105,4 +122,14 @@ public class CadastrarManutencao extends TelaBase {
 		definirConteudo(conteudo);
 	}
 
+	public Carro getCarro() {
+		return carro;
+	}
+
+	public void setCarro(Carro carro) {
+		this.carro = carro;
+	}
+
+	
+	
 }

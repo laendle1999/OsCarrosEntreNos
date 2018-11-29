@@ -90,7 +90,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 				new BuscarVendedorComEdicao(banco, new ListenerAlteracoes<Vendedor>() {
 					@Override
 					public boolean aceitarMudanca(Vendedor objetoBuscado, String campo, String valorNovo) {
-						return false; // << retornar se valorNovo é valido ou não
+						return true; // << retornar se valorNovo é valido ou não
 					}
 				}, VendedorSendoApagado -> {
 					/// apagar item do banco

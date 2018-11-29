@@ -145,6 +145,8 @@ public class GerenciarPagamento extends TelaBase {
 			// TODO financiamento
 
 			// TODO carro troca
+
+			close();
 		});
 
 		definirConteudo(conteudo);

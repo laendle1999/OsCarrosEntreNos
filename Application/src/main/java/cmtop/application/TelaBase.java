@@ -1,8 +1,10 @@
 package cmtop.application;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -28,9 +30,14 @@ public abstract class TelaBase extends Stage {
 		
 		parteDireita.setAlignment(Pos.CENTER);
 		
+		Button btn = new Button("Voltar");
+		linha.getChildren().add(btn);
+		btn.setTranslateX(10);
+		btn.setTranslateY(-(height/2)+30);
+		
 		linha.getChildren().add(parteDireita);
-		linha.setAlignment(Pos.CENTER);
-		faixa.setTranslateX(-95);
+		linha.setAlignment(Pos.CENTER_LEFT);
+		parteDireita.setTranslateX(80);
 		raiz.getChildren().add(linha);
 		
 		BorderPane borderPane = new BorderPane();
@@ -45,6 +52,9 @@ public abstract class TelaBase extends Stage {
 		setHeight(height);
 		
 		centerOnScreen();
+		
+		btn.setOnMouseClicked(event->close());
+		
 	}
 	
 	public void definirConteudo(VBox conteudo) {

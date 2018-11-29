@@ -27,7 +27,7 @@ public class PontoEntradaAplicacao extends Application {
 
 	private static ConfiguracaoBanco configuracaoBanco;
 
-	private final static int TEMPO_LIMITE_BANCO_SEGUNDOS = 5;
+	private final static int TEMPO_LIMITE_BANCO_SEGUNDOS = 20;
 
 	public enum ConfiguracaoBanco {
 		SERVIDOR_REDE_LOCAL, CLIENTE_REDE_LOCAL, REMOTO_NUVEM

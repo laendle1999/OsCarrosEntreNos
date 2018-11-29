@@ -2,10 +2,9 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
-import cmtop.busca.BuscaComEdicao.ListenerAlteracoes;
+import cmtop.busca.BuscaCliente;
 import cmtop.busca.BuscarClienteComEdicao;
 import cmtop.busca.BuscarVendaACliente;
-import cmtop.domain.entity.Cliente;
 import cmtop.persistence.entity.Banco;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -60,25 +59,21 @@ public class MenuGerenciamentoCliente extends TelaBase {
 				new CadastrarCliente(banco).show();
 			}
 		});
-		
+
 		botoes[1].setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
-				System.out.println("Entrou no botao");
-				new BuscarClienteComEdicao(banco, new ListenerAlteracoes<Cliente>() {
-					@Override
-					public boolean aceitarMudanca(Cliente objetoBuscado, String campo, String valorNovo) {
-						return true; // << retornar se valorNovo é valido ou não
-					}
-				}, ClienteSendoApagado -> {
-					/// apagar item do banco
-				}).show();
-				
+				new BuscarClienteComEdicao(banco).show();
+
 			}
 		});
-		
-		botoes[2].setOnMouseClicked(event -> new BuscarVendaACliente(banco, null).show());
+
+		botoes[2].setOnMouseClicked(event -> {
+			new BuscaCliente(banco, cliente -> {
+				new BuscarVendaACliente(banco, cliente, null).show();
+			}).show();
+		});
 
 		definirConteudo(conteudo);
 	}

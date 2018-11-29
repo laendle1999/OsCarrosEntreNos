@@ -102,35 +102,41 @@ public class TelaConfiguracao extends TelaBase {
 		
 		btnBackup[0].setOnMouseClicked(event->{
 			
-			ConfiguracaoBanco configuracaoBanco = new PontoEntradaAplicacao().getConfiguracaoBanco();
+			ConfiguracaoBanco configuracaoBanco = PontoEntradaAplicacao.getConfiguracaoBanco();
 			if(configuracaoBanco == ConfiguracaoBanco.SERVIDOR_REDE_LOCAL) {
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Salvar relatório");
+				fileChooser.setTitle("Exportar Backup");
 				fileChooser.getExtensionFilters().addAll(
-						new FileChooser.ExtensionFilter("Todos os arquivos","*", ".","*"),
-						new FileChooser.ExtensionFilter("PDF", "*.zip"));
+						new FileChooser.ExtensionFilter("Todos os arquivos","*.*"));
 				File arquivo = fileChooser.showSaveDialog(null);
-				new ConfiguracaoService().backupBanco(arquivo);
+				ConfiguracaoService.backupBanco(arquivo);
 			}else if(configuracaoBanco == ConfiguracaoBanco.CLIENTE_REDE_LOCAL){
-				new ComponentesServices().mostrarErro("Não é possivel fazer Backup pelo computador do Cliente");
+				ComponentesServices.mostrarErro("Não é possivel fazer Backup pelo computador do Cliente");
 			}else {
-				new ComponentesServices().mostrarInformacao("Banco em Nuvem não necessita de Backup");
+				ComponentesServices.mostrarInformacao("Banco em Nuvem não necessita de Backup");
 			}
 			
 		});
 		
 		btnBackup[1].setOnMouseClicked(event->{
 			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Salvar relatório");
+			fileChooser.setTitle("Importar Backup");
 			fileChooser.getExtensionFilters().addAll(
-					new FileChooser.ExtensionFilter("Todos os arquivos","*", ".","*"),
-					new FileChooser.ExtensionFilter("PDF", "*.zip"));
+					new FileChooser.ExtensionFilter("ZIP", "*.zip"),
+					new FileChooser.ExtensionFilter("Todos os arquivos","*.*"));	
 			File arquivo = fileChooser.showOpenDialog(null);
+
+			System.out.println("Comecando o backup");
 			
-			new ComponentesServices().mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos", resultado->{
+			
+			ComponentesServices.mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos", resultado->{
 				if(!resultado)
 					return;
-				new ConfiguracaoService().importarBackup(arquivo);
+				new Thread(()->{
+					System.out.println("Sou uma thread livre");
+					ComponentesServices.mostrarAlerta("Por Favor Aguarde");
+				},"TelaConfiguracao importarBackup").start();
+				ConfiguracaoService.importarBackup(arquivo);
 			});
 		});
 		

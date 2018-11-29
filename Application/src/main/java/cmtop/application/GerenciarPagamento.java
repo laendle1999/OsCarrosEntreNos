@@ -61,7 +61,7 @@ public class GerenciarPagamento extends TelaBase {
 		secao.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(new HBox(secao, new Text(/*"  	 R$" + vendaService.get*/)));
+		conteudo.getChildren().add(new HBox(secao, new Text("  	 R$" + vendaService.getCarro().getValorVenda())));
 
 		checkBoxes = new CheckBox[] { new CheckBox("Valor a Vista"), new CheckBox("Financiamento"),
 				new CheckBox("Carro") };

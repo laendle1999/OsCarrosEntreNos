@@ -20,7 +20,7 @@ public class ServidorRedeLocal {
 
 	private static boolean aguardandoConsultaComResposta = false;
 
-	public static int PORTA_PADRAO = 8910;
+	public static int PORTA_PADRAO = 6370;
 
 	private Banco banco;
 

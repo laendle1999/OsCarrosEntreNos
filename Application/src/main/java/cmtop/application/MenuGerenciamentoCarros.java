@@ -2,6 +2,7 @@ package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
+import cmtop.busca.BuscaCarroComEdicao;
 import cmtop.busca.BuscaTrocaCarro;
 import cmtop.busca.BuscarCarroPorTempo;
 import cmtop.persistence.entity.Banco;
@@ -36,9 +37,9 @@ public class MenuGerenciamentoCarros extends TelaBase {
 		menu.add(vendedor, 2, 0);
 
 		Button[] botoes = { new Button("Compra"), new Button("Manutenção"), new Button("Aprovar trocas"),
-				new Button("Tempo Parado"), new Button("Funcao 5"), new Button("Funcao 6") };
+				new Button("Tempo Parado"), new Button("Consultar e editar"), new Button("Funcao 6") };
 
-		for (int x = 0; x < 6; x++) {
+		for (int x = 0; x < botoes.length; x++) {
 			botoes[x].setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
 					+ "    -fx-padding: 3 3 3 3; -fx-text-fill: #242d35;"
 					+ "    -fx-font-size: 14px;-fx-pref-width: 150px; -fx-pref-height: 75px");
@@ -48,7 +49,7 @@ public class MenuGerenciamentoCarros extends TelaBase {
 		menu.add(botoes[1], 1, 1);
 		menu.add(botoes[2], 2, 1);
 		menu.add(botoes[3], 0, 2);
-		// menu.add(botoes[4], 1, 2);
+		menu.add(botoes[4], 1, 2);
 		// menu.add(botoes[5], 2, 2);
 
 		botoes[0].setOnMouseClicked(new EventHandler<Event>() {
@@ -75,6 +76,9 @@ public class MenuGerenciamentoCarros extends TelaBase {
 		});
 
 		botoes[3].setOnMouseClicked(event -> new BuscarCarroPorTempo(banco, null).show());
+
+		botoes[4].setOnAction(
+				event -> new BuscaCarroComEdicao(banco, "Consultar carros").show());
 
 		definirConteudo(conteudo);
 	}

@@ -103,6 +103,11 @@ public class CarroRepository {
 		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
 	}
 
+	public void listarCarros(int limite, ListenerConsultaComResposta<Carro> listener) {
+		Condicao condicao = new Condicao();
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
+	}
+
 	public void obterCarrosPorRenavan(String valor, int limite, ListenerConsultaComResposta<Carro> listener) {
 		Condicao condicao = new Condicao();
 		condicao.add("renavan", TipoCondicao.SIMILAR, new ValorString(valor));
@@ -149,6 +154,20 @@ public class CarroRepository {
 		condicao.add("data_entrada", TipoCondicao.MAIOR, new ValorLong(data));
 
 		tabela.buscar(condicao, limiteResultados, construirListenerRegistros(listener));
+	}
+
+	public void alterarCarro(Carro carro, ListenerConsulta listener) {
+		Condicao condicao = new Condicao();
+		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(carro.getId()));
+
+		Registro registro = converterCarroEmRegistro(carro);
+		tabela.atualizar(condicao, registro, listener);
+	}
+
+	public void removerCarro(Carro carro, ListenerConsulta listener) {
+		Condicao condicao = new Condicao();
+		condicao.add("id_carro", TipoCondicao.IGUAL, new ValorInt(carro.getId()));
+		tabela.remover(condicao, listener);
 	}
 
 }

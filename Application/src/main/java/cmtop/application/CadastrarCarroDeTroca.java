@@ -111,6 +111,7 @@ public class CadastrarCarroDeTroca extends TelaBase {
 					@Override
 					public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 						ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
+						close();
 
 						apagarTrocaCarro(banco, troca);
 					}
@@ -118,14 +119,14 @@ public class CadastrarCarroDeTroca extends TelaBase {
 					@Override
 					public void erro(Exception e) {
 						e.printStackTrace();
-						ComponentesServices.mostrarErro("Houve um erro no cadastro");
+						ComponentesServices.mostrarErro(
+								"Houve um erro no cadastro, verifique se não existe um carro com o mesmo RENAVAN ou com a mesma a placa");
 					}
 				});
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
 				e.printStackTrace();
 			}
-			close();
 
 		});
 

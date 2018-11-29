@@ -41,7 +41,11 @@ public class CampoCondicao {
 	public String toSQL() {
 		StringBuilder source = new StringBuilder();
 
-		source.append(getNome() + " ");
+		if (valor.getTipo() == TipoValor.STRING && condicao == TipoCondicao.SIMILAR) {
+			source.append("UPPER(" + getNome() + ") ");
+		} else {
+			source.append(getNome() + " ");
+		}
 
 		switch (condicao) {
 		case IGUAL:
@@ -81,7 +85,12 @@ public class CampoCondicao {
 
 		if (valor.getTipo() == TipoValor.STRING || condicao == TipoCondicao.SIMILAR) {
 			if (valor != null && valor.toString() != null) {
-				source.append(limparString(valor.toString()).replace("'", "''"));
+				String string = limparString(valor.toString()).replace("'", "''");
+				if (condicao == TipoCondicao.SIMILAR) {
+					source.append(string.toUpperCase());
+				} else {
+					source.append(string);
+				}
 			}
 		} else {
 			source.append(valor);

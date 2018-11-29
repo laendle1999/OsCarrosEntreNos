@@ -11,6 +11,7 @@ import cmtop.domain.repository.TrocaCarroRepository;
 import cmtop.domain.valueobject.StatusCarro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -111,8 +112,7 @@ public class CadastrarCarroDeTroca extends TelaBase {
 					@Override
 					public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 						ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
-						close();
-
+						Platform.runLater(() -> close());
 						apagarTrocaCarro(banco, troca);
 					}
 

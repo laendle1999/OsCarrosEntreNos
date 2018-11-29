@@ -18,7 +18,7 @@ public class BuscarClienteComEdicao extends BuscaComEdicao<Cliente> {
 
 	private Banco banco;
 
-	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Placa", "");
+	private static Campo PLACA = new Campo(TipoCampo.TEXTO, "Nome", "");
 
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "");

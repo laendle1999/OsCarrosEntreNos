@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import cmtop.domain.entity.Cliente;
@@ -26,7 +26,7 @@ public class ClienteRepositoryTest {
 
 	@Test
 
-	public void criarCliente() throws IOException {
+	public void criarCliente() throws IOException, InterruptedException {
 
 		Banco banco = new BancoServidorRedeLocal(TipoBanco.DERBY, 5);
 
@@ -35,12 +35,12 @@ public class ClienteRepositoryTest {
 		cliente = new Cliente(1232, "Eduardo", "1234", "1234", "Rua Maria de Lurdes", "989893832", "989342834",
 				01012000);
 
-		System.out.println("cadastrando");
+		CountDownLatch latchAguardarBanco = new CountDownLatch(1);
+
 		cr.cadastrarCliente(cliente, new ListenerConsulta() {
-			
+
 			@Override
 			public void sucesso(int resultadosAfetados, List<Long> chaves) {
-				System.out.println("cadastrado");
 				cr.consultarClientePorRg("1234", 100, new ListenerConsultaComResposta<Cliente>() {
 
 					@Override
@@ -53,21 +53,26 @@ public class ClienteRepositoryTest {
 						String rg = cliente.getRg();
 						assertEquals(rg, "1234");
 						System.out.println(cliente.getNome());
+
+						latchAguardarBanco.countDown();
 					}
 
 					@Override
 					public void erro(Exception e) {
-						System.out.println("a");
 						e.printStackTrace();
+						latchAguardarBanco.countDown();
 					}
 				});
 			}
-			
+
 			@Override
 			public void erro(Exception e) {
 				e.printStackTrace();
+				latchAguardarBanco.countDown();
 			}
 		});
+
+		latchAguardarBanco.await();
 
 		// system.out.println();
 

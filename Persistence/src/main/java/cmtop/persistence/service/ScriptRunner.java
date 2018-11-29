@@ -43,7 +43,7 @@ public class ScriptRunner {
 	private boolean stopOnError;
 	private boolean autoCommit;
 
-	private PrintWriter logWriter = null; // new PrintWriter(System.out);
+	private PrintWriter logWriter = new PrintWriter(System.out);
 	private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
 	private String delimiter = DEFAULT_DELIMITER;

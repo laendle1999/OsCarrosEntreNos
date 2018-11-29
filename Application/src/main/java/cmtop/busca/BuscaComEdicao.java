@@ -11,6 +11,7 @@ import cmtop.application.model.ModelGenerico.Coluna;
 import cmtop.application.service.ComponentesServices;
 import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -225,40 +226,42 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 	}
 
 	private void atualizarColunasTabela() {
-		List<String> nomesColunasTabela = obterNomesColunasDoModelo();
+		Platform.runLater(() -> {
+			List<String> nomesColunasTabela = obterNomesColunasDoModelo();
 
-		tabela.getColumns().clear();
+			tabela.getColumns().clear();
 
-		for (int i = 0; i < nomesColunasTabela.size(); i++) {
-			final int _i = i;
-			TableColumn<ModelGenerico, String> coluna = new TableColumn<>(nomesColunasTabela.get(_i));
+			for (int i = 0; i < nomesColunasTabela.size(); i++) {
+				final int _i = i;
+				TableColumn<ModelGenerico, String> coluna = new TableColumn<>(nomesColunasTabela.get(_i));
 
-			coluna.setCellValueFactory(celula -> {
-				return celula.getValue().getColunas().get(_i).getValor();
-			});
-
-			if (obterColunasDoModelo().get(_i).alteravel()) {
-				coluna.setCellFactory(TextFieldTableCell.forTableColumn());
-
-				coluna.setOnEditCommit(event -> {
-					ObjetoBuscado objetoModificado = obterItensSelecionados().get(0);
-					String nomeCampoAlterado = nomesColunasTabela.get(_i);
-					String valorNovo = event.getNewValue();
-
-					if (!listenerAlteracoes.aceitarMudanca(objetoModificado, nomeCampoAlterado, valorNovo)) {
-						// Atualizar coluna voltando ao valor antigo
-						coluna.setVisible(false);
-						coluna.setVisible(true);
-					}
+				coluna.setCellValueFactory(celula -> {
+					return celula.getValue().getColunas().get(_i).getValor();
 				});
+
+				if (obterColunasDoModelo().get(_i).alteravel()) {
+					coluna.setCellFactory(TextFieldTableCell.forTableColumn());
+
+					coluna.setOnEditCommit(event -> {
+						ObjetoBuscado objetoModificado = obterItensSelecionados().get(0);
+						String nomeCampoAlterado = nomesColunasTabela.get(_i);
+						String valorNovo = event.getNewValue();
+
+						if (!listenerAlteracoes.aceitarMudanca(objetoModificado, nomeCampoAlterado, valorNovo)) {
+							// Atualizar coluna voltando ao valor antigo
+							coluna.setVisible(false);
+							coluna.setVisible(true);
+						}
+					});
+				}
+
+				tabela.getColumns().add(coluna);
 			}
 
-			tabela.getColumns().add(coluna);
-		}
-
-		if (nomesColunasTabela.isEmpty()) {
-			tabela.getColumns().add(new TableColumn<>(""));
-		}
+			if (nomesColunasTabela.isEmpty()) {
+				tabela.getColumns().add(new TableColumn<>(""));
+			}
+		});
 	}
 
 	private List<String> obterNomesColunasDoModelo() {

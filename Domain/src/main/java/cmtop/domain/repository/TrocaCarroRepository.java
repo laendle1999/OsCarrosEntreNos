@@ -1,12 +1,16 @@
 package cmtop.domain.repository;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cmtop.domain.entity.TrocaCarro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
 import cmtop.persistence.entity.Tabela;
+import cmtop.persistence.valueobject.Condicao;
 import cmtop.persistence.valueobject.ListenerConsulta;
+import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorString;
@@ -21,7 +25,6 @@ public class TrocaCarroRepository {
 		tabela = banco.getTabela("troca_carro");
 	}
 
-	@SuppressWarnings("unused")
 	private TrocaCarro converterRegistroEmTrocaCarro(Registro registro) {
 		int id = registro.get("id_troca").getAsInt();
 
@@ -36,6 +39,16 @@ public class TrocaCarroRepository {
 		int id_venda = registro.get("id_venda").getAsInt();
 
 		return new TrocaCarro(id, placa, modelo, marca, cor, local, ano, valor_carro, data_entrada, id_venda);
+	}
+
+	private List<TrocaCarro> converterRegistrosEmTrocasCarro(List<Registro> registros) {
+		List<TrocaCarro> resultado = new ArrayList<>();
+
+		for (Registro registro : registros) {
+			TrocaCarro entidade = converterRegistroEmTrocaCarro(registro);
+			resultado.add(entidade);
+		}
+		return resultado;
 	}
 
 	private Registro converterTrocaCarroEmRegistro(TrocaCarro trocaCarro) {
@@ -57,4 +70,24 @@ public class TrocaCarroRepository {
 		tabela.inserir(registro, listener);
 	}
 
+	public void listarTrocasCarro(int limite, ListenerConsultaComResposta<TrocaCarro> listener) {
+		Condicao condicao = new Condicao();
+		tabela.buscar(condicao, limite, construirListenerRegistros(listener));
+	}
+
+	private ListenerConsultaComResposta<Registro> construirListenerRegistros(
+			ListenerConsultaComResposta<TrocaCarro> listener) {
+		return new ListenerConsultaComResposta<Registro>() {
+
+			@Override
+			public void erro(Exception e) {
+				listener.erro(e);
+			}
+
+			@Override
+			public void resposta(List<Registro> registros) {
+				listener.resposta(converterRegistrosEmTrocasCarro(registros));
+			}
+		};
+	}
 }

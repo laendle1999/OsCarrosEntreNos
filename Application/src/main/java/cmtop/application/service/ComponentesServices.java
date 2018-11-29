@@ -59,8 +59,7 @@ public class ComponentesServices {
 			if (option == 0) {
 				char[] password = pass.getPassword();
 				listenerEntrada.accept(new String(password));
-			}
-			else {
+			} else {
 				listenerEntrada.accept(null);
 			}
 		}).start();
@@ -71,8 +70,7 @@ public class ComponentesServices {
 	}
 
 	public static void mostrarConfirmacao(String mensagem, Consumer<Boolean> resultado) {
-		int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como servidor?", "",
-				JOptionPane.YES_NO_OPTION);
+		int dialogResult = JOptionPane.showConfirmDialog(null, mensagem, "", JOptionPane.YES_NO_OPTION);
 		if (dialogResult == JOptionPane.YES_OPTION) {
 			resultado.accept(true);
 		} else if (dialogResult == JOptionPane.NO_OPTION) {

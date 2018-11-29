@@ -32,7 +32,7 @@ public class MenuGerencia extends TelaBase {
 		menu.add(vendedor, 2, 0);
 
 		Button[] botoes = { new Button("Carros"), new Button("Vendedor"), new Button("Relatórios"),
-				new Button("Configurações"), new Button("Gerência"), new Button("Funcao 6") };
+				new Button("Configurações"), new Button("Funcao 5"), new Button("Funcao 6") };
 
 		for (int x = 0; x < 6; x++) {
 			botoes[x].setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"

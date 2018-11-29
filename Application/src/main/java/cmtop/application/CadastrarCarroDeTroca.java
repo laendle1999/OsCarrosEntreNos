@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Carro;
+import cmtop.domain.entity.TrocaCarro;
 import cmtop.domain.repository.CarroRepository;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
@@ -17,9 +18,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class CadastrarCompra extends TelaBase {
+public class CadastrarCarroDeTroca extends TelaBase {
 
-	public CadastrarCompra(Banco banco) {
+	public CadastrarCarroDeTroca(Banco banco, TrocaCarro troca) {
 		super("AutoManager - Cadastro de compra", 700, 800, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
@@ -40,13 +41,20 @@ public class CadastrarCompra extends TelaBase {
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
 		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
-				new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField() };
+				new TextField(), new TextField() };
 		Text[] labels = { new Text("Modelo"), new Text("Marca"), new Text("Ano"), new Text("Placa"),
-				new Text("RENAVAN"), new Text("Cor"), new Text("Adicionais"), new Text("Custo"),
-				new Text("Local da Compra"), new Text("Nome do Fornecedor"), new Text("Data da Compra") };
+				new Text("RENAVAN"), new Text("Cor"), new Text("Custo") };
+		campos[0].setText(troca.getModelo());
+		campos[1].setText(troca.getMarca());
+		campos[2].setText(troca.getAno() + "");
+		campos[3].setText(troca.getPlaca());
+		campos[4].setText("");
+		campos[4].setText(troca.getCor());
+		campos[4].setText(troca.getValorCarro() + "");
+		
 		Button btn = new Button("Confirmar");
 
-		for (int x = 0; x < 11; x++) {
+		for (int x = 0; x < labels.length; x++) {
 			// campos[x].setStyle(
 			// " -fx-background-color: \r\n" +
 			// " rgba(0,0,0,0.08),\r\n" +
@@ -70,15 +78,11 @@ public class CadastrarCompra extends TelaBase {
 		btn.setTranslateX(300);
 		btn.setTranslateY(30);
 		btn.setOnMouseClicked(new EventHandler<Event>() {
-
 			@Override
 			public void handle(Event event) {
 				Carro carro = new Carro(0, null, campos[3].getText(), campos[4].getText(), campos[0].getText(),
 						campos[1].getText(), campos[5].getText(), Integer.parseInt(campos[2].getText()), 0,
 						Float.parseFloat(campos[7].getText()), Long.parseLong(campos[10].getText()), null);
-
-				// Compra compra = new Compra(campos[8].getText(), campos[9].getText(),
-				// Long.parseLong(campos[10].getText()), focusGrabCounter, focusGrabCounter);
 
 				try {
 					new CarroRepository(banco).cadastrarCarro(carro, new ListenerConsulta() {
@@ -90,12 +94,11 @@ public class CadastrarCompra extends TelaBase {
 						@Override
 						public void erro(Exception e) {
 							e.printStackTrace();
-							ComponentesServices.mostrarErro("Houve um erro no Cadastro");
+							ComponentesServices.mostrarErro("Houve um erro no cadastro");
 						}
 					});
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.err.println("alou");
+					System.err.println(e.getMessage());
 					e.printStackTrace();
 				}
 				close();

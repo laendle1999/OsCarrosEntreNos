@@ -12,21 +12,19 @@ import cmtop.domain.service.DateService;
 import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class CadastrarVendedor extends TelaBase {
-	private int i;
 
 	public CadastrarVendedor(Banco banco) {
 		super("AutoManager - Formulário de entrada", 600, 700, TipoBotaoVoltar.VOLTAR);
@@ -75,25 +73,10 @@ public class CadastrarVendedor extends TelaBase {
 		menu.add(tipoCad[0], 1, 11);
 		menu.add(tipoCad[1], 2, 11);
 
-		tipoCad[0].selectedProperty().addListener(new ChangeListener<Boolean>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				tipoCad[0].setSelected(newValue);
-				tipoCad[1].setSelected(!newValue);
-				setI(1);
-			}
-		});
-
-		tipoCad[1].selectedProperty().addListener(new ChangeListener<Boolean>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				tipoCad[1].setSelected(newValue);
-				tipoCad[0].setSelected(!newValue);
-				setI(0);
-			}
-		});
+		ToggleGroup toggleGroup = new ToggleGroup();
+		tipoCad[0].setSelected(true);
+		tipoCad[0].setToggleGroup(toggleGroup);
+		tipoCad[1].setToggleGroup(toggleGroup);
 
 		menu.setTranslateY(15);
 
@@ -120,9 +103,14 @@ public class CadastrarVendedor extends TelaBase {
 					return;
 				}
 
+				TipoAcesso tipoAcesso = TipoAcesso.VENDEDOR;
+				if (tipoCad[1].isSelected()) {
+					tipoAcesso = TipoAcesso.GERENTE;
+				}
+
 				Vendedor vendedor = new Vendedor(6, campos[7].getText(), campos[8].getText(), campos[0].getText(),
 						dataNascimento, campos[2].getText(), campos[3].getText(), campos[4].getText(),
-						campos[5].getText(), campos[1].getText(), TipoAcesso.fromInt(getI()));
+						campos[5].getText(), campos[1].getText(), tipoAcesso);
 				try {
 					new VendedorRepository(banco).cadastrarVendedor(vendedor, campos[5].getText(),
 							new ListenerConsulta() {
@@ -152,14 +140,6 @@ public class CadastrarVendedor extends TelaBase {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		Date data = format.parse(string);
 		return DateService.converterDataEmTimestamp(data);
-	}
-
-	void setI(int i) {
-		this.i = i;
-	}
-
-	public int getI() {
-		return i;
 	}
 
 }

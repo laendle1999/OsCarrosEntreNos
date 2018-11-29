@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.Registro;
+import cmtop.persistence.service.ServidorRedeLocal.SessaoCliente;
 import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 

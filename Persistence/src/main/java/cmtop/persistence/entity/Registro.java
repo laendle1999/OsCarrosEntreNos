@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cmtop.persistence.valueobject.CampoCondicao;
 import cmtop.persistence.valueobject.TipoValor;
 import cmtop.persistence.valueobject.Valor;
 import cmtop.persistence.valueobject.ValorDouble;
@@ -302,10 +303,10 @@ public class Registro {
 
 			if (valor.getTipo() == TipoValor.STRING) {
 				sql += "'";
-			}
-			sql += valor;
-			if (valor.getTipo() == TipoValor.STRING) {
+				sql += CampoCondicao.limparString(valor.toString()).replace("'", "''");
 				sql += "'";
+			} else {
+				sql += valor;
 			}
 
 			if (i + 1 < chaves.size()) {

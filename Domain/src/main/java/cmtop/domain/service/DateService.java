@@ -12,6 +12,13 @@ public class DateService {
 		return gregorianCalendar.getTimeInMillis();
 	}
 
+	public static long converterDataEmTimestamp(Date date) {
+		GregorianCalendar gregorianCalendar = new GregorianCalendar();
+		gregorianCalendar.setTime(date);
+
+		return gregorianCalendar.getTimeInMillis();
+	}
+
 	public static Date converterTimestampEmData(long timestamp) {
 		GregorianCalendar gregorianCalendar = new GregorianCalendar();
 		gregorianCalendar.setTimeInMillis(timestamp);

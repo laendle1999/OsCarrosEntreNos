@@ -15,7 +15,7 @@ public class CondicaoTest {
 		CampoCondicao a = new CampoCondicao("a", TipoCondicao.IGUAL, new ValorInt(10));
 		CampoCondicao b = new CampoCondicao("b", TipoCondicao.DIFERENTE, new ValorInt(10));
 		CampoCondicao c = new CampoCondicao("c", TipoCondicao.MAIOR, new ValorInt(10));
-		CampoCondicao d = new CampoCondicao("d", TipoCondicao.SIMILAR, new ValorString("abc"));
+		CampoCondicao d = new CampoCondicao("d", TipoCondicao.SIMILAR, new ValorString("abc'"));
 		
 		Condicao condicao = new Condicao();
 		condicao.add(a);

@@ -26,7 +26,7 @@ public class TabelaTest {
 		registro.set("rg", new ValorString("10"));
 		registro.set("cpf", new ValorString("15"));
 		registro.set("dt_nasc", new ValorLong(1543344888115L));
-		registro.set("endereco", new ValorString("endereco"));
+		registro.set("endereco", new ValorString("endereco'"));
 		registro.set("telefone1", new ValorString("12345678"));
 		registro.set("nome", new ValorString("abc"));
 

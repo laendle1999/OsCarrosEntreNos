@@ -79,7 +79,11 @@ public class CampoCondicao {
 			source.append("%");
 		}
 
-		source.append(valor);
+		if (valor.getTipo() == TipoValor.STRING || condicao == TipoCondicao.SIMILAR) {
+			source.append(limparString(valor.toString()).replace("'", "''"));
+		} else {
+			source.append(valor);
+		}
 
 		if (condicao == TipoCondicao.SIMILAR) {
 			source.append("%");
@@ -90,6 +94,10 @@ public class CampoCondicao {
 		}
 
 		return source.toString();
+	}
+
+	public static String limparString(String string) {
+		return string.toString().replaceAll("\\p{C}", "");
 	}
 
 }

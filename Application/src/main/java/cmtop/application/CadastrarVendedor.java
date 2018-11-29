@@ -1,10 +1,14 @@
 package cmtop.application;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Vendedor;
 import cmtop.domain.repository.VendedorRepository;
+import cmtop.domain.service.DateService;
 import cmtop.domain.valueobject.TipoAcesso;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
@@ -22,13 +26,13 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class CadastrarVendedor extends TelaBase {
-	private int  i;
-	
+	private int i;
+
 	public CadastrarVendedor(Banco banco) {
-		super("AutoManager - Formulário de entrada", 600, 500);
+		super("AutoManager - Formulário de entrada", 600, 700);
 
 		VBox conteudo = new VBox();
-		
+
 		GridPane menu = new GridPane();
 		menu.setAlignment(Pos.CENTER);
 		menu.setStyle("-fx-background-fill: black, white ;\n" + "-fx-background-insets: 0, 1 ;");
@@ -46,9 +50,9 @@ public class CadastrarVendedor extends TelaBase {
 
 		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
 				new TextField(), new TextField(), new TextField(), new TextField(), new TextField() };
-		Text[] labels = { new Text("Nome"), new Text("E-mail"), new Text("RG"), new Text("CPF"),
-				new Text("Endereço"), new Text("Login") , new Text("Senha"),
-				new Text("Telefone 1"), new Text("Telefone 2"), new Text("Data de Nascimento") };
+		Text[] labels = { new Text("Nome"), new Text("E-mail"), new Text("RG"), new Text("CPF"), new Text("Endereço"),
+				new Text("Login"), new Text("Senha"), new Text("Telefone 1"), new Text("Telefone 2"),
+				new Text("Data de Nascimento") };
 		Button btn = new Button("Confirmar");
 
 		for (int x = 0; x < 10; x++) {
@@ -63,14 +67,14 @@ public class CadastrarVendedor extends TelaBase {
 			// " -fx-text-fill: #242d35;\r\n" +
 			// " -fx-font-size: 14px;");
 			menu.add(labels[x], 0, x + 1);
-			menu.add(campos[x], 1, x + 1,2,1);
+			menu.add(campos[x], 1, x + 1, 2, 1);
 		}
-		
-		RadioButton[] tipoCad = {new RadioButton("Vendedor"),new RadioButton("Gerente")};
-		menu.add(new Text("Tipo de Conta"),0,11);
-		menu.add(tipoCad[0],1,11);
-		menu.add(tipoCad[1],2,11);
-		
+
+		RadioButton[] tipoCad = { new RadioButton("Vendedor"), new RadioButton("Gerente") };
+		menu.add(new Text("Tipo de Conta"), 0, 11);
+		menu.add(tipoCad[0], 1, 11);
+		menu.add(tipoCad[1], 2, 11);
+
 		tipoCad[0].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
@@ -80,7 +84,7 @@ public class CadastrarVendedor extends TelaBase {
 				setI(1);
 			}
 		});
-		
+
 		tipoCad[1].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
@@ -107,40 +111,55 @@ public class CadastrarVendedor extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				Vendedor vendedor = new Vendedor(6,campos[7].getText(),campos[8].getText(),campos[0].getText(),
-						Long.parseLong(campos[9].getText()),campos[2].getText(),campos[3].getText(),campos[4].getText(),
+				long dataNascimento;
+				try {
+					dataNascimento = converterDataNascimentoParaLong(campos[9].getText());
+				} catch (ParseException e1) {
+					ComponentesServices.mostrarAlerta(
+							"A data de nascimento deve estar no formato dia/mês/ano, por exemplo 10/10/1990");
+					return;
+				}
+
+				Vendedor vendedor = new Vendedor(6, campos[7].getText(), campos[8].getText(), campos[0].getText(),
+						dataNascimento, campos[2].getText(), campos[3].getText(), campos[4].getText(),
 						campos[5].getText(), campos[1].getText(), TipoAcesso.fromInt(getI()));
 				try {
-					new VendedorRepository(banco).cadastrarVendedor(vendedor,campos[5].getText() , new ListenerConsulta() {
-						@Override
+					new VendedorRepository(banco).cadastrarVendedor(vendedor, campos[5].getText(),
+							new ListenerConsulta() {
+								@Override
 								public void sucesso(int resultadosAfetados) {
 									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
-						}
-						@Override
-						public void erro(Exception e){
-							e.printStackTrace();
-							ComponentesServices.mostrarErro("Houve um erro no Cadastro");
-						}
-						});
+								}
+
+								@Override
+								public void erro(Exception e) {
+									e.printStackTrace();
+									ComponentesServices.mostrarErro("Houve um erro no Cadastro");
+								}
+							});
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.err.println("alou");
+					System.err.println(e.getMessage());
 					e.printStackTrace();
 				}
 				close();
-				
 			}
 		});
-		
+
 		definirConteudo(conteudo);
 	}
 
-	void setI(int i){
+	private long converterDataNascimentoParaLong(String string) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Date data = format.parse(string);
+		return DateService.converterDataEmTimestamp(data);
+	}
+
+	void setI(int i) {
 		this.i = i;
 	}
 
 	public int getI() {
 		return i;
 	}
-	
+
 }

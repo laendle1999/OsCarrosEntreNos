@@ -94,8 +94,7 @@ public class CadastrarCliente extends TelaBase {
 							}
 						});
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.err.println("alou");
+						ComponentesServices.mostrarErro("Houve um erro no cadastro");
 						e.printStackTrace();
 					}
 					close();

@@ -62,7 +62,7 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 
 						@Override
 						public void sucesso(int resultadosAfetados, List<Long> chaves) {
-							System.out.println("Carro editado no banco com sucesso");
+							ComponentesServices.mostrarInformacao("Carro editado com sucesso");
 						}
 
 						@Override

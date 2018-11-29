@@ -16,7 +16,6 @@ import cmtop.domain.entity.Cliente;
 import cmtop.domain.entity.Venda;
 import cmtop.domain.entity.Vendedor;
 import cmtop.domain.repository.CarroRepository;
-import cmtop.domain.repository.ClienteRepository;
 import cmtop.domain.repository.VendaRepository;
 import cmtop.domain.repository.VendedorRepository;
 import cmtop.persistence.entity.Banco;

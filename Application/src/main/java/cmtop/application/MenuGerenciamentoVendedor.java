@@ -1,6 +1,7 @@
 package cmtop.application;
 
 import java.io.IOException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
@@ -54,7 +55,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 		Text textVendedor = new Text("Olá " + nomeVendedor);
 		textVendedor.setTextAlignment(TextAlignment.LEFT);
 
-		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(500, 177));
+		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(400, 177));
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER);
 		menu.add(textVendedor, 2, 0);
@@ -115,7 +116,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 
 					repository.alterarSenhaVendedor(vendedorEscolhido, senha, new ListenerConsulta() {
 						@Override
-						public void sucesso(int resultadosAfetados) {
+						public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 							ComponentesServices.mostrarInformacao("Senha alterada com sucesso");
 						}
 

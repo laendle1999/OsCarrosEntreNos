@@ -10,7 +10,6 @@ import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -38,10 +37,10 @@ public class TelaLogin extends TelaBase {
 		secao.setTextAlignment(TextAlignment.LEFT);
 
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(secao);
+		//conteudo.getChildren().add(secao);
 
-		conteudo.getChildren().add(new Label("usuario: funcionario, senha: 1234"));
-		conteudo.getChildren().add(new Label("usuario: gerente, senha: 1234"));
+		//conteudo.getChildren().add(new Label("usuario: funcionario, senha: 1234"));
+		//conteudo.getChildren().add(new Label("usuario: gerente, senha: 1234"));
 
 		conteudo.getChildren().add(menu);
 		conteudo.setAlignment(Pos.CENTER_LEFT);

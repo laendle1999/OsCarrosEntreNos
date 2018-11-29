@@ -55,9 +55,12 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 
 	private Consumer<ObjetoBuscado> listenerApagar;
 
+	private String nomeObjetoParaBuscar;
+
 	public BuscaComEdicao(String nomeObjetoParaBuscar, String mensagemBotaoEscolher,
 			ListenerAlteracoes<ObjetoBuscado> listenerAlteracoes, Consumer<ObjetoBuscado> listenerApagar) {
 		super("AutoManager", 700, 600, TipoBotaoVoltar.NENHUM);
+		this.nomeObjetoParaBuscar = nomeObjetoParaBuscar;
 		this.listenerAlteracoes = listenerAlteracoes;
 		this.listenerApagar = listenerApagar;
 
@@ -209,12 +212,15 @@ public abstract class BuscaComEdicao<ObjetoBuscado> extends TelaBase {
 			final ContextMenu contextMenu = new ContextMenu();
 			final MenuItem removeMenuItem = new MenuItem("Apagar item");
 			removeMenuItem.setOnAction(event -> {
-				ObjetoBuscado objetoApagado = obterItensSelecionados().get(0);
+				ComponentesServices.mostrarConfirmacao("Tem certeza que deseja apagar o " + nomeObjetoParaBuscar + "?",
+						resultado -> {
+							ObjetoBuscado objetoApagado = obterItensSelecionados().get(0);
 
-				listenerApagar.accept(objetoApagado);
+							listenerApagar.accept(objetoApagado);
 
-				tabela.getItems().remove(row.getItem());
-				listaOriginal.remove(objetoApagado);
+							tabela.getItems().remove(row.getItem());
+							listaOriginal.remove(objetoApagado);
+						});
 			});
 			contextMenu.getItems().add(removeMenuItem);
 			// Set context menu on row, but use a binding to make it only show for non-empty

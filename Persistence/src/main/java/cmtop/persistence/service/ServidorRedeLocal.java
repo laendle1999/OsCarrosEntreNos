@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -110,9 +111,10 @@ public class ServidorRedeLocal {
 			CountDownLatch latch = new CountDownLatch(1);
 			banco.executarConsulta(sql, new ListenerConsulta() {
 				@Override
-				public void sucesso(int resultadosAfetados) {
+				public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 					resultado = ComandosRede.OK + "\n";
-					resultado += resultadosAfetados;
+					resultado += resultadosAfetados + "\n";
+					resultado += concatenarLista(chavesCriadas);
 					latch.countDown();
 				}
 
@@ -135,6 +137,18 @@ public class ServidorRedeLocal {
 		public void fecharSessao() {
 			ouvidorCliente.interromper();
 		}
+	}
+
+	private static String concatenarLista(List<Long> chavesCriadas) {
+		StringBuilder strbul = new StringBuilder();
+		Iterator<Long> iter = chavesCriadas.iterator();
+		while (iter.hasNext()) {
+			strbul.append(iter.next());
+			if (iter.hasNext()) {
+				strbul.append(",");
+			}
+		}
+		return strbul.toString();
 	}
 
 	public ServidorRedeLocal(Banco banco) {

@@ -4,7 +4,7 @@ public class Venda {
 
 	private String numeroVenda;
 
-	private String dataVenda;
+	private long dataVenda;
 
 	private int carro;
 
@@ -14,7 +14,7 @@ public class Venda {
 
 	private int id;
 
-	public Venda(int id, String numeroVenda, String dataVenda, int cliente, int vendedor) {
+	public Venda(int id, String numeroVenda, long dataVenda, int cliente, int vendedor) {
 		this.id = id;
 		this.numeroVenda = numeroVenda;
 		this.carro = -1;
@@ -31,11 +31,11 @@ public class Venda {
 		this.numeroVenda = numeroVenda;
 	}
 
-	public String getDataVenda() {
+	public long getDataVenda() {
 		return dataVenda;
 	}
 
-	public void setDataVenda(String dataVenda) {
+	public void setDataVenda(long dataVenda) {
 		this.dataVenda = dataVenda;
 	}
 

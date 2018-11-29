@@ -18,7 +18,7 @@ public class ValorEntradaRepository {
 
 	public ValorEntradaRepository(Banco banco) throws IOException {
 		this.banco = banco;
-		tabela = banco.getTabela("finaciamento");
+		tabela = banco.getTabela("valor_entrada");
 	}
 
 	@SuppressWarnings("unused")

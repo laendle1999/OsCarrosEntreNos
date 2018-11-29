@@ -11,6 +11,7 @@ import cmtop.persistence.entity.Tabela;
 import cmtop.persistence.valueobject.Condicao;
 import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
+import cmtop.persistence.valueobject.TipoCondicao;
 import cmtop.persistence.valueobject.ValorFloat;
 import cmtop.persistence.valueobject.ValorInt;
 import cmtop.persistence.valueobject.ValorLong;
@@ -69,6 +70,12 @@ public class TrocaCarroRepository {
 	public void adicionarCarroTroca(TrocaCarro trocaCarro, ListenerConsulta listener) {
 		Registro registro = converterTrocaCarroEmRegistro(trocaCarro);
 		tabela.inserir(registro, listener);
+	}
+
+	public void removerTrocaCarro(TrocaCarro trocaCarro, ListenerConsulta listener) {
+		Condicao condicao = new Condicao();
+		condicao.add("id_troca", TipoCondicao.IGUAL, new ValorInt(trocaCarro.getId()));
+		tabela.remover(condicao, listener);
 	}
 
 	public void listarTrocasCarro(int limite, ListenerConsultaComResposta<TrocaCarro> listener) {

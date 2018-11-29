@@ -1,6 +1,7 @@
 package cmtop.persistence.test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -34,8 +35,10 @@ public class TabelaTest {
 		Tabela tabela = getBanco().getTabela("cliente");
 		tabela.inserir(registro, new ListenerConsulta() {
 			@Override
-			public void sucesso(int resultadosAfetados) {
+			public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 				latchInserir.countDown();
+				System.out.println(resultadosAfetados);
+				System.out.println(chavesCriadas);
 			}
 
 			@Override
@@ -55,7 +58,7 @@ public class TabelaTest {
 		CountDownLatch latchRemover = new CountDownLatch(1);
 		tabela.remover(condicao, new ListenerConsulta() {
 			@Override
-			public void sucesso(int resultadosAfetados) {
+			public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 				latchRemover.countDown();
 			}
 

@@ -5,7 +5,7 @@ import cmtop.domain.entity.Carro;
 public class CarroModel extends ModelGenerico {
 
 	private Carro carro = null;
-	
+
 	public CarroModel(Carro carro) {
 		this.carro = carro;
 		adicionarColuna("Renavan", carro.getRenavan(), false);
@@ -13,12 +13,12 @@ public class CarroModel extends ModelGenerico {
 		adicionarColuna("Ano", carro.getAno() + "", true);
 		adicionarColuna("Cor", carro.getCor(), true);
 		adicionarColuna("Modelo", carro.getModelo(), true);
-		adicionarColuna("Placa", carro.getPlaca(), false);
+		adicionarColuna("Placa", carro.getPlaca(), true);
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		return carro.getMarca() + " " + carro.getModelo() + " " + carro.getAno() + " - " + carro.getCor();
 	}
 

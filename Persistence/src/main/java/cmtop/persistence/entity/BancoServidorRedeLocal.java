@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -128,9 +129,12 @@ public class BancoServidorRedeLocal extends Banco {
 	public void executarConsulta(String sql, ListenerConsulta listener) {
 		new MyThread(() -> {
 			try {
-				Statement statement = getConnection().createStatement();
-				statement.execute(sql);
-				listener.sucesso(statement.getUpdateCount());
+				PreparedStatement statement = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				statement.executeUpdate();
+				ResultSet generatedKeys = statement.getGeneratedKeys();
+				List<Long> chaves = obterIdsInseridos(generatedKeys);
+				int updateCount = statement.getUpdateCount();
+				listener.sucesso(updateCount, chaves);
 			} catch (SQLException | IOException e) {
 				listener.erro(e);
 			}
@@ -149,46 +153,7 @@ public class BancoServidorRedeLocal extends Banco {
 				}
 
 				ResultSet resultSet = statement.getResultSet();
-
-				ResultSetMetaData metaData = resultSet.getMetaData();
-				int columnCount = metaData.getColumnCount();
-
-				while (resultSet.next()) {
-					Registro registro = new Registro(getTipoConexao());
-
-					for (int i = 1; i <= columnCount; i++) {
-						String colName = metaData.getColumnName(i);
-
-						switch (metaData.getColumnType(i)) {
-						case Types.INTEGER:
-						case Types.TINYINT:
-							registro.set(colName, new ValorInt(resultSet.getInt(i)));
-							break;
-						case Types.BIGINT:
-							registro.set(colName, new ValorLong(resultSet.getLong(i)));
-							break;
-						case Types.DOUBLE:
-							registro.set(colName, new ValorDouble(resultSet.getDouble(i)));
-							break;
-						case Types.FLOAT:
-						case Types.DECIMAL:
-							registro.set(colName, new ValorFloat(resultSet.getFloat(i)));
-							break;
-						case Types.VARCHAR:
-						case Types.LONGVARCHAR:
-						case Types.DATE:
-							registro.set(colName, new ValorString(resultSet.getString(i)));
-							break;
-						default:
-							System.err.println(
-									"Field not identified on register: " + colName + "; converting it to string");
-							registro.set(colName, new ValorString(resultSet.getString(i)));
-							continue;
-						}
-					}
-
-					resultados.add(registro);
-				}
+				resultados = converterResultEmRegistros(resultSet);
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
 				listener.erro(e);
@@ -197,6 +162,66 @@ public class BancoServidorRedeLocal extends Banco {
 
 			listener.resposta(resultados);
 		}, "BancoServidorRedeLocal consultaComResultado").start();
+	}
+
+	private List<Long> obterIdsInseridos(ResultSet generatedKeys) throws SQLException {
+		List<Long> ids = new ArrayList<>();
+		if (generatedKeys == null) {
+			return ids;
+		}
+		while (generatedKeys.next()) {
+			ids.add(generatedKeys.getLong(1));
+		}
+		return ids;
+	}
+
+	private List<Registro> converterResultEmRegistros(ResultSet resultSet) throws SQLException {
+		List<Registro> resultados = new ArrayList<>();
+
+		if (resultSet == null) {
+			return resultados;
+		}
+
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		int columnCount = metaData.getColumnCount();
+
+		while (resultSet.next()) {
+			Registro registro = new Registro(getTipoConexao());
+
+			for (int i = 1; i <= columnCount; i++) {
+				String colName = metaData.getColumnName(i);
+
+				switch (metaData.getColumnType(i)) {
+				case Types.INTEGER:
+				case Types.TINYINT:
+					registro.set(colName, new ValorInt(resultSet.getInt(i)));
+					break;
+				case Types.BIGINT:
+					registro.set(colName, new ValorLong(resultSet.getLong(i)));
+					break;
+				case Types.DOUBLE:
+					registro.set(colName, new ValorDouble(resultSet.getDouble(i)));
+					break;
+				case Types.FLOAT:
+				case Types.DECIMAL:
+					registro.set(colName, new ValorFloat(resultSet.getFloat(i)));
+					break;
+				case Types.VARCHAR:
+				case Types.LONGVARCHAR:
+				case Types.DATE:
+					registro.set(colName, new ValorString(resultSet.getString(i)));
+					break;
+				default:
+					System.err.println("Field not identified on register: " + colName + "; converting it to string");
+					registro.set(colName, new ValorString(resultSet.getString(i)));
+					continue;
+				}
+			}
+
+			resultados.add(registro);
+		}
+
+		return resultados;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
+import cmtop.application.service.ConfiguracaoService;
 import cmtop.application.service.NetworkUtil;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.entity.BancoClienteRedeLocal;
@@ -35,16 +36,7 @@ public class PontoEntradaAplicacao extends Application {
 	private static Banco banco;
 
 	public static void iniciarAplicacao() {
-		// int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como
-		// servidor?", "",
-		// JOptionPane.YES_NO_OPTION);
-		// if (dialogResult == JOptionPane.YES_OPTION) {
-		// configuracaoBanco = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
-		// } else {
-		// configuracaoBanco = ConfiguracaoBanco.CLIENTE_REDE_LOCAL;
-		// }
-
-		configuracaoBanco = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
+		configuracaoBanco = obterConfiguracaoBanco();
 
 		switch (configuracaoBanco) {
 		case SERVIDOR_REDE_LOCAL:
@@ -165,6 +157,31 @@ public class PontoEntradaAplicacao extends Application {
 
 	public static ConfiguracaoBanco getConfiguracaoBanco() {
 		return configuracaoBanco;
+	}
+
+	public static ConfiguracaoBanco obterConfiguracaoBanco() {
+		ConfiguracaoBanco configuracao = null;
+		try {
+			configuracao = ConfiguracaoService.obterConfiguracaoBanco();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (configuracao == null) {
+			int dialogResult = JOptionPane.showConfirmDialog(null, "Executar como servidor?", "",
+					JOptionPane.YES_NO_OPTION);
+			if (dialogResult == JOptionPane.YES_OPTION) {
+				configuracao = ConfiguracaoBanco.SERVIDOR_REDE_LOCAL;
+			} else {
+				configuracao = ConfiguracaoBanco.CLIENTE_REDE_LOCAL;
+			}
+			try {
+				ConfiguracaoService.gravarConfiguracaoBanco(configuracao);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return configuracao;
 	}
 
 }

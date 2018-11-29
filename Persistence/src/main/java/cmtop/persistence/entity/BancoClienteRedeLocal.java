@@ -2,6 +2,8 @@ package cmtop.persistence.entity;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cmtop.persistence.service.ComandosRede;
 import cmtop.persistence.service.MyThread;
@@ -62,11 +64,17 @@ public class BancoClienteRedeLocal extends Banco {
 				}
 
 				String resultadosAfetados = getPortaVozCliente().aguardarMensagem();
-				listener.sucesso(Integer.parseInt(resultadosAfetados));
-			} catch (IOException e) {
+				String chavesGeradasStr = getPortaVozCliente().aguardarMensagem();
+				String[] chavesGeradas = chavesGeradasStr.split("\\,");
+				List<Long> chaves = new ArrayList<>();
+				for (int i = 0; i < chavesGeradas.length; i++) {
+					chaves.add(Long.parseLong(chavesGeradas[i]));
+				}
+				listener.sucesso(Integer.parseInt(resultadosAfetados), chaves);
+			} catch (IOException | NumberFormatException e) {
 				listener.erro(e);
 			}
-		}, "executarConsulta").start();
+		}, "BancoClienteRedeLocal executarConsulta").start();
 	}
 
 	@Override

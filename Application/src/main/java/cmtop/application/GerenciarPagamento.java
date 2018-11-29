@@ -1,6 +1,8 @@
 package cmtop.application;
 
 import cmtop.application.service.ComponentesServices;
+import cmtop.domain.entity.ValorEntrada;
+import cmtop.domain.service.VendaService;
 import cmtop.persistence.entity.Banco;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,47 +18,46 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class CadastrarPagamento extends TelaBase {
+public class GerenciarPagamento extends TelaBase {
 
-	public CadastrarPagamento(Banco banco, float custo) {
+	public GerenciarPagamento(Banco banco, VendaService vendaService) {
 		super("AutoManager - Cadastrar Pagamento", 600, 500, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 
 		GridPane menuVista = new GridPane();
 		menuVista.setAlignment(Pos.CENTER);
-		menuVista.setStyle("-fx-background-fill: black, white ; -fx-padding: 20px; \n" + "-fx-background-insets: 0, 1 ;");
+		menuVista.setStyle(
+				"-fx-background-fill: black, white ; -fx-padding: 20px; \n" + "-fx-background-insets: 0, 1 ;");
 		menuVista.setHgap(10);
 		menuVista.setVgap(10);
 		menuVista.setVisible(false);
-		
+
 		GridPane menuFinanciamento = new GridPane();
 		menuFinanciamento.setAlignment(Pos.CENTER);
-		menuFinanciamento.setStyle("-fx-background-fill: black, white ; -fx-padding: 20px;\n" + "-fx-background-insets: 0, 1 ;");
+		menuFinanciamento
+				.setStyle("-fx-background-fill: black, white ; -fx-padding: 20px;\n" + "-fx-background-insets: 0, 1 ;");
 		menuFinanciamento.setHgap(10);
 		menuFinanciamento.setVgap(10);
 		menuFinanciamento.setVisible(false);
-		
+
 		GridPane menuCarro = new GridPane();
 		menuCarro.setAlignment(Pos.CENTER);
-		menuCarro.setStyle("-fx-background-fill: black, white ; -fx-padding: 20px;\n" + "-fx-background-insets: 0, 1 ;");
+		menuCarro
+				.setStyle("-fx-background-fill: black, white ; -fx-padding: 20px;\n" + "-fx-background-insets: 0, 1 ;");
 		menuCarro.setHgap(10);
 		menuCarro.setVgap(10);
 		menuCarro.setVisible(false);
 
-		
-		
 		Text secao = new Text("Cadastro Pagamento");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
-		
-		
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(new HBox(secao,new Text("  	 R$" + custo)));
-		
-		CheckBox[] cb = { new CheckBox("Valor a Vista"),new CheckBox("Financiamento"),new CheckBox("Carro")}; 
-		conteudo.getChildren().add(new HBox(cb[0],cb[1],cb[2]));
-		
+		conteudo.getChildren().add(new HBox(secao, new Text("  	 R$" + vendaService)));
+
+		CheckBox[] cb = { new CheckBox("Valor a Vista"), new CheckBox("Financiamento"), new CheckBox("Carro") };
+		conteudo.getChildren().add(new HBox(cb[0], cb[1], cb[2]));
+
 		conteudo.getChildren().add(menuVista);
 		conteudo.getChildren().add(menuFinanciamento);
 		conteudo.getChildren().add(menuCarro);
@@ -68,46 +69,44 @@ public class CadastrarPagamento extends TelaBase {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				cb[0].setSelected(newValue);
 				menuVista.setVisible(newValue);
-				
+
 			}
 		});
-		
+
 		cb[1].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				cb[1].setSelected(newValue);
 				menuFinanciamento.setVisible(newValue);
-				
+
 			}
 		});
-		
+
 		cb[2].selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				cb[2].setSelected(newValue);
 				menuCarro.setVisible(newValue);
-				
+
 			}
 		});
-		
-		
-		
+
 		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
 				new TextField() };
 		Text[] labels = { new Text("Valor à Vista"), new Text("Valor Financiado"), new Text("Banco"), new Text("Carro"),
 				new Text("Campo 5"), new Text("Campo 6") };
-		Button[] btn = {new Button("Confirmar"),new Button("Cadastrar Carro")};
-		
+		Button[] btn = { new Button("Confirmar"), new Button("Cadastrar Carro") };
+
 		menuVista.add(labels[0], 0, 0);
 		menuVista.add(campos[0], 1, 0);
-		
+
 		menuFinanciamento.add(labels[1], 0, 0);
 		menuFinanciamento.add(campos[1], 1, 0);
 		menuFinanciamento.add(labels[2], 0, 1);
 		menuFinanciamento.add(campos[2], 1, 1);
-		
+
 		menuCarro.add(labels[3], 0, 0);
 		menuCarro.add(btn[1], 1, 0);
 
@@ -119,7 +118,7 @@ public class CadastrarPagamento extends TelaBase {
 			}
 		});
 
-		//menu.setTranslateY(15);
+		// menu.setTranslateY(15);
 
 		btn[0].setStyle("    -fx-background-color: \r\n" + "        rgba(0,0,0,0.08),\r\n"
 				+ "        linear-gradient(#9a9a9a, #909090),\r\n"
@@ -131,9 +130,25 @@ public class CadastrarPagamento extends TelaBase {
 		btn[0].setTranslateX(300);
 		btn[0].setTranslateY(30);
 
+		btn[0].setOnAction(event -> {
+			// valor a vista
+			vendaService.limparValoresEntrada();
+			if (cb[0].isSelected()) {
+				try {
+					float valor = Float.parseFloat(campos[0].getText());
+					vendaService.adicionarValorEntrada(new ValorEntrada("", valor));
+				} catch (NumberFormatException e) {
+					ComponentesServices.mostrarAlerta("Valor inválido, digite um número");
+				}
+			}
+
+			// TODO financiamento
+
+			// TODO carro troca
+		});
+
 		definirConteudo(conteudo);
-		
-		
+
 	}
 
 }

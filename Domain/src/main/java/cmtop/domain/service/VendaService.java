@@ -72,6 +72,18 @@ public class VendaService {
 		pagamento.adicionarValorEntrada(valorEntrada);
 	}
 
+	public void limparValoresEntrada() {
+		pagamento.getValoresEntrada().clear();
+	}
+
+	public void limparTrocasCarro() {
+		pagamento.getTrocasCarro().clear();
+	}
+
+	public void limparFinanciamentos() {
+		pagamento.getFinanciamentos().clear();
+	}
+
 	public void escolherCarro(Carro carro) {
 		this.carro = carro;
 	}

@@ -12,7 +12,7 @@ import javafx.scene.text.TextAlignment;
 public class TelaConfiguracao extends TelaBase {
 
 	public TelaConfiguracao() {
-		super("AutoManager - Configuração", 600, 500, TipoBotaoVoltar.VOLTAR);
+		super("AutoManager - Configuração", 800, 500, TipoBotaoVoltar.VOLTAR);
 
 		VBox conteudo = new VBox();
 

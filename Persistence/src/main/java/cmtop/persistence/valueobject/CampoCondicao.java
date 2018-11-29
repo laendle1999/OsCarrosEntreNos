@@ -97,7 +97,7 @@ public class CampoCondicao {
 	}
 
 	public static String limparString(String string) {
-		return string.toString().replaceAll("\\p{C}", "");
+		return string.replaceAll("\\p{C}", "");
 	}
 
 }

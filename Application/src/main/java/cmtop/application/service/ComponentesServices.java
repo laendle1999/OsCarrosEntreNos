@@ -17,8 +17,7 @@ import javafx.scene.image.ImageView;
 public class ComponentesServices {
 
 	public static ImageView obterLogoAplicacao(double width, double height) {
-		ClassLoader classLoader = ComponentesServices.class.getClassLoader();
-		String imgPath = classLoader.getResource("img/AutoManagerLogo.png").getPath();
+		String imgPath = new File("img/AutoManagerLogo.png").getAbsolutePath();
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(new File(imgPath));

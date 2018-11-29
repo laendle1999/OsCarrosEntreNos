@@ -1,5 +1,7 @@
 package cmtop.persistence.entity;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -105,11 +107,11 @@ public class BancoServidorRedeLocal extends Banco {
 	}
 
 	private void createDatabase(Connection connection) throws IOException {
-		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-		InputStream is = classloader.getResourceAsStream(DERBY_SQL_CREATE_SCRIPT_LOCATION);
+		File file = new File(DERBY_SQL_CREATE_SCRIPT_LOCATION);
+		InputStream inputStream = new FileInputStream(file);
 		try {
 			ScriptRunner scriptRunner = new ScriptRunner(connection, true, true);
-			scriptRunner.runScript(new InputStreamReader(is, StandardCharsets.UTF_8));
+			scriptRunner.runScript(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 		} catch (SQLException e) {
 			throw new IOException(e);
 		}

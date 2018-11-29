@@ -36,7 +36,7 @@ public class BuscarVendedorComEdicao extends BuscaComEdicao<Vendedor> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Vendedor>> callbackListaOriginal)
 			throws IOException {
 		VendedorRepository vendedorRepository = new VendedorRepository(banco);
-		vendedorRepository.obterVendedorPorLogin(camposBusca.get(LOGIN.getNome()),
+		vendedorRepository.obterVendedoresPorLogin(camposBusca.get(LOGIN.getNome()), 1,
 				new ListenerConsultaComResposta<Vendedor>() {
 
 					@Override

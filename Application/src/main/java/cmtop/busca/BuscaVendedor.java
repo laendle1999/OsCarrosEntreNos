@@ -32,7 +32,7 @@ public class BuscaVendedor extends Busca<Vendedor> {
 			Consumer<List<? extends ModelGenerico>> callbackListaModel, Consumer<List<Vendedor>> callbackListaOriginal)
 			throws IOException {
 		VendedorRepository repository = new VendedorRepository(banco);
-		repository.obterVendedorPorLogin(camposBusca.get(USUARIO.getNome()),
+		repository.obterVendedoresPorLogin(camposBusca.get(USUARIO.getNome()), 1,
 				new ListenerConsultaComResposta<Vendedor>() {
 
 					@Override

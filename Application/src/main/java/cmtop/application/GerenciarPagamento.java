@@ -211,8 +211,14 @@ public class GerenciarPagamento extends TelaBase {
 
 			// carro troca
 			atualizarTrocasCarro(trocaCarro);
-
-			close();
+			if(Float.parseFloat(valorPagoLabel.getText()) < (vendaService.getCarro().getValorVenda())){
+				ComponentesServices.mostrarErro("Valor faltante de: " + (Float.parseFloat(valorPagoLabel.getText()) - (vendaService.getCarro().getValorVenda())));
+			}else {
+				ComponentesServices.mostrarAlerta("Pagamento realizado com sucesso, Devolver: " + (Float.parseFloat(valorPagoLabel.getText()) - (vendaService.getCarro().getValorVenda())));
+				
+				close();
+			}
+			
 		});
 
 		definirConteudo(conteudo);

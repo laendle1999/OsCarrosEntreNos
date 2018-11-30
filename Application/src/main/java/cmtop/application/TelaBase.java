@@ -8,7 +8,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public abstract class TelaBase extends Stage {
@@ -24,7 +23,6 @@ public abstract class TelaBase extends Stage {
 
 		HBox linha = new HBox();
 		linha.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		//linha.setStyle("-fx-background-color: #fefefe;");
 		linha.setStyle("-fx-background-color: #fefefe;");
 
 
@@ -59,7 +57,6 @@ public abstract class TelaBase extends Stage {
 
 		BorderPane borderPane = new BorderPane();
 		Scene cena = new Scene(borderPane);
-		cena.setFill(Color.MEDIUMSEAGREEN);
 		borderPane.setCenter(linha);
 
 		setScene(cena);

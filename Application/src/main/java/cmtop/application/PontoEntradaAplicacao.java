@@ -36,46 +36,68 @@ public class PontoEntradaAplicacao extends Application {
 	private static Banco banco;
 
 	public static void iniciarAplicacao() {
-		configuracaoBanco = obterConfiguracaoBanco();
+		SplashScreen splashScreen = new SplashScreen();
+		splashScreen.show();
 
-		switch (configuracaoBanco) {
-		case SERVIDOR_REDE_LOCAL:
-			try {
-				banco = new BancoServidorRedeLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Não foi possível iniciar banco servidor");
+		new MyThread(() -> {
+			configuracaoBanco = obterConfiguracaoBanco();
+
+			switch (configuracaoBanco) {
+			case SERVIDOR_REDE_LOCAL:
+				try {
+					Platform.runLater(() -> {
+						splashScreen.mostrarStatus("Iniciando banco servidor local...");
+					});
+					banco = new BancoServidorRedeLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Não foi possível iniciar banco servidor");
+					Platform.runLater(() -> {
+						splashScreen.close();
+					});
+					PontoEntradaAplicacao.finalizarAplicacao();
+					return;
+				}
+				break;
+			case CLIENTE_REDE_LOCAL:
+				CountDownLatch latch = new CountDownLatch(1);
+				Platform.runLater(() -> {
+					splashScreen.mostrarStatus("Procurando servidor...");
+				});
+				procurarBancoServidorLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS, b -> {
+					banco = b;
+					latch.countDown();
+				});
+				try {
+					latch.await(TEMPO_LIMITE_BANCO_SEGUNDOS, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+				}
+				if (banco == null) {
+					System.out.println("Servidor não encontrado");
+					JOptionPane.showMessageDialog(null, "Servidor não encontrado na rede local");
+					Platform.runLater(() -> {
+						splashScreen.close();
+					});
+					PontoEntradaAplicacao.finalizarAplicacao();
+					return;
+				}
+				break;
+			case REMOTO_NUVEM:
+				banco = new BancoRemoto(TipoBanco.AZURE);
+				break;
+			default:
+				Platform.runLater(() -> {
+					splashScreen.close();
+				});
 				PontoEntradaAplicacao.finalizarAplicacao();
 				return;
 			}
-			break;
-		case CLIENTE_REDE_LOCAL:
-			CountDownLatch latch = new CountDownLatch(1);
-			System.out.println("Procurando servidor...");
-			procurarBancoServidorLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS, b -> {
-				banco = b;
-				latch.countDown();
+
+			Platform.runLater(() -> {
+				splashScreen.close();
+				new TelaLogin(banco).show();
 			});
-			try {
-				latch.await(TEMPO_LIMITE_BANCO_SEGUNDOS, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-			}
-			if (banco == null) {
-				System.out.println("Servidor não encontrado");
-				JOptionPane.showMessageDialog(null, "Servidor não encontrado na rede local");
-				PontoEntradaAplicacao.finalizarAplicacao();
-				return;
-			}
-			break;
-		case REMOTO_NUVEM:
-			banco = new BancoRemoto(TipoBanco.AZURE);
-			break;
-		default:
-			PontoEntradaAplicacao.finalizarAplicacao();
-			return;
-		}
-
-		new TelaLogin(banco).show();
+		}, "PontoEntradaAplicacao iniciarAplicacao").start();
 	}
 
 	private static void procurarBancoServidorLocal(TipoBanco tipoBanco, int timeoutSegundos, Consumer<Banco> listener) {

@@ -131,6 +131,14 @@ public class GerenciarPagamento extends TelaBase {
 			Financiamento financiamento = vendaService.getFinanciamentos().get(0);
 			campos[1].setText(financiamento.getValorFinanciado() + "");
 			campos[2].setText(financiamento.getBanco() + "");
+			campos[1].textProperty().addListener(new ChangeListener<String>() {
+
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					setValorPago(Float.parseFloat(newValue));
+					
+				}
+			});
 		}
 
 		if (!vendaService.getTrocasCarro().isEmpty()) {

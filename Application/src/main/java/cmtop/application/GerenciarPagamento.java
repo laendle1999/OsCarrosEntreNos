@@ -1,5 +1,7 @@
 package cmtop.application;
 
+import java.awt.Desktop.Action;
+
 import cmtop.application.model.TrocaCarroModel;
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Financiamento;
@@ -10,6 +12,7 @@ import cmtop.persistence.entity.Banco;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -119,11 +122,17 @@ public class GerenciarPagamento extends TelaBase {
 
 		menuVista.add(labels[0], 0, 0);
 		menuVista.add(campos[0], 1, 0);
+		campos[0].setOnAction((ActionEvent e)->{
+			atualizarView();
+		});
 
 		menuFinanciamento.add(labels[1], 0, 0);
 		menuFinanciamento.add(campos[1], 1, 0);
 		menuFinanciamento.add(labels[2], 0, 1);
 		menuFinanciamento.add(campos[2], 1, 1);
+		campos[1].setOnAction((ActionEvent e)->{
+			atualizarView();
+		});
 
 		if (!vendaService.getValoresEntrada().isEmpty()) {
 			checkBoxes[0].setSelected(true);
@@ -224,9 +233,12 @@ public class GerenciarPagamento extends TelaBase {
 			if(valor < (vendaService.getCarro().getValorVenda())){
 				ComponentesServices.mostrarErro("Valor faltante de: " + ((vendaService.getCarro().getValorVenda()) - valor));
 			}else {
-				ComponentesServices.mostrarAlerta("Pagamento realizado com sucesso, Devolver: " + (valor - (vendaService.getCarro().getValorVenda())));
-				
-				close();
+				ComponentesServices.mostrarConfirmacao("Pagamento realizado com sucesso, Devolver: " + (valor - (vendaService.getCarro().getValorVenda()))
+						, resposta->{
+							if(!resposta)
+								return;
+							close();
+						});
 			}
 			
 		});

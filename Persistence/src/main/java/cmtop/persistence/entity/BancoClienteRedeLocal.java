@@ -56,10 +56,17 @@ public class BancoClienteRedeLocal extends Banco {
 	public void executarConsulta(String sql, ListenerConsulta listener) {
 		new MyThread(() -> {
 			try {
+				getPortaVozCliente().enviarMensagem(ComandosRede.CONSULTA_SQL);
+				String status = getPortaVozCliente().aguardarMensagem();
+				if (status.trim().isEmpty() || !status.equals(ComandosRede.OK)) {
+					listener.erro(new IOException("Não foi possível iniciar consulta no servidor"));
+					return;
+				}
+
 				getPortaVozCliente().enviarMensagem(sql);
 				String resposta = getPortaVozCliente().aguardarMensagem();
 				if (resposta.trim().isEmpty() || !resposta.equals(ComandosRede.OK)) {
-					listener.erro(new IOException("Comando não foi executado no servidor"));
+					listener.erro(new IOException("Comando não foi executado no servidor, resposta: " + resposta));
 					return;
 				}
 

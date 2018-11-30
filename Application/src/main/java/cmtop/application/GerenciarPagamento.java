@@ -26,11 +26,11 @@ public class GerenciarPagamento extends TelaBase {
 	private VendaService vendaService;
 	private CheckBox[] checkBoxes;
 	private TextField[] campos;
-	private String valorPago = "R$ 0.00";
 	private HBox valorEntrada = new HBox();
+	private Text valorPagoLabel;
 
 	public GerenciarPagamento(Banco banco, VendaService vendaService) {
-		super("AutoManager - Gerenciar pagamento", 600, 500, TipoBotaoVoltar.VOLTAR);
+		super("AutoManager - Gerenciar pagamento", 650, 600, TipoBotaoVoltar.VOLTAR);
 		this.vendaService = vendaService;
 
 		VBox conteudo = new VBox();
@@ -62,10 +62,15 @@ public class GerenciarPagamento extends TelaBase {
 		Text secao = new Text("Gerenciar pagamento");
 		secao.setTextAlignment(TextAlignment.LEFT);
 
+		valorPagoLabel = new Text("");
 		conteudo.getChildren().add(ComponentesServices.obterLogoAplicacao(300, 200));
-		conteudo.getChildren().add(new HBox(secao, new Text("  	 R$" + vendaService.getCarro().getValorVenda())));
+		try {
+			conteudo.getChildren().add(new HBox(secao, new Text("  	 R$" + vendaService.getCarro().getValorVenda())));
+		} catch (NullPointerException e) {
+			// TODO
+		}
 		conteudo.getChildren().add(valorEntrada);
-		valorEntrada.getChildren().add(new Text(valorPago));
+		valorEntrada.getChildren().add(valorPagoLabel);
 
 		checkBoxes = new CheckBox[] { new CheckBox("Valor a Vista"), new CheckBox("Financiamento"),
 				new CheckBox("Carro") };
@@ -135,7 +140,7 @@ public class GerenciarPagamento extends TelaBase {
 
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					setValorPago(Float.parseFloat(newValue));
+					//setValorPago(Float.parseFloat(newValue));
 					
 				}
 			});
@@ -149,7 +154,7 @@ public class GerenciarPagamento extends TelaBase {
 
 		menuCarro.add(labels[3], 0, 0);
 		menuCarro.add(btn[1], 1, 0);
-		
+
 		menuCarro.add(campos[3], 0, 1);
 		GridPane.setColumnSpan(campos[3], 2);
 		campos[3].setEditable(false);
@@ -160,7 +165,6 @@ public class GerenciarPagamento extends TelaBase {
 					return;
 				}
 				this.trocaCarro = trocaCarro;
-				setValorPago(trocaCarro.getValorCarro());
 
 				Platform.runLater(() -> atualizarTrocasCarro(trocaCarro));
 			}).show();
@@ -183,9 +187,9 @@ public class GerenciarPagamento extends TelaBase {
 			vendaService.limparValoresEntrada();
 			if (checkBoxes[0].isSelected()) {
 				try {
-					float valor = Float.parseFloat(campos[0].getText());
+					String valorStr = campos[0].getText();
+					float valor = Float.parseFloat(valorStr);
 					vendaService.adicionarValorEntrada(new ValorEntrada("", valor));
-					setValorPago(valor);
 				} catch (NumberFormatException e) {
 					ComponentesServices.mostrarAlerta("Valor inválido, digite um número");
 					return;
@@ -196,10 +200,9 @@ public class GerenciarPagamento extends TelaBase {
 			vendaService.limparFinanciamentos();
 			if (checkBoxes[1].isSelected()) {
 				try {
-					float valorFinanciado = Float.parseFloat(campos[1].getText());
+					float valorFinanciado = Integer.parseInt(campos[1].getText());
 					String bancoFinanc = campos[2].getText();
 					vendaService.adicionarFinanciamento(new Financiamento(bancoFinanc, valorFinanciado, -1));
-					setValorPago(valorFinanciado);
 				} catch (NumberFormatException e) {
 					ComponentesServices.mostrarAlerta("Valor financiado inválido, digite um número");
 					return;
@@ -214,6 +217,7 @@ public class GerenciarPagamento extends TelaBase {
 
 		definirConteudo(conteudo);
 
+		atualizarView();
 	}
 
 	public void setTrocaCarro(TrocaCarro trocaCarro) {
@@ -227,24 +231,25 @@ public class GerenciarPagamento extends TelaBase {
 				return;
 			campos[3].setText(new TrocaCarroModel(trocaCarro).toString());
 			vendaService.adicionarTrocaCarro(trocaCarro);
+			atualizarView();
 		}
 	}
 
-	public String getValorPago() {
-		return valorPago;
+	private void atualizarView() {
+		String valorPago = "R$ ";
+		float valor = 0;
+		if (!vendaService.getFinanciamentos().isEmpty()) {
+			valor += vendaService.getFinanciamentos().get(0).getValorFinanciado();
+		}
+		if (!vendaService.getTrocasCarro().isEmpty()) {
+			valor += vendaService.getTrocasCarro().get(0).getValorCarro();
+		}
+		if (!vendaService.getValoresEntrada().isEmpty()) {
+			valor += vendaService.getValoresEntrada().get(0).getValor();
+		}
+		valorPago += valor;
+
+		valorPagoLabel.setText(valorPago);
 	}
 
-	public void setValorPago(float valorPago) {
-		valorPago += Float.parseFloat(this.valorPago);
-		this.valorPago = String.valueOf(valorPago);
-		autualizarView();
-		
-	}
-	
-	private void autualizarView() {
-		valorEntrada.getChildren().clear();
-		valorEntrada.getChildren().add(new Text(valorPago));
-	}
-	
-	
 }

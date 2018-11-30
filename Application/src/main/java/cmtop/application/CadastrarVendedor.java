@@ -2,6 +2,7 @@ package cmtop.application;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Vendedor;
@@ -113,7 +114,7 @@ public class CadastrarVendedor extends TelaBase {
 					new VendedorRepository(banco).cadastrarVendedor(vendedor, campos[5].getText(),
 							new ListenerConsulta() {
 								@Override
-								public void sucesso(int resultadosAfetados) {
+								public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 									ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
 								}
 

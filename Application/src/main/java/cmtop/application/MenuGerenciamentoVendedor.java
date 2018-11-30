@@ -1,6 +1,7 @@
 package cmtop.application;
 
 import java.io.IOException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.application.service.LoginService;
@@ -115,7 +116,7 @@ public class MenuGerenciamentoVendedor extends TelaBase {
 
 					repository.alterarSenhaVendedor(vendedorEscolhido, senha, new ListenerConsulta() {
 						@Override
-						public void sucesso(int resultadosAfetados) {
+						public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 							ComponentesServices.mostrarInformacao("Senha alterada com sucesso");
 						}
 

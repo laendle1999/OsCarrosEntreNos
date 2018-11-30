@@ -2,6 +2,7 @@ package cmtop.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import cmtop.application.PontoEntradaAplicacao.ConfiguracaoBanco;
 import cmtop.application.service.ComponentesServices;
@@ -99,47 +100,44 @@ public class TelaConfiguracao extends TelaBase {
 			}
 
 		});
-		
-		btnBackup[0].setOnMouseClicked(event->{
-			
+		btnBackup[0].setOnMouseClicked(event -> {
+
 			ConfiguracaoBanco configuracaoBanco = PontoEntradaAplicacao.getConfiguracaoBanco();
-			if(configuracaoBanco == ConfiguracaoBanco.SERVIDOR_REDE_LOCAL) {
+			if (configuracaoBanco == ConfiguracaoBanco.SERVIDOR_REDE_LOCAL) {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Exportar Backup");
-				fileChooser.getExtensionFilters().addAll(
-						new FileChooser.ExtensionFilter("Todos os arquivos","*.*"));
+				fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Todos os arquivos", "*.*"));
 				File arquivo = fileChooser.showSaveDialog(null);
 				ConfiguracaoService.backupBanco(arquivo);
-			}else if(configuracaoBanco == ConfiguracaoBanco.CLIENTE_REDE_LOCAL){
+			} else if (configuracaoBanco == ConfiguracaoBanco.CLIENTE_REDE_LOCAL) {
 				ComponentesServices.mostrarErro("Não é possivel fazer Backup pelo computador do Cliente");
-			}else {
+			} else {
 				ComponentesServices.mostrarInformacao("Banco em Nuvem não necessita de Backup");
 			}
-			
+
 		});
-		
-		btnBackup[1].setOnMouseClicked(event->{
+
+		btnBackup[1].setOnMouseClicked(event -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Importar Backup");
-			fileChooser.getExtensionFilters().addAll(
-					new FileChooser.ExtensionFilter("ZIP", "*.zip"),
-					new FileChooser.ExtensionFilter("Todos os arquivos","*.*"));	
+			fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("ZIP", "*.zip"),
+					new FileChooser.ExtensionFilter("Todos os arquivos", "*.*"));
 			File arquivo = fileChooser.showOpenDialog(null);
 
 			System.out.println("Comecando o backup");
-			
-			
-			ComponentesServices.mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos", resultado->{
-				if(!resultado)
-					return;
-				new Thread(()->{
-					System.out.println("Sou uma thread livre");
-					ComponentesServices.mostrarAlerta("Por Favor Aguarde");
-				},"TelaConfiguracao importarBackup").start();
-				ConfiguracaoService.importarBackup(arquivo);
-			});
+
+			ComponentesServices.mostrarConfirmacao("Se Continuar todos os Registros Atuais serão perdidos",
+					resultado -> {
+						if (!resultado)
+							return;
+						new Thread(() -> {
+							System.out.println("Sou uma thread livre");
+							ComponentesServices.mostrarAlerta("Por Favor Aguarde");
+						}, "TelaConfiguracao importarBackup").start();
+						ConfiguracaoService.importarBackup(arquivo);
+					});
 		});
-		
+
 		definirConteudo(conteudo);
 	}
 
@@ -149,7 +147,7 @@ public class TelaConfiguracao extends TelaBase {
 			new VendedorRepository(banco).alterarSenhaVendedor(vendedor, senha, new ListenerConsulta() {
 
 				@Override
-				public void sucesso(int resultadosAfetados) {
+				public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 					ComponentesServices.mostrarInformacao("Senhas alterada com sucesso");
 				}
 

@@ -1,10 +1,14 @@
 package cmtop.application;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
+import cmtop.domain.service.DateService;
+import cmtop.domain.valueobject.StatusCarro;
 import cmtop.persistence.entity.Banco;
 import cmtop.persistence.valueobject.ListenerConsulta;
 import javafx.event.Event;
@@ -40,12 +44,12 @@ public class CadastrarCompra extends TelaBase {
 		conteudo.setAlignment(Pos.CENTER_LEFT);
 
 		TextField[] campos = { new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
-				new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField()
-				, new TextField(), new TextField()};
+				new TextField(), new TextField(), new TextField(), new TextField(), new TextField(), new TextField(),
+				new TextField(), new TextField() };
 		Text[] labels = { new Text("Modelo"), new Text("Marca"), new Text("Ano"), new Text("Placa"),
 				new Text("RENAVAN"), new Text("Cor"), new Text("Adicionais"), new Text("Custo"),
-				new Text("Local da Compra"), new Text("Nome do Fornecedor"), new Text("Data da Compra")
-				, new Text("Codigo do Carro"), new Text("Valor de Venda")};
+				new Text("Local da Compra"), new Text("Nome do Fornecedor"), new Text("Data da Compra"),
+				new Text("Codigo do Carro"), new Text("Valor de Venda") };
 		Button btn = new Button("Confirmar");
 
 		for (int x = 0; x < 11; x++) {
@@ -68,7 +72,7 @@ public class CadastrarCompra extends TelaBase {
 		menu.add(campos[11], 1, 1);
 		menu.add(labels[12], 0, 2);
 		menu.add(campos[12], 1, 2);
-		
+
 		btn.setStyle("-fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5,5,4;"
 				+ "    -fx-padding: 3 3 3 3; -fx-text-fill: #242d35;" + "    -fx-font-size: 14px;");
 
@@ -79,10 +83,20 @@ public class CadastrarCompra extends TelaBase {
 
 			@Override
 			public void handle(Event event) {
-				Carro carro = new Carro(0, campos[11].getText(), campos[3].getText(), campos[4].getText(), campos[0].getText(),
-						campos[1].getText(), campos[5].getText(), Integer.parseInt(campos[2].getText()), 
-						Float.parseFloat(campos[12].getText()), Float.parseFloat(campos[7].getText()), 
-						Long.parseLong(campos[10].getText()), null);
+				Carro carro;
+				try {
+					carro = new Carro(0, campos[11].getText(), campos[3].getText(), campos[4].getText(),
+							campos[0].getText(), campos[1].getText(), campos[5].getText(),
+							Integer.parseInt(campos[2].getText()), Float.parseFloat(campos[12].getText()),
+							Float.parseFloat(campos[7].getText()),
+							DateService.converterDataStringParaLong(campos[10].getText()), StatusCarro.DISPONIVEL);
+				} catch (NumberFormatException e1) {
+					ComponentesServices.mostrarAlerta("Verifique o formato dos campos ano, custo e valor da venda");
+					return;
+				} catch (ParseException e) {
+					ComponentesServices.mostrarAlerta("Verifique o formato da data, dia/mês/ano");
+					return;
+				}
 
 				// Compra compra = new Compra(campos[8].getText(), campos[9].getText(),
 				// Long.parseLong(campos[10].getText()), focusGrabCounter, focusGrabCounter);
@@ -90,7 +104,7 @@ public class CadastrarCompra extends TelaBase {
 				try {
 					new CarroRepository(banco).cadastrarCarro(carro, new ListenerConsulta() {
 						@Override
-						public void sucesso(int resultadosAfetados) {
+						public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 							ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
 						}
 
@@ -101,8 +115,7 @@ public class CadastrarCompra extends TelaBase {
 						}
 					});
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.err.println("alou");
+					ComponentesServices.mostrarErro("Houve um erro no Cadastro");
 					e.printStackTrace();
 				}
 				close();

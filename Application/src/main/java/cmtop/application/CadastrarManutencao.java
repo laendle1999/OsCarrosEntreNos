@@ -2,6 +2,7 @@ package cmtop.application;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import cmtop.application.service.ComponentesServices;
 import cmtop.busca.BuscaCarro;
@@ -106,7 +107,7 @@ public class CadastrarManutencao extends TelaBase {
 				try {
 					new ManutencaoRepository(banco).cadastrarManutencao(manutencao, new ListenerConsulta() {
 						@Override
-						public void sucesso(int resultadosAfetados) {
+						public void sucesso(int resultadosAfetados, List<Long> chavesCriadas) {
 							ComponentesServices.mostrarInformacao("Cadastrado com sucesso");
 						}
 

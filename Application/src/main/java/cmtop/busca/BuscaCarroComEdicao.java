@@ -7,11 +7,13 @@ import java.util.function.Consumer;
 
 import cmtop.application.model.CarroModel;
 import cmtop.application.model.ModelGenerico;
+import cmtop.application.service.ComponentesServices;
 import cmtop.busca.CamposBusca.Campo;
 import cmtop.busca.CamposBusca.TipoCampo;
 import cmtop.domain.entity.Carro;
 import cmtop.domain.repository.CarroRepository;
 import cmtop.persistence.entity.Banco;
+import cmtop.persistence.valueobject.ListenerConsulta;
 import cmtop.persistence.valueobject.ListenerConsultaComResposta;
 
 public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
@@ -23,11 +25,80 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 	@SuppressWarnings("unused")
 	private static Campo RENAVAN = new Campo(TipoCampo.TEXTO, "Renavan", "renavan", "");
 
-	public BuscaCarroComEdicao(Banco banco2, ListenerAlteracoes<Carro> listenerAlteracoes,
-			Consumer<Carro> listenerApagar) {
-		super("Carro", "Selecionar carro", listenerAlteracoes, listenerApagar);
+	public BuscaCarroComEdicao(Banco banco, String titulo) {
+		super("Carro", titulo, new ListenerAlteracoes<Carro>() {
 
-		this.banco = banco2;
+			@Override
+			public boolean aceitarMudanca(Carro carro, String campo, String valorNovo) {
+				if (campo.equals("Renavan"))
+					return false;
+
+				/// Campos da classe CarroModel
+				switch (campo) {
+				case "Marca":
+					carro.setMarca(valorNovo);
+					break;
+				case "Ano":
+					try {
+						int ano = Integer.parseInt(valorNovo);
+						carro.setAno(ano);
+					} catch (NumberFormatException e) {
+						return false;
+					}
+					break;
+				case "Cor":
+					carro.setCor(valorNovo);
+					break;
+				case "Modelo":
+					carro.setModelo(valorNovo);
+					break;
+				case "Placa":
+					carro.setPlaca(valorNovo);
+					break;
+				}
+
+				try {
+					new CarroRepository(banco).alterarCarro(carro, new ListenerConsulta() {
+
+						@Override
+						public void sucesso(int resultadosAfetados, List<Long> chaves) {
+							ComponentesServices.mostrarInformacao("Carro editado com sucesso");
+						}
+
+						@Override
+						public void erro(Exception e) {
+							ComponentesServices.mostrarErro("Falha ao editar o carro");
+							e.printStackTrace();
+						}
+					});
+				} catch (IOException e) {
+					ComponentesServices.mostrarErro("Falha ao editar o carro");
+					e.printStackTrace();
+					return false;
+				}
+				return true;
+			}
+		}, carro -> {
+			try {
+				new CarroRepository(banco).removerCarro(carro, new ListenerConsulta() {
+					@Override
+					public void sucesso(int resultadosAfetados, List<Long> chaves) {
+						ComponentesServices.mostrarInformacao("Carro removido do sistema com sucesso");
+					}
+
+					@Override
+					public void erro(Exception e) {
+						ComponentesServices.mostrarErro("Falha ao remover o carro");
+						e.printStackTrace();
+					}
+				});
+			} catch (IOException e) {
+				ComponentesServices.mostrarErro("Falha ao remover o carro");
+				e.printStackTrace();
+			}
+		});
+
+		this.banco = banco;
 		this.definirCamposBusca(PLACA);
 	}
 

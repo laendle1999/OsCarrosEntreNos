@@ -10,14 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
+import cmtop.persistence.service.MyThread;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ComponentesServices {
 
 	public static ImageView obterLogoAplicacao(double width, double height) {
-		ClassLoader classLoader = ComponentesServices.class.getClassLoader();
-		String imgPath = classLoader.getResource("img/AutoManagerLogo.png").getPath();
+		String imgPath = new File("img/AutoManagerLogo.png").getAbsolutePath();
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(new File(imgPath));
@@ -32,22 +32,26 @@ public class ComponentesServices {
 	}
 
 	public static void mostrarAlerta(String mensagem) {
-		JOptionPane.showMessageDialog(null, mensagem, "Alerta", JOptionPane.WARNING_MESSAGE);
+		new MyThread(() -> {
+			JOptionPane.showMessageDialog(null, mensagem, "Alerta", JOptionPane.WARNING_MESSAGE);
+		}, "ComponentesServices mostrarAlerta").start();
 	}
 
 	public static void mostrarErro(String mensagem) {
-		JOptionPane.showMessageDialog(null, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
+		new MyThread(() -> {
+			JOptionPane.showMessageDialog(null, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
+		}, "ComponentesServices mostrarErro").start();
 	}
 
 	public static void mostrarEntradaTexto(String mensagem, Consumer<String> listenerEntrada) {
-		new Thread(() -> {
+		new MyThread(() -> {
 			String input = JOptionPane.showInputDialog(mensagem);
 			listenerEntrada.accept(input);
-		}).start();
+		}, "ComponentesServices mostrarEntradaTexto").start();
 	}
 
 	public static void mostrarEntradaSenha(String mensagem, Consumer<String> listenerEntrada) {
-		new Thread(() -> {
+		new MyThread(() -> {
 			JPanel panel = new JPanel();
 			JLabel label = new JLabel(mensagem);
 			JPasswordField pass = new JPasswordField(10);
@@ -62,22 +66,26 @@ public class ComponentesServices {
 			} else {
 				listenerEntrada.accept(null);
 			}
-		}).start();
+		}, "ComponentesServices mostrarEntradaSenha").start();
 	}
 
 	public static void mostrarInformacao(String mensagem) {
-		JOptionPane.showMessageDialog(null, mensagem, "Informação", JOptionPane.INFORMATION_MESSAGE);
+		new MyThread(() -> {
+			JOptionPane.showMessageDialog(null, mensagem, "Informação", JOptionPane.INFORMATION_MESSAGE);
+		}, "ComponentesServices mostrarInformacao").start();
 	}
 
 	public static void mostrarConfirmacao(String mensagem, Consumer<Boolean> resultado) {
-		int dialogResult = JOptionPane.showConfirmDialog(null, mensagem, "", JOptionPane.YES_NO_OPTION);
-		if (dialogResult == JOptionPane.YES_OPTION) {
-			resultado.accept(true);
-		} else if (dialogResult == JOptionPane.NO_OPTION) {
-			resultado.accept(false);
-		} else {
-			resultado.accept(null);
-		}
+		new MyThread(() -> {
+			int dialogResult = JOptionPane.showConfirmDialog(null, mensagem, "", JOptionPane.YES_NO_OPTION);
+			if (dialogResult == JOptionPane.YES_OPTION) {
+				resultado.accept(true);
+			} else if (dialogResult == JOptionPane.NO_OPTION) {
+				resultado.accept(false);
+			} else {
+				resultado.accept(null);
+			}
+		}, "ComponentesServices mostrarConfirmacao").start();
 	}
 
 }

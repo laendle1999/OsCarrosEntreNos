@@ -8,6 +8,7 @@ import org.ini4j.Wini;
 import org.zeroturnaround.zip.ZipUtil;
 
 import cmtop.application.PontoEntradaAplicacao;
+import cmtop.application.PontoEntradaAplicacao.ConfiguracaoBanco;
 import cmtop.persistence.service.MyThread;
 
 public class ConfiguracaoService {
@@ -50,6 +51,22 @@ public class ConfiguracaoService {
 	public static int obterTempoAlertaEstoque() throws IOException {
 		Wini ini = loadIni();
 		return ini.get("config", "tempoAlerta", int.class);
+	}
+
+	public static ConfiguracaoBanco obterConfiguracaoBanco() throws IOException {
+		Wini ini = loadIni();
+		String valor = ini.get("config", "configuracaoBanco", String.class);
+		if (valor == null || valor.isEmpty()) {
+			return null;
+		} else {
+			return ConfiguracaoBanco.valueOf(valor);
+		}
+	}
+
+	public static void gravarConfiguracaoBanco(ConfiguracaoBanco configuracaoBanco) throws IOException {
+		Wini ini = loadIni();
+		ini.put("config", "configuracaoBanco", configuracaoBanco.name());
+		gravarIni(ini);
 	}
 
 	private static Wini loadIni() throws IOException {

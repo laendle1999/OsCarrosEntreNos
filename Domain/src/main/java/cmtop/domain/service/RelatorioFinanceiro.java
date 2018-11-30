@@ -3,9 +3,13 @@ package cmtop.domain.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import cmtop.domain.entity.Cliente;
 import cmtop.domain.entity.Compra;
 import cmtop.domain.entity.Venda;
+import cmtop.domain.repository.ClienteRepository;
 import cmtop.domain.repository.CompraRepository;
 import cmtop.domain.repository.VendaRepository;
 import cmtop.persistence.entity.Banco;
@@ -66,7 +70,11 @@ public class RelatorioFinanceiro {
 
 										s.append("<h2>Vendas realizadas após "
 												+ DateService.converterTimestampParaDataString(dataInicio) + "</h2>");
-										adicionarTabelaVendas(s, vendas);
+										try {
+											adicionarTabelaVendas(s, vendas);
+										} catch (IOException e) {
+											listener.erro(e);
+										}
 
 										s.append("</body></html>");
 
@@ -87,7 +95,7 @@ public class RelatorioFinanceiro {
 		for (int i = 0; i < compras.size(); i++) {
 			s.append("<tr>");
 			Compra compra = compras.get(i);
-			s.append("<td>" + compra.getData() + "</td>");
+			s.append("<td>" + DateService.converterTimestampParaDataString(compra.getData()) + "</td>");
 			s.append("<td>" + compra.getCusto() + "</td>");
 			s.append("<td>" + compra.getNomeFornecedor() + "</td>");
 			s.append("</tr>");
@@ -98,7 +106,7 @@ public class RelatorioFinanceiro {
 		s.append("</table>");
 	}
 
-	private void adicionarTabelaVendas(StringBuilder s, List<Venda> vendas) {
+	private void adicionarTabelaVendas(StringBuilder s, List<Venda> vendas) throws IOException {
 		s.append("<table border=\"1\">");
 		s.append("<tr>");
 		s.append("<th>Data</th><th>Id cliente</th>");
@@ -106,8 +114,31 @@ public class RelatorioFinanceiro {
 		for (int i = 0; i < vendas.size(); i++) {
 			s.append("<tr>");
 			Venda venda = vendas.get(i);
-			s.append("<td>" + venda.getDataVenda() + "</td>");
-			s.append("<td>" + venda.getCliente() + "</td>");
+			s.append("<td>" + DateService.converterTimestampParaDataString(venda.getDataVenda()) + "</td>");
+
+			CountDownLatch latch = new CountDownLatch(1);
+			new ClienteRepository(banco).obterClientePorId(venda.getCliente(),
+					new ListenerConsultaComResposta<Cliente>() {
+						@Override
+						public void resposta(List<Cliente> registros) {
+							String nomeCliente = "";
+							if (!registros.isEmpty()) {
+								nomeCliente = registros.get(0).getNome();
+							}
+							s.append("<td>" + nomeCliente + "</td>");
+							latch.countDown();
+						}
+
+						@Override
+						public void erro(Exception e) {
+							e.printStackTrace();
+							latch.countDown();
+						}
+					});
+			try {
+				latch.await(3, TimeUnit.SECONDS);
+			} catch (InterruptedException e1) {
+			}
 			s.append("</tr>");
 		}
 		if (vendas.isEmpty()) {

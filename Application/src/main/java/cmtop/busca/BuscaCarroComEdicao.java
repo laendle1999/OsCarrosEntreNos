@@ -30,7 +30,7 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 
 			@Override
 			public boolean aceitarMudanca(Carro carro, String campo, String valorNovo) {
-				if (campo.equals("Renavan"))
+				if (campo.equals("Renavan") || campo.equals("Data de entrada"))
 					return false;
 
 				/// Campos da classe CarroModel
@@ -54,6 +54,14 @@ public class BuscaCarroComEdicao extends BuscaComEdicao<Carro> {
 					break;
 				case "Placa":
 					carro.setPlaca(valorNovo);
+					break;
+				case "Valor de venda":
+					try {
+						float valor = Float.parseFloat(valorNovo);
+						carro.setValorVenda(valor);
+					} catch (NumberFormatException e) {
+						return false;
+					}
 					break;
 				}
 

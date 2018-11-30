@@ -16,6 +16,7 @@ public class CarroModel extends ModelGenerico {
 		adicionarColuna("Data de entrada", DateService.converterTimestampParaDataString(carro.getDataEntrada()), false);
 		adicionarColuna("Cor", carro.getCor(), true);
 		adicionarColuna("Modelo", carro.getModelo(), true);
+		adicionarColuna("Valor de venda", carro.getValorVenda() + "", true);
 	}
 
 	@Override

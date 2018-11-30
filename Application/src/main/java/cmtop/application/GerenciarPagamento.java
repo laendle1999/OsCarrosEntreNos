@@ -1,7 +1,5 @@
 package cmtop.application;
 
-import java.awt.Desktop.Action;
-
 import cmtop.application.model.TrocaCarroModel;
 import cmtop.application.service.ComponentesServices;
 import cmtop.domain.entity.Financiamento;
@@ -35,6 +33,10 @@ public class GerenciarPagamento extends TelaBase {
 	public GerenciarPagamento(Banco banco, VendaService vendaService) {
 		super("AutoManager - Gerenciar pagamento", 650, 600, TipoBotaoVoltar.VOLTAR);
 		this.vendaService = vendaService;
+
+		if (!vendaService.getTrocasCarro().isEmpty()) {
+			trocaCarro = vendaService.getTrocasCarro().get(0);
+		}
 
 		VBox conteudo = new VBox();
 
@@ -122,7 +124,7 @@ public class GerenciarPagamento extends TelaBase {
 
 		menuVista.add(labels[0], 0, 0);
 		menuVista.add(campos[0], 1, 0);
-		campos[0].setOnAction((ActionEvent e)->{
+		campos[0].setOnAction((ActionEvent e) -> {
 			atualizarView();
 		});
 
@@ -130,7 +132,7 @@ public class GerenciarPagamento extends TelaBase {
 		menuFinanciamento.add(campos[1], 1, 0);
 		menuFinanciamento.add(labels[2], 0, 1);
 		menuFinanciamento.add(campos[2], 1, 1);
-		campos[1].setOnAction((ActionEvent e)->{
+		campos[1].setOnAction((ActionEvent e) -> {
 			atualizarView();
 		});
 
@@ -149,8 +151,8 @@ public class GerenciarPagamento extends TelaBase {
 
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					//setValorPago(Float.parseFloat(newValue));
-					
+					// setValorPago(Float.parseFloat(newValue));
+
 				}
 			});
 		}
@@ -209,7 +211,7 @@ public class GerenciarPagamento extends TelaBase {
 			vendaService.limparFinanciamentos();
 			if (checkBoxes[1].isSelected()) {
 				try {
-					float valorFinanciado = Integer.parseInt(campos[1].getText());
+					float valorFinanciado = Float.parseFloat(campos[1].getText());
 					String bancoFinanc = campos[2].getText();
 					vendaService.adicionarFinanciamento(new Financiamento(bancoFinanc, valorFinanciado, -1));
 				} catch (NumberFormatException e) {
@@ -230,17 +232,19 @@ public class GerenciarPagamento extends TelaBase {
 			if (!vendaService.getValoresEntrada().isEmpty()) {
 				valor += vendaService.getValoresEntrada().get(0).getValor();
 			}
-			if(valor < (vendaService.getCarro().getValorVenda())){
-				ComponentesServices.mostrarErro("Valor faltante de: " + ((vendaService.getCarro().getValorVenda()) - valor));
-			}else {
-				ComponentesServices.mostrarConfirmacao("Pagamento realizado com sucesso, Devolver: " + (valor - (vendaService.getCarro().getValorVenda()))
-						, resposta->{
-							if(!resposta)
-								return;
-							close();
-						});
+
+			if (vendaService.getCarro() != null) {
+				if (valor < (vendaService.getCarro().getValorVenda())) {
+					ComponentesServices.mostrarInformacao(
+							"Valor faltante de: " + ((vendaService.getCarro().getValorVenda()) - valor));
+				} else {
+					ComponentesServices.mostrarInformacao(
+							"Valor para devolver ao cliente: " + (valor - (vendaService.getCarro().getValorVenda())));
+				}
 			}
-			
+
+			close();
+
 		});
 
 		definirConteudo(conteudo);

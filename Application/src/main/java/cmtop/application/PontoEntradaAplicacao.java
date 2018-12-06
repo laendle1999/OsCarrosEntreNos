@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
@@ -27,7 +26,7 @@ public class PontoEntradaAplicacao extends Application {
 
 	private static ConfiguracaoBanco configuracaoBanco;
 
-	private final static int TEMPO_LIMITE_BANCO_SEGUNDOS = 5;
+	private final static int TEMPO_LIMITE_BANCO_SEGUNDOS = 10;
 
 	public enum ConfiguracaoBanco {
 		SERVIDOR_REDE_LOCAL, CLIENTE_REDE_LOCAL, REMOTO_NUVEM
@@ -36,46 +35,69 @@ public class PontoEntradaAplicacao extends Application {
 	private static Banco banco;
 
 	public static void iniciarAplicacao() {
-		configuracaoBanco = obterConfiguracaoBanco();
+		SplashScreen splashScreen = new SplashScreen();
+		splashScreen.show();
 
-		switch (configuracaoBanco) {
-		case SERVIDOR_REDE_LOCAL:
-			try {
-				banco = new BancoServidorRedeLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Não foi possível iniciar banco servidor");
+		new MyThread(() -> {
+			configuracaoBanco = obterConfiguracaoBanco();
+
+			switch (configuracaoBanco) {
+			case SERVIDOR_REDE_LOCAL:
+				try {
+					Platform.runLater(() -> {
+						splashScreen.mostrarStatus("Iniciando banco servidor local...");
+					});
+					System.out.println("Ip deste computador na rede: " + getIpAddress());
+					banco = new BancoServidorRedeLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Não foi possível iniciar banco servidor");
+					Platform.runLater(() -> {
+						splashScreen.close();
+					});
+					PontoEntradaAplicacao.finalizarAplicacao();
+					return;
+				}
+				break;
+			case CLIENTE_REDE_LOCAL:
+				CountDownLatch latch = new CountDownLatch(1);
+				Platform.runLater(() -> {
+					splashScreen.mostrarStatus("Procurando servidor...");
+				});
+				procurarBancoServidorLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS, b -> {
+					banco = b;
+					latch.countDown();
+				});
+				try {
+					latch.await();
+				} catch (InterruptedException e) {
+				}
+				if (banco == null) {
+					System.out.println("Servidor não encontrado");
+					JOptionPane.showMessageDialog(null, "Servidor não encontrado na rede local");
+					Platform.runLater(() -> {
+						splashScreen.close();
+					});
+					PontoEntradaAplicacao.finalizarAplicacao();
+					return;
+				}
+				break;
+			case REMOTO_NUVEM:
+				banco = new BancoRemoto(TipoBanco.AZURE);
+				break;
+			default:
+				Platform.runLater(() -> {
+					splashScreen.close();
+				});
 				PontoEntradaAplicacao.finalizarAplicacao();
 				return;
 			}
-			break;
-		case CLIENTE_REDE_LOCAL:
-			CountDownLatch latch = new CountDownLatch(1);
-			System.out.println("Procurando servidor...");
-			procurarBancoServidorLocal(TipoBanco.DERBY, TEMPO_LIMITE_BANCO_SEGUNDOS, b -> {
-				banco = b;
-				latch.countDown();
+
+			Platform.runLater(() -> {
+				splashScreen.close();
+				new TelaLogin(banco).show();
 			});
-			try {
-				latch.await(TEMPO_LIMITE_BANCO_SEGUNDOS, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-			}
-			if (banco == null) {
-				System.out.println("Servidor não encontrado");
-				JOptionPane.showMessageDialog(null, "Servidor não encontrado na rede local");
-				PontoEntradaAplicacao.finalizarAplicacao();
-				return;
-			}
-			break;
-		case REMOTO_NUVEM:
-			banco = new BancoRemoto(TipoBanco.AZURE);
-			break;
-		default:
-			PontoEntradaAplicacao.finalizarAplicacao();
-			return;
-		}
-
-		new TelaLogin(banco).show();
+		}, "PontoEntradaAplicacao iniciarAplicacao").start();
 	}
 
 	private static void procurarBancoServidorLocal(TipoBanco tipoBanco, int timeoutSegundos, Consumer<Banco> listener) {
@@ -96,34 +118,25 @@ public class PontoEntradaAplicacao extends Application {
 				}
 			}
 
-			private synchronized void interromperBusca() {
-				buscaInterrompida = true;
-			}
-
 			private synchronized void servidorEncontrado(Banco banco) {
+				if (buscaInterrompida)
+					return;
+				buscaInterrompida = true;
 				listener.accept(banco);
 			}
 
 			@Override
 			public void run() {
 				List<String> listaIps = new ArrayList<>();
+				listaIps = NetworkUtil.getNetworkIPs(timeoutSegundos);
 
-				CountDownLatch latch = new CountDownLatch(1);
-				NetworkUtil.getNetworkIPs(timeoutSegundos, list -> {
-					listaIps.addAll(list);
-					latch.countDown();
-				});
-				try {
-					latch.await(timeoutSegundos, TimeUnit.SECONDS);
-				} catch (InterruptedException e1) {
-				}
+				System.out.println("Computadores na rede: \n" + listaIps);
 
 				computadoresFaltantes = listaIps.size();
 
 				for (int i = 0; i < listaIps.size(); i++) {
 					try {
 						Banco banco = new BancoClienteRedeLocal(listaIps.get(i), "", "", tipoBanco, timeoutSegundos);
-						interromperBusca();
 						servidorEncontrado(banco);
 						System.out.println("Servidor encontrado: " + listaIps.get(i));
 					} catch (IOException e) {
@@ -135,7 +148,6 @@ public class PontoEntradaAplicacao extends Application {
 		}, "procurarBancoServidorLocal").start();
 	}
 
-	@SuppressWarnings("unused")
 	private static String getIpAddress() {
 		return NetworkUtil.getCurrentEnvironmentNetworkIp();
 	}

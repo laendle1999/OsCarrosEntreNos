@@ -71,6 +71,7 @@ public class ServidorRedeLocal {
 						return ComandosRede.OK;
 					}
 
+					System.out.println("Programa cliente enviou um comando desconhecido");
 					return ComandosRede.COMANDO_DESCONHECIDO;
 				}
 			});

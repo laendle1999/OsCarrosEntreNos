@@ -6,6 +6,7 @@ import cmtop.busca.BuscaCarroComEdicao;
 import cmtop.busca.BuscaTrocaCarro;
 import cmtop.busca.BuscarCarroPorTempo;
 import cmtop.persistence.entity.Banco;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -66,11 +67,13 @@ public class MenuGerenciamentoCarros extends TelaBase {
 				if (trocaCarro == null)
 					return;
 
-				ComponentesServices.mostrarConfirmacao("Deseja aprovar esta troca e inserir o carro no banco de dados?",
+				ComponentesServices.mostrarConfirmacao("Deseja iniciar o processo de aprovação do carro?",
 						resultado -> {
 							if (resultado == null || resultado == false)
 								return;
-							new CadastrarCarroDeTroca(banco, trocaCarro).show();
+							Platform.runLater(() -> {
+								new CadastrarCarroDeTroca(banco, trocaCarro).show();
+							});
 						});
 			}).show();
 		});

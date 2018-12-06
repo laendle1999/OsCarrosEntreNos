@@ -1,6 +1,7 @@
 package cmtop.application.model;
 
 import cmtop.domain.entity.Carro;
+import cmtop.domain.service.DateService;
 
 public class CarroModel extends ModelGenerico {
 
@@ -9,11 +10,13 @@ public class CarroModel extends ModelGenerico {
 	public CarroModel(Carro carro) {
 		this.carro = carro;
 		adicionarColuna("Renavan", carro.getRenavan(), false);
+		adicionarColuna("Placa", carro.getPlaca(), true);
 		adicionarColuna("Marca", carro.getMarca(), true);
 		adicionarColuna("Ano", carro.getAno() + "", true);
+		adicionarColuna("Data de entrada", DateService.converterTimestampParaDataString(carro.getDataEntrada()), false);
 		adicionarColuna("Cor", carro.getCor(), true);
 		adicionarColuna("Modelo", carro.getModelo(), true);
-		adicionarColuna("Placa", carro.getPlaca(), true);
+		adicionarColuna("Valor de venda", carro.getValorVenda() + "", true);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.concurrent.CountDownLatch;
 
 import cmtop.persistence.service.MyThread;
 
@@ -104,52 +104,38 @@ public final class NetworkUtil {
 		return inet.isReachable(5000);
 	}
 
-	public static void getNetworkIPs(int timeoutSegundos, Consumer<List<String>> listener) {
+	public static List<String> getNetworkIPs(int timeoutSegundos) {
+		String subnet = getCurrentEnvironmentNetworkIp();
+		String[] split = subnet.split("\\.");
+		String newSubnet = "";
+		for (int i = 0; i < split.length - 1; i++) {
+			newSubnet += split[i] + ".";
+		}
+
+		CountDownLatch latch = new CountDownLatch(255 - 1);
+
 		List<String> list = new ArrayList<>();
+		for (int i = 1; i < 255; i++) {
+			String host = newSubnet + i;
 
-		final int[] ip = getIp();
-
-		new Runnable() {
-			private int threadsProcessadas = 0;
-
-			private synchronized void incrementarThreads() {
-				threadsProcessadas++;
-				if (threadsProcessadas == 254) {
-					listener.accept(list);
+			new MyThread(() -> {
+				try {
+					if (InetAddress.getByName(host).isReachable(timeoutSegundos * 1000)) {
+						list.add(host);
+					}
+					latch.countDown();
+				} catch (IOException e) {
+					latch.countDown();
+					e.printStackTrace();
 				}
-			}
+			}, "NetworkUtil getNetworkIPs").start();
+		}
 
-			private synchronized void adicionarIpNaLista(String ip) {
-				list.add(ip);
-			}
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+		}
 
-			@Override
-			public void run() {
-				for (int i = 1; i <= 254; i++) {
-					final int _i = i;
-					new MyThread(new Runnable() {
-						public void run() {
-							try {
-								ip[ip.length - 1] = _i;
-
-								byte[] byteIp = new byte[ip.length];
-								for (int n = 0; n < ip.length; n++) {
-									byteIp[n] = (byte) ip[n];
-								}
-
-								InetAddress address = InetAddress.getByAddress(byteIp);
-								String output = address.toString().substring(1);
-								if (address.isReachable(timeoutSegundos)) {
-									adicionarIpNaLista(output);
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							incrementarThreads();
-						}
-					}, "getNetworkIPs").start();
-				}
-			}
-		}.run();
+		return list;
 	}
 }
